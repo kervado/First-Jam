@@ -1,5 +1,6 @@
 [project]
 title = JamOfficePsychosis
+dependencies#0 = https://github.com/subsoap/defos/archive/refs/tags/v2.8.7.zip
 
 [bootstrap]
 main_collection = /main/main.collectionc
