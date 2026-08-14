@@ -1,4 +1,7 @@
 images {
+  image: "/assets/images/square.png"
+}
+images {
   image: "/assets/images/background.png"
 }
 images {

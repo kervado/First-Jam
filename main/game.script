@@ -1,0 +1,244 @@
+--------------------------------------------------------------------------------
+-- JamOfficePsychosis -- single game level
+--
+-- The assistant (player) walks around a one-room office. Colliding with the
+-- coffee machine fills the coffee cups (max 3). Workers at desks randomly ask
+-- for coffee (an icon appears above the desk); walking into such a desk while
+-- holding coffee delivers one cup and clears the request.
+--
+-- Placeholder graphics: every element is a tinted white square (element.go).
+--------------------------------------------------------------------------------
+
+-- ------------------------------------------------------------------ constants
+local ROOM_W        = 1920
+local ROOM_H        = 1080
+local BASE_TEX      = 64          -- element.go sprite is a 64x64 white square
+
+local SPEED         = 320         -- horizontal pixels / second
+local ISO_RATIO     = 0.58        -- classic isometric height/width; movement only
+local CONTACT_PAD   = 8           -- how close counts as "touching" for interactions
+
+local MAX_COFFEE    = 3
+local DESK_MIN_WAIT = 4.0         -- seconds before a satisfied worker may ask again
+local DESK_MAX_WAIT = 11.0
+
+-- z layers
+local Z_FLOOR    = -0.9
+local Z_SOLID    = 0.0
+local Z_PLAYER   = 0.2
+local Z_ICON     = 0.3
+local Z_CUP      = 0.4
+
+-- colors (r, g, b, a in 0..1)
+local C_FLOOR    = vmath.vector4(0.12, 0.14, 0.13, 1.0)
+local C_PLAYER   = vmath.vector4(0.25, 0.82, 0.38, 1.0)
+local C_MACHINE  = vmath.vector4(0.62, 0.36, 0.14, 1.0)
+local C_DESK     = vmath.vector4(0.25, 0.46, 0.86, 1.0)
+local C_OBSTACLE = vmath.vector4(0.40, 0.40, 0.46, 1.0)
+local C_ICON     = vmath.vector4(0.96, 0.80, 0.20, 1.0)
+local C_CUP      = vmath.vector4(0.92, 0.86, 0.70, 1.0)
+local C_HIDDEN   = vmath.vector4(0.0, 0.0, 0.0, 0.0)
+
+-- ------------------------------------------------------------- level layout
+-- {x, y, w, h}
+local MACHINE = { x = 1650, y = 850, w = 100, h = 100 }
+
+local DESKS = {
+	{ x = 450,  y = 780, w = 150, h = 100 },
+	{ x = 1000, y = 250, w = 150, h = 100 },
+	{ x = 1450, y = 550, w = 150, h = 100 },
+}
+
+local OBSTACLES = {
+	{ x = 300,  y = 300, w = 120, h = 120 },
+	{ x = 760,  y = 620, w = 100, h = 160 },
+	{ x = 1250, y = 850, w = 140, h = 90  },
+	{ x = 600,  y = 150, w = 180, h = 80  },
+	{ x = 1750, y = 350, w = 90,  h = 200 },
+}
+
+local PLAYER_START = { x = 960, y = 540, w = 48, h = 48 }
+
+-- --------------------------------------------------------------- helpers
+
+-- spawn a tinted, sized square element; returns the instance id and sprite url
+local function spawn_square(x, y, z, w, h, color)
+	local id = factory.create("#element_factory", vmath.vector3(x, y, z))
+	go.set(id, "scale", vmath.vector3(w / BASE_TEX, h / BASE_TEX, 1))
+	local spr = msg.url(nil, id, "sprite")
+	go.set(spr, "tint", color)
+	return id, spr
+end
+
+-- axis-aligned bounding box overlap test (centers + half-extents)
+local function aabb_overlap(ax, ay, ahw, ahh, bx, by, bhw, bhh)
+	return math.abs(ax - bx) < (ahw + bhw) and math.abs(ay - by) < (ahh + bhh)
+end
+
+local function rand_wait()
+	return DESK_MIN_WAIT + math.random() * (DESK_MAX_WAIT - DESK_MIN_WAIT)
+end
+
+-- true if the (inflated) player box touches solid s
+local function touching(player, s)
+	return aabb_overlap(
+		player.x, player.y, player.hw + CONTACT_PAD, player.hh + CONTACT_PAD,
+		s.x, s.y, s.hw, s.hh)
+end
+
+--------------------------------------------------------------------------------
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	math.randomseed(os.time())
+	math.random(); math.random()   -- warm up the generator
+
+	self.move = { up = false, down = false, left = false, right = false }
+	self.coffee = 0
+	self.solids = {}               -- everything the player cannot pass through
+
+	-- floor (walkable, not a solid)
+	spawn_square(ROOM_W / 2, ROOM_H / 2, Z_FLOOR, ROOM_W, ROOM_H, C_FLOOR)
+
+	-- coffee machine (solid + refill on contact)
+	local mid = spawn_square(MACHINE.x, MACHINE.y, Z_SOLID, MACHINE.w, MACHINE.h, C_MACHINE)
+	self.machine = {
+		x = MACHINE.x, y = MACHINE.y,
+		hw = MACHINE.w / 2, hh = MACHINE.h / 2,
+	}
+	table.insert(self.solids, self.machine)
+
+	-- worker desks (solid + coffee requests)
+	self.desks = {}
+	for _, d in ipairs(DESKS) do
+		spawn_square(d.x, d.y, Z_SOLID, d.w, d.h, C_DESK)
+		-- request icon, floating above the desk, hidden until needed
+		local icon_x = d.x
+		local icon_y = d.y + d.h / 2 + 34
+		local _, icon_spr = spawn_square(icon_x, icon_y, Z_ICON, 34, 34, C_HIDDEN)
+		local desk = {
+			x = d.x, y = d.y,
+			hw = d.w / 2, hh = d.h / 2,
+			needs = false,
+			timer = rand_wait(),
+			icon_spr = icon_spr,
+		}
+		table.insert(self.desks, desk)
+		table.insert(self.solids, desk)
+	end
+
+	-- plain obstacles (solid only)
+	for _, o in ipairs(OBSTACLES) do
+		spawn_square(o.x, o.y, Z_SOLID, o.w, o.h, C_OBSTACLE)
+		table.insert(self.solids, {
+			x = o.x, y = o.y, hw = o.w / 2, hh = o.h / 2,
+		})
+	end
+
+	-- player (the assistant)
+	self.player = {
+		x = PLAYER_START.x, y = PLAYER_START.y,
+		hw = PLAYER_START.w / 2, hh = PLAYER_START.h / 2,
+	}
+	self.player.id = spawn_square(
+		self.player.x, self.player.y, Z_PLAYER,
+		PLAYER_START.w, PLAYER_START.h, C_PLAYER)
+
+	-- coffee cup indicators, floating above the player's head
+	self.cups = {}
+	for i = 1, MAX_COFFEE do
+		local cid, cspr = spawn_square(0, 0, Z_CUP, 18, 18, C_HIDDEN)
+		self.cups[i] = { id = cid, spr = cspr }
+	end
+end
+
+-- can the player occupy (px, py) without entering any solid?
+local function is_free(self, px, py)
+	local p = self.player
+	for _, s in ipairs(self.solids) do
+		if aabb_overlap(px, py, p.hw, p.hh, s.x, s.y, s.hw, s.hh) then
+			return false
+		end
+	end
+	return true
+end
+
+function update(self, dt)
+	local p = self.player
+
+	-- ---- movement (per-axis so we can slide along walls) ----
+	local dx = 0
+	local dy = 0
+	if self.move.left  then dx = dx - 1 end
+	if self.move.right then dx = dx + 1 end
+	if self.move.down  then dy = dy - 1 end
+	if self.move.up    then dy = dy + 1 end
+
+	-- classic isometric ratio applies to movement only: the vertical
+	-- (screen y) axis moves at 0.58x the horizontal speed.
+	local step_x = dx * SPEED * dt
+	local step_y = dy * SPEED * ISO_RATIO * dt
+
+	if step_x ~= 0 then
+		local nx = p.x + step_x
+		nx = math.max(p.hw, math.min(ROOM_W - p.hw, nx))
+		if is_free(self, nx, p.y) then p.x = nx end
+	end
+	if step_y ~= 0 then
+		local ny = p.y + step_y
+		ny = math.max(p.hh, math.min(ROOM_H - p.hh, ny))
+		if is_free(self, p.x, ny) then p.y = ny end
+	end
+
+	go.set_position(vmath.vector3(p.x, p.y, Z_PLAYER), p.id)
+
+	-- ---- desk coffee requests ----
+	for _, desk in ipairs(self.desks) do
+		if not desk.needs then
+			desk.timer = desk.timer - dt
+			if desk.timer <= 0 then
+				desk.needs = true
+				go.set(desk.icon_spr, "tint", C_ICON)   -- show request icon
+			end
+		end
+	end
+
+	-- ---- interactions on contact ----
+	-- coffee machine: fill up to the maximum
+	if touching(p, self.machine) then
+		self.coffee = MAX_COFFEE
+	end
+
+	-- desks: deliver one cup to a worker who asked for coffee
+	for _, desk in ipairs(self.desks) do
+		if desk.needs and self.coffee > 0 and touching(p, desk) then
+			self.coffee = self.coffee - 1
+			desk.needs = false
+			desk.timer = rand_wait()
+			go.set(desk.icon_spr, "tint", C_HIDDEN)     -- hide request icon
+		end
+	end
+
+	-- ---- coffee cup indicators above the player ----
+	for i, cup in ipairs(self.cups) do
+		local cx = p.x - 22 + (i - 1) * 22
+		local cy = p.y + p.hh + 22
+		go.set_position(vmath.vector3(cx, cy, Z_CUP), cup.id)
+		go.set(cup.spr, "tint", i <= self.coffee and C_CUP or C_HIDDEN)
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == nil then return end
+	if action.pressed then
+		if     action_id == hash("up")    then self.move.up = true
+		elseif action_id == hash("down")  then self.move.down = true
+		elseif action_id == hash("left")  then self.move.left = true
+		elseif action_id == hash("right") then self.move.right = true end
+	elseif action.released then
+		if     action_id == hash("up")    then self.move.up = false
+		elseif action_id == hash("down")  then self.move.down = false
+		elseif action_id == hash("left")  then self.move.left = false
+		elseif action_id == hash("right") then self.move.right = false end
+	end
+end
