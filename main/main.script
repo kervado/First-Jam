@@ -1,9 +1,8 @@
-function init(self)
-	msg.post(".", "acquire_input_focus")
-end
+local store = require("main.settings_store")
 
-function on_input(self, action_id, action)
-	if action_id == hash("touch") and action.pressed then
-		print("Touch!")
-	end
+function init(self)
+	-- Global, shared across scripts (shared_state = 1 in game.project).
+	-- SETTINGS.volume is the 0..1 master volume the settings slider reflects.
+	SETTINGS = store.load()
+	store.apply(SETTINGS)
 end

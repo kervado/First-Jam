@@ -1,0 +1,230 @@
+-- Settings screen (shown/hidden by the main menu). Same visual language as the
+-- menu: gray rows that highlight with a frame + red marker + white text on hover.
+-- Controls:
+--   * ПОЛНЫЙ ЭКРАН - click to toggle fullscreen
+--   * ГРОМКОСТЬ    - horizontal slider driven by the mouse wheel or by dragging;
+--                    its position mirrors the global SETTINGS.volume (0..1)
+--   * НАЗАД        - back to the menu
+-- Every change is applied live and saved to disk via settings_store.
+
+local store = require("main.settings_store")
+
+local COLOR_IDLE  = vmath.vector4(0.5, 0.5, 0.5, 1.0)
+local COLOR_HOVER = vmath.vector4(1.0, 1.0, 1.0, 1.0)
+local COLOR_ON    = vmath.vector4(0.35, 0.75, 0.40, 1.0) -- "ВКЛ"
+local COLOR_OFF   = vmath.vector4(0.55, 0.55, 0.55, 1.0) -- "ВЫКЛ"
+
+local SCALE_NORMAL  = vmath.vector3(1.0, 1.0, 1.0)
+local SCALE_PRESSED = vmath.vector3(1.12, 1.12, 1.0)
+
+local VOLUME_STEP = 0.05
+
+-- UI feedback sounds (components on this game object), master group.
+local HOVER_SOUND = "#hover_sound"
+local CLICK_SOUND = "#touch_icon_sound"
+
+local function play_hover()
+	msg.post(HOVER_SOUND, "stop_sound")
+	msg.post(HOVER_SOUND, "play_sound")
+end
+
+local function play_click()
+	msg.post(CLICK_SOUND, "stop_sound")
+	msg.post(CLICK_SOUND, "play_sound")
+end
+
+-- slider geometry - must match settings.gui
+local TRACK_X = 224.0
+local TRACK_W = 420.0
+local TRACK_Y = 505.0
+local TRACK_H = 6.0
+
+local function clamp01(v)
+	if v < 0 then return 0 end
+	if v > 1 then return 1 end
+	return v
+end
+
+local function set_highlight(btn, on)
+	gui.set_color(btn.text, on and COLOR_HOVER or COLOR_IDLE)
+	gui.set_enabled(btn.frame, on)
+	gui.set_enabled(btn.inner, on)
+	gui.set_enabled(btn.marker, on)
+end
+
+local function update_slider(self)
+	local v = SETTINGS.volume
+	gui.set_size(self.sl_fill, vmath.vector3(TRACK_W * v, TRACK_H, 0))
+	gui.set_position(self.sl_handle, vmath.vector3(TRACK_X + TRACK_W * v, TRACK_Y, 0))
+	gui.set_text(self.vol_value, string.format("%d%%", math.floor(v * 100 + 0.5)))
+end
+
+local function refresh_fullscreen(self)
+	gui.set_text(self.fs_state, SETTINGS.fullscreen and "ВКЛ" or "ВЫКЛ")
+	gui.set_color(self.fs_state, SETTINGS.fullscreen and COLOR_ON or COLOR_OFF)
+end
+
+-- Sets volume, applies the master gain and updates the slider. Does NOT save
+-- (callers save at a sensible moment to avoid disk writes every drag frame).
+local function set_volume(self, v)
+	SETTINGS.volume = clamp01(v)
+	if sound and sound.set_group_gain then
+		sound.set_group_gain(hash("master"), SETTINGS.volume)
+	end
+	update_slider(self)
+end
+
+local function toggle_fullscreen(self)
+	SETTINGS.fullscreen = not SETTINGS.fullscreen
+	if defos and defos.set_fullscreen then
+		defos.set_fullscreen(SETTINGS.fullscreen)
+	end
+	refresh_fullscreen(self)
+	store.save(SETTINGS)
+end
+
+local function set_active(self, on)
+	self.active = on
+	self.dragging = false
+	gui.set_enabled(self.root, on)
+	if on then
+		-- reflect the current settings whenever we open the screen
+		refresh_fullscreen(self)
+		update_slider(self)
+	else
+		for _, btn in ipairs(self.buttons) do
+			btn.hovered = false
+			btn.pressed = false
+			set_highlight(btn, false)
+			gui.set_scale(btn.text, SCALE_NORMAL)
+		end
+	end
+end
+
+local function go_back(self)
+	set_active(self, false)
+	msg.post("/menu#menu", "show_menu")
+end
+
+local BUTTONS = {
+	{ prefix = "fs",   on_click = toggle_fullscreen },
+	{ prefix = "back", on_click = go_back },
+}
+
+function init(self)
+	if not SETTINGS then
+		-- main.script normally sets this first; be robust to init order
+		SETTINGS = store.load()
+	end
+
+	self.root = gui.get_node("root")
+	self.active = false
+	self.dragging = false
+
+	self.sl_fill = gui.get_node("sl_fill")
+	self.sl_handle = gui.get_node("sl_handle")
+	self.sl_hit = gui.get_node("sl_hit")
+	self.sl_p0 = gui.get_node("sl_p0") -- track start (value 0), in screen space
+	self.sl_p1 = gui.get_node("sl_p1") -- track end   (value 1), in screen space
+	self.vol_value = gui.get_node("vol_value")
+	self.fs_state = gui.get_node("fs_state")
+
+	self.buttons = {}
+	for i, def in ipairs(BUTTONS) do
+		self.buttons[i] = {
+			hit = gui.get_node(def.prefix .. "_hit"),
+			frame = gui.get_node(def.prefix .. "_frame"),
+			inner = gui.get_node(def.prefix .. "_inner"),
+			marker = gui.get_node(def.prefix .. "_marker"),
+			text = gui.get_node(def.prefix .. "_text"),
+			on_click = def.on_click,
+			hovered = false,
+			pressed = false,
+		}
+		set_highlight(self.buttons[i], false)
+		gui.set_scale(self.buttons[i].text, SCALE_NORMAL)
+	end
+
+	msg.post(".", "acquire_input_focus")
+	-- start hidden until the menu asks us to show
+	gui.set_enabled(self.root, false)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show") then
+		set_active(self, true)
+	end
+end
+
+-- Convert a pointer action to a 0..1 slider value purely in screen space.
+-- gui.get_screen_position returns SCREEN coordinates, so it must be compared
+-- against action.screen_x (also screen space) - NOT action.x, which is the
+-- logical/adjusted coordinate and differs from screen space on ultrawide / DPI.
+-- (This mirrors the working slider in project-tower-game-app.)
+local function volume_at(self, action)
+	local sx = action.screen_x or action.x
+	local x0 = gui.get_screen_position(self.sl_p0).x
+	local x1 = gui.get_screen_position(self.sl_p1).x
+	if x1 == x0 then
+		return SETTINGS.volume
+	end
+	return clamp01((sx - x0) / (x1 - x0))
+end
+
+function on_input(self, action_id, action)
+	if not self.active then
+		return
+	end
+
+	-- refresh hover highlight for the clickable rows
+	for _, btn in ipairs(self.buttons) do
+		local now = gui.pick_node(btn.hit, action.x, action.y)
+		if now and not btn.hovered then
+			play_hover()
+		end
+		btn.hovered = now
+		set_highlight(btn, btn.hovered)
+	end
+
+	-- dragging the slider (mouse move carries action_id == nil)
+	if self.dragging and action.x then
+		set_volume(self, volume_at(self, action))
+	end
+
+	if action_id == hash("wheel_up") and action.pressed then
+		set_volume(self, SETTINGS.volume + VOLUME_STEP)
+		store.save(SETTINGS)
+	elseif action_id == hash("wheel_down") and action.pressed then
+		set_volume(self, SETTINGS.volume - VOLUME_STEP)
+		store.save(SETTINGS)
+	elseif action_id == hash("touch") then
+		if action.pressed then
+			if gui.pick_node(self.sl_hit, action.x, action.y) then
+				self.dragging = true
+				set_volume(self, volume_at(self, action))
+			else
+				for _, btn in ipairs(self.buttons) do
+					if btn.hovered then
+						btn.pressed = true
+						gui.set_scale(btn.text, SCALE_PRESSED)
+						play_click()
+					end
+				end
+			end
+		elseif action.released then
+			if self.dragging then
+				self.dragging = false
+				store.save(SETTINGS) -- persist the final slider value once
+			end
+			for _, btn in ipairs(self.buttons) do
+				if btn.pressed then
+					btn.pressed = false
+					gui.set_scale(btn.text, SCALE_NORMAL)
+					if btn.hovered and btn.on_click then
+						btn.on_click(self)
+					end
+				end
+			end
+		end
+	end
+end

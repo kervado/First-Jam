@@ -9,18 +9,20 @@ local COLOR_HOVER = vmath.vector4(1.0, 1.0, 1.0, 1.0) -- white label on hover
 local SCALE_NORMAL  = vmath.vector3(1.0, 1.0, 1.0)
 local SCALE_PRESSED = vmath.vector3(1.12, 1.12, 1.0)  -- label grows while held
 
-local function quit_game()
-	msg.post("@system:", "exit", { code = 0 })
+-- UI feedback sounds (components on this game object). They play in the master
+-- group, so the volume slider already scales them.
+local HOVER_SOUND = "#hover_sound"
+local CLICK_SOUND = "#touch_icon_sound"
+
+local function play_hover()
+	msg.post(HOVER_SOUND, "stop_sound")
+	msg.post(HOVER_SOUND, "play_sound")
 end
 
--- on_click fires on release over the same item. Items without a handler still
--- highlight on hover but do nothing yet.
-local ITEMS = {
-	{ prefix = "new" },
-	{ prefix = "settings" },
-	{ prefix = "diary" },
-	{ prefix = "exit", on_click = quit_game },
-}
+local function play_click()
+	msg.post(CLICK_SOUND, "stop_sound")
+	msg.post(CLICK_SOUND, "play_sound")
+end
 
 local function set_highlight(btn, on)
 	gui.set_color(btn.text, on and COLOR_HOVER or COLOR_IDLE)
@@ -29,9 +31,48 @@ local function set_highlight(btn, on)
 	gui.set_enabled(btn.marker, on)
 end
 
+local function set_active(self, on)
+	self.active = on
+	gui.set_enabled(self.root, on)
+	if not on then
+		-- drop any hover/press state so it doesn't linger when we return
+		for _, btn in ipairs(self.buttons) do
+			btn.hovered = false
+			btn.pressed = false
+			set_highlight(btn, false)
+			gui.set_scale(btn.text, SCALE_NORMAL)
+		end
+	end
+end
+
+local function quit_game()
+	msg.post("@system:", "exit", { code = 0 })
+end
+
+local function open_settings(self)
+	set_active(self, false)                 -- hide this menu
+	msg.post("/settings#settings", "show")  -- and reveal the settings screen
+end
+
+local function start_game(self)
+	set_active(self, false)          -- hide the menu
+	msg.post("#gameproxy", "load")   -- load game.collection; enabled on proxy_loaded
+end
+
+-- on_click(self) fires on release over the same item. Items without a handler
+-- still highlight on hover but do nothing yet.
+local ITEMS = {
+	{ prefix = "new", on_click = start_game },
+	{ prefix = "settings", on_click = open_settings },
+	{ prefix = "diary" },
+	{ prefix = "exit", on_click = quit_game },
+}
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
+	self.root = gui.get_node("root")
+	self.active = true
 	self.buttons = {}
 	for i, def in ipairs(ITEMS) do
 		local btn = {
@@ -50,11 +91,29 @@ function init(self)
 	end
 end
 
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show_menu") then
+		set_active(self, true)
+	elseif message_id == hash("proxy_loaded") then
+		-- game.collection finished loading: init + enable it
+		msg.post(sender, "init")
+		msg.post(sender, "enable")
+	end
+end
+
 function on_input(self, action_id, action)
+	if not self.active then
+		return
+	end
+
 	-- Mouse movement arrives with action_id == nil; use every pointer action
 	-- to refresh the hover state against the invisible hit boxes.
 	for _, btn in ipairs(self.buttons) do
-		btn.hovered = gui.pick_node(btn.hit, action.x, action.y)
+		local now = gui.pick_node(btn.hit, action.x, action.y)
+		if now and not btn.hovered then
+			play_hover() -- play once when the cursor enters an item
+		end
+		btn.hovered = now
 		set_highlight(btn, btn.hovered)
 	end
 
@@ -67,6 +126,7 @@ function on_input(self, action_id, action)
 			if btn.hovered then
 				btn.pressed = true
 				gui.set_scale(btn.text, SCALE_PRESSED) -- label grows
+				play_click()
 			end
 		end
 	elseif action.released then
@@ -76,7 +136,7 @@ function on_input(self, action_id, action)
 				gui.set_scale(btn.text, SCALE_NORMAL) -- label back to normal
 				-- a click = pressed and released over the same item
 				if btn.hovered and btn.on_click then
-					btn.on_click()
+					btn.on_click(self)
 				end
 			end
 		end
