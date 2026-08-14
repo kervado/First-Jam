@@ -1,3 +1,12 @@
+components {
+  id: "script"
+  component: "/main/solid.script"
+  properties {
+    id: "kind"
+    value: "coffee"
+    type: PROPERTY_TYPE_HASH
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
@@ -8,8 +17,8 @@ embedded_components {
   "  texture: \"/main/main.atlas\"\n"
   "}\n"
   "size {\n"
-  "  x: 64.0\n"
-  "  y: 64.0\n"
+  "  x: 100.0\n"
+  "  y: 100.0\n"
   "}\n"
   "size_mode: SIZE_MODE_MANUAL\n"
   ""

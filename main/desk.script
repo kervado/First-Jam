@@ -1,0 +1,54 @@
+--------------------------------------------------------------------------------
+-- desk.script
+--
+-- A worker's desk. Blocks the player and registers as a "desk". A worker wants
+-- exactly one thing at a time; the type is chosen by the controller using the
+-- per-desk weights below.
+--
+-- Request weights (edit per desk in the .go or per instance in the collection):
+--   coffee / paper / cats -> relative chance of wanting each item.
+--   e.g. coffee=3, paper=2, cats=1  ->  3/6, 2/6, 1/6
+--        coffee=3, paper=4, cats=2  ->  3/9, 4/9, 2/9
+--   A weight of 0 disables that item for this desk.
+--
+-- This script only presents state: it shows / hides the request icon (tinted to
+-- the wanted item's colour) when the controller tells it to.
+--------------------------------------------------------------------------------
+
+local items = require("main.items")
+
+local CONTROLLER = "controller#controller"
+local C_DESK = vmath.vector4(0.25, 0.46, 0.86, 1.0)   -- blue desk
+
+go.property("coffee", 3)
+go.property("paper", 2)
+go.property("cats", 1)
+
+function init(self)
+	go.set("#sprite", "tint", C_DESK)
+	msg.post("#icon", "disable")   -- hidden until a request comes in
+
+	local size  = go.get("#sprite", "size")
+	local scale = go.get_scale()
+	local pos   = go.get_position()
+
+	msg.post(CONTROLLER, "register", {
+		kind = hash("desk"),
+		id   = go.get_id(),
+		x = pos.x, y = pos.y, z = pos.z,
+		hw = 0.5 * size.x * scale.x,
+		hh = 0.5 * size.y * scale.y,
+		w_coffee = self.coffee,
+		w_paper  = self.paper,
+		w_cats   = self.cats,
+	})
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show_icon") then
+		go.set("#icon", "tint", items.COLORS[message.type] or vmath.vector4(1, 1, 1, 1))
+		msg.post("#icon", "enable")
+	elseif message_id == hash("hide_icon") then
+		msg.post("#icon", "disable")
+	end
+end

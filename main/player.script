@@ -1,0 +1,47 @@
+--------------------------------------------------------------------------------
+-- player.script
+--
+-- The assistant. It does not move itself: the controller owns movement,
+-- collision and the carried-item state. This script registers the player and
+-- displays what it is currently carrying (up to three indicators above its
+-- head, tinted to the carried item's colour).
+--------------------------------------------------------------------------------
+
+local items = require("main.items")
+
+local CONTROLLER = "controller#controller"
+local C_PLAYER = vmath.vector4(0.25, 0.82, 0.38, 1.0)   -- green assistant
+local CUPS = 3   -- max carried units of any type (coffee = 3 is the largest)
+
+function init(self)
+	go.set("#sprite", "tint", C_PLAYER)
+	for i = 1, CUPS do
+		msg.post("#cup" .. i, "disable")
+	end
+
+	local size  = go.get("#sprite", "size")
+	local scale = go.get_scale()
+	local pos   = go.get_position()
+
+	msg.post(CONTROLLER, "register", {
+		kind = hash("player"),
+		id   = go.get_id(),
+		x = pos.x, y = pos.y, z = pos.z,
+		hw = 0.5 * size.x * scale.x,
+		hh = 0.5 * size.y * scale.y,
+	})
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("set_carry") then
+		local color = items.COLORS[message.type]   -- nil when carrying nothing
+		for i = 1, CUPS do
+			if color and i <= message.count then
+				go.set("#cup" .. i, "tint", color)
+				msg.post("#cup" .. i, "enable")
+			else
+				msg.post("#cup" .. i, "disable")
+			end
+		end
+	end
+end
