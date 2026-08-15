@@ -1,24 +1,7 @@
 name: "game"
-scale_along_z: 0
 instances {
   id: "controller"
   prototype: "/main/controller.go"
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
 }
 instances {
   id: "floor"
@@ -27,17 +10,6 @@ instances {
     x: 960.0
     y: 540.0
     z: -0.9
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
   }
 }
 instances {
@@ -48,17 +20,6 @@ instances {
     y: 540.0
     z: 0.2
   }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
 }
 instances {
   id: "coffee_machine"
@@ -66,18 +27,6 @@ instances {
   position {
     x: 1650.0
     y: 850.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
   }
 }
 instances {
@@ -86,18 +35,6 @@ instances {
   position {
     x: 450.0
     y: 780.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
   }
 }
 instances {
@@ -106,36 +43,6 @@ instances {
   position {
     x: 1000.0
     y: 250.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-  component_properties {
-    id: "script"
-    properties {
-      id: "coffee"
-      value: "1.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "paper"
-      value: "1.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "cats"
-      value: "1.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
   }
 }
 instances {
@@ -144,36 +51,6 @@ instances {
   position {
     x: 1450.0
     y: 550.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-  component_properties {
-    id: "script"
-    properties {
-      id: "coffee"
-      value: "0.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "paper"
-      value: "3.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "cats"
-      value: "2.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
   }
 }
 instances {
@@ -182,18 +59,10 @@ instances {
   position {
     x: 300.0
     y: 300.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
   }
   scale3 {
     x: 1.2
     y: 1.2
-    z: 1.0
   }
 }
 instances {
@@ -202,18 +71,9 @@ instances {
   position {
     x: 760.0
     y: 620.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
   }
   scale3 {
-    x: 1.0
     y: 1.6
-    z: 1.0
   }
 }
 instances {
@@ -222,18 +82,10 @@ instances {
   position {
     x: 1250.0
     y: 850.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
   }
   scale3 {
     x: 1.4
     y: 0.9
-    z: 1.0
   }
 }
 instances {
@@ -242,18 +94,10 @@ instances {
   position {
     x: 600.0
     y: 150.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
   }
   scale3 {
     x: 1.8
     y: 0.8
-    z: 1.0
   }
 }
 instances {
@@ -262,18 +106,10 @@ instances {
   position {
     x: 1750.0
     y: 350.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
   }
   scale3 {
     x: 0.9
     y: 2.0
-    z: 1.0
   }
 }
 instances {
@@ -282,18 +118,6 @@ instances {
   position {
     x: 150.0
     y: 950.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
   }
 }
 instances {
@@ -302,20 +126,9 @@ instances {
   position {
     x: 150.0
     y: 150.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
   }
 }
+scale_along_z: 0
 embedded_instances {
   id: "camera"
   data: "embedded_components {\n"
@@ -333,6 +146,5 @@ embedded_instances {
   position {
     x: 960.0
     y: 540.0
-    z: 0.0
   }
 }
