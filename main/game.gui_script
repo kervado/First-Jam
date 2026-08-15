@@ -11,17 +11,45 @@ local function set_button(self, on)
 	gui.set_enabled(self.btn, on) -- disabling the button hides its icon too
 end
 
+local function set_stress(self, value)
+	value = math.max(0, math.min(100, value or 0))
+	gui.set_text(self.text_stress, string.format("%d%%", math.floor(value + 0.5)))
+
+	local p = gui.get_position(self.level_stress)
+	p.x = self.stress_w * value / 100 -- slide the fill by x
+	gui.set_position(self.level_stress, p)
+
+	-- gradient: 0 = green, 50 = yellow, 100 = red (keep the node's alpha)
+	local r, g
+	if value <= 50 then
+		r, g = value / 50, 1.0
+	else
+		r, g = 1.0, 1.0 - (value - 50) / 50
+	end
+	local c = gui.get_color(self.level_stress)
+	c.x, c.y, c.z = r, g, 0.0
+	gui.set_color(self.level_stress, c)
+end
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.btn = gui.get_node("btn")
+	self.text_stress = gui.get_node("text_stress")
+	self.level_stress = gui.get_node("level_stress")
+	-- read the bar width from the mask node, so resizing base_level in the gui
+	-- needs no script change
+	self.stress_w = gui.get_size(gui.get_node("base_level")).x
 	self.active = true
 	gui.set_color(self.btn, COLOR_IDLE)
+	set_stress(self, 0) -- start empty
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("game_ui_show") then
 		set_button(self, true)
 		gui.set_color(self.btn, COLOR_IDLE)
+	elseif message_id == hash("stress") then
+		set_stress(self, message.value)
 	end
 end
 

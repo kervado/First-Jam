@@ -15,7 +15,7 @@ local COLOR_ON    = vmath.vector4(0.35, 0.75, 0.40, 1.0) -- "ВКЛ"
 local COLOR_OFF   = vmath.vector4(0.55, 0.55, 0.55, 1.0) -- "ВЫКЛ"
 
 local SCALE_NORMAL  = vmath.vector3(1.0, 1.0, 1.0)
-local SCALE_PRESSED = vmath.vector3(1.12, 1.12, 1.0)
+local SCALE_PRESSED = vmath.vector3(1.06, 1.06, 1.0)
 
 local VOLUME_STEP = 0.05
 
