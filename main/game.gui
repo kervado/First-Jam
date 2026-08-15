@@ -11,6 +11,10 @@ fonts {
   name: "font_title"
   font: "/main/font_title.font"
 }
+textures {
+  name: "emoji"
+  texture: "/assets/ui/emoji/emoji.atlas"
+}
 nodes {
   position {
     x: 1905.0
@@ -165,16 +169,12 @@ nodes {
   position {
     x: 336.0
   }
-  size {
-    x: 100.0
-    y: 100.0
-  }
-  color {
-    x: 0.0
-    y: 0.5019608
-    z: 0.0
+  scale {
+    x: 1.3
+    y: 1.3
   }
   type: TYPE_BOX
+  texture: "emoji/emoji_normal"
   id: "smile_stress"
   parent: "box_haos"
   inherit_alpha: true

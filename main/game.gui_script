@@ -11,6 +11,16 @@ local function set_button(self, on)
 	gui.set_enabled(self.btn, on) -- disabling the button hides its icon too
 end
 
+-- Chaos level -> smile_stress face, by office stress (0..100):
+-- 0-29 NORMAL, 30-59 TENSION, 60-79 CHAOS, 80-99 CRITICAL, 100 FAILURE
+local function chaos_face(value)
+	if value < 30 then return "emoji_normal"
+	elseif value < 60 then return "emoji_tension"
+	elseif value < 80 then return "emoji_chaos"
+	elseif value < 100 then return "emoji_critical"
+	else return "emoji_failure" end
+end
+
 local function set_stress(self, value)
 	value = math.max(0, math.min(100, value or 0))
 	gui.set_text(self.text_stress, string.format("%d%%", math.floor(value + 0.5)))
@@ -29,6 +39,13 @@ local function set_stress(self, value)
 	local c = gui.get_color(self.level_stress)
 	c.x, c.y, c.z = r, g, 0.0
 	gui.set_color(self.level_stress, c)
+
+	-- swap the chaos-level face only when the tier actually changes
+	local face = chaos_face(value)
+	if face ~= self.smile_face then
+		self.smile_face = face
+		pcall(gui.play_flipbook, self.smile_stress, hash(face))
+	end
 end
 
 function init(self)
@@ -36,6 +53,7 @@ function init(self)
 	self.btn = gui.get_node("btn")
 	self.text_stress = gui.get_node("text_stress")
 	self.level_stress = gui.get_node("level_stress")
+	self.smile_stress = gui.get_node("smile_stress")
 	-- read the bar width from the mask node, so resizing base_level in the gui
 	-- needs no script change
 	self.stress_w = gui.get_size(gui.get_node("base_level")).x
