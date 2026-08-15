@@ -50,7 +50,7 @@ nodes {
 nodes {
   position {
     x: 220.0
-    y: 1270.0
+    y: 1382.0
   }
   size {
     x: 900.0
@@ -341,6 +341,57 @@ nodes {
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
+}
+nodes {
+  position {
+    x: 214.0
+    y: 1180.0
+  }
+  type: TYPE_BOX
+  texture: "main_menu/frame"
+  id: "menu_frame"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  position {
+    x: 1210.0
+    y: 1180.0
+  }
+  type: TYPE_BOX
+  texture: "main_menu/square"
+  id: "menu_marker"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  position {
+    x: 238.0
+    y: 1180.0
+  }
+  size {
+    x: 1060.0
+    y: 124.0
+  }
+  color {
+    x: 0.5764706
+    y: 0.5803922
+    z: 0.5882353
+  }
+  type: TYPE_TEXT
+  text: "\320\222\320\253\320\245\320\236\320\224 \320\222 \320\234\320\225\320\235\320\256"
+  font: "menu"
+  id: "menu_text"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+  enabled: false
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

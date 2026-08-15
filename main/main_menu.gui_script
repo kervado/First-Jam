@@ -97,8 +97,8 @@ local function quit_game()
 end
 
 local function open_settings(self)
-	set_active(self, false)                 -- hide this menu
-	msg.post("/settings#settings", "show")  -- and reveal the settings screen
+	set_active(self, false)                                 -- hide this menu
+	msg.post("/settings#settings", "show", { from = "menu" }) -- reveal settings
 end
 
 local function start_game(self)
@@ -169,12 +169,20 @@ function on_message(self, message_id, message, sender)
 		-- game.collection finished loading: init + enable it
 		msg.post(sender, "init")
 		msg.post(sender, "enable")
+	elseif message_id == hash("return_to_menu") then
+		-- settings (opened from the game) asked to quit the game and show the menu
+		msg.post("#gameproxy", "disable")
+		msg.post("#gameproxy", "unload")
+		set_active(self, true)
 	end
 end
 
 function on_input(self, action_id, action)
 	if not self.active then
 		return
+	end
+	if action.x == nil then
+		return -- ignore key actions (WASD/arrows) - no cursor position
 	end
 
 	-- Mouse movement arrives with action_id == nil; use every pointer action to

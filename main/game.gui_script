@@ -1,0 +1,48 @@
+-- In-game HUD: a small square button in the top-right corner that opens the
+-- settings screen (the settings instance living in this game collection).
+-- While settings is open the button hides; settings posts "game_ui_show" to
+-- bring it back when the player returns to the game.
+
+local COLOR_IDLE  = vmath.vector4(0.16, 0.16, 0.20, 0.90)
+local COLOR_HOVER = vmath.vector4(0.30, 0.30, 0.38, 0.95)
+
+local function set_button(self, on)
+	self.active = on
+	gui.set_enabled(self.btn, on) -- disabling the button hides its icon too
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.btn = gui.get_node("btn")
+	self.active = true
+	gui.set_color(self.btn, COLOR_IDLE)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("game_ui_show") then
+		set_button(self, true)
+		gui.set_color(self.btn, COLOR_IDLE)
+	end
+end
+
+function on_input(self, action_id, action)
+	if not self.active then
+		return
+	end
+	if action.x == nil then
+		return -- key actions (WASD/arrows) have no cursor position; ignore them
+	end
+
+	local hover = gui.pick_node(self.btn, action.x, action.y)
+	gui.set_color(self.btn, hover and COLOR_HOVER or COLOR_IDLE)
+
+	if action_id == hash("touch") then
+		if action.released and hover then
+			set_button(self, false)                                 -- hide while in settings
+			msg.post("/settings#settings", "show", { from = "game" }) -- open this collection's settings
+		end
+		if hover then
+			return true -- swallow clicks on the button so they don't reach the game
+		end
+	end
+end

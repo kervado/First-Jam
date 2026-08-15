@@ -1,0 +1,223 @@
+script: "/main/game.gui_script"
+fonts {
+  name: "font_menu"
+  font: "/main/font_menu.font"
+}
+fonts {
+  name: "font_small"
+  font: "/main/font_small.font"
+}
+fonts {
+  name: "font_title"
+  font: "/main/font_title.font"
+}
+nodes {
+  position {
+    x: 1905.0
+    y: 1062.0
+  }
+  size {
+    x: 68.0
+    y: 68.0
+  }
+  color {
+    x: 0.16
+    y: 0.16
+    z: 0.2
+  }
+  type: TYPE_BOX
+  id: "btn"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_NE
+  inherit_alpha: true
+  alpha: 0.9
+}
+nodes {
+  position {
+    x: -34.0
+    y: -18.0
+  }
+  size {
+    x: 32.0
+    y: 5.0
+  }
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln0"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -34.0
+    y: -34.0
+  }
+  size {
+    x: 32.0
+    y: 5.0
+  }
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln1"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -34.0
+    y: -50.0
+  }
+  size {
+    x: 32.0
+    y: 5.0
+  }
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln2"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1623.0
+    y: 1028.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 800.0
+    y: 150.0
+  }
+  color {
+    x: 0.101960786
+    y: 0.101960786
+    z: 0.101960786
+  }
+  type: TYPE_BOX
+  id: "box_haos"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -382.0
+    y: 42.0
+  }
+  scale {
+    x: 0.6
+    y: 0.6
+  }
+  size {
+    x: 568.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "\320\241\320\242\320\240\320\225\320\241\320\241 \320\236\320\244\320\230\320\241\320\220"
+  font: "font_small"
+  id: "text_stress_title"
+  pivot: PIVOT_W
+  parent: "box_haos"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 274.0
+    y: -30.0
+  }
+  scale {
+    x: 0.6
+    y: 0.6
+  }
+  size {
+    x: 160.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "100%"
+  font: "font_small"
+  id: "text_stress"
+  pivot: PIVOT_E
+  parent: "box_haos"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 336.0
+  }
+  size {
+    x: 100.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.5019608
+    z: 0.0
+  }
+  type: TYPE_BOX
+  id: "smile_stress"
+  parent: "box_haos"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -380.0
+    y: -30.0
+  }
+  size {
+    x: 525.0
+    y: 46.0
+  }
+  color {
+    x: 0.4
+    y: 0.4
+    z: 0.4
+  }
+  type: TYPE_BOX
+  id: "base_level"
+  pivot: PIVOT_W
+  parent: "box_haos"
+  inherit_alpha: true
+  clipping_mode: CLIPPING_MODE_STENCIL
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 525.0
+    y: 50.0
+  }
+  color {
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_BOX
+  id: "level_stress"
+  pivot: PIVOT_E
+  parent: "base_level"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT
+max_nodes: 64
