@@ -44,7 +44,7 @@ local BG_PSYCHO = hash("background")
 local LOGO_NORMAL = vmath.vector4(1.0, 1.0, 1.0, 1.0)
 local LOGO_PSYCHO = vmath.vector4(0.82, 0.10, 0.12, 1.0)
 
-local IDLE_MIN, IDLE_MAX = 20.0, 40.0  -- seconds of calm between seizures
+local IDLE_MIN, IDLE_MAX = 12.0, 24.0  -- seconds of calm between seizures
 -- durations of the flicker steps; step 1 = psycho, then alternating. Odd count
 -- so it ends on a psycho "hold" before snapping back to normal.
 local FLICKER = { 0.05, 0.04, 0.08, 0.04, 0.13, 0.05, 0.10, 0.04, 0.45 }
