@@ -253,9 +253,10 @@ function update(self, dt)
 	if expired > 0 then
 		self.psychosis = math.min(100, self.psychosis + expired * (PSYCHOSIS_PER_MIN / 60) * dt)
 		local whole = math.floor(self.psychosis)
-		if whole > self.psychosis_shown then
+		if whole ~= self.psychosis_shown then
 			self.psychosis_shown = whole
-			print("psychosis: " .. whole .. "%")
+			-- push the new stress value to the in-game HUD
+			msg.post("/game_ui#game_gui", "stress", { value = self.psychosis })
 		end
 	end
 
