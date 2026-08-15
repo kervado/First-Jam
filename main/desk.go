@@ -1,6 +1,21 @@
 components {
   id: "script"
   component: "/main/desk.script"
+  properties {
+    id: "coffee"
+    value: "0.0"
+    type: PROPERTY_TYPE_NUMBER
+  }
+  properties {
+    id: "paper"
+    value: "3.0"
+    type: PROPERTY_TYPE_NUMBER
+  }
+  properties {
+    id: "cats"
+    value: "2.0"
+    type: PROPERTY_TYPE_NUMBER
+  }
 }
 embedded_components {
   id: "sprite"
@@ -17,26 +32,6 @@ embedded_components {
   "  texture: \"/main/main.atlas\"\n"
   "}\n"
   ""
-}
-embedded_components {
-  id: "icon"
-  type: "sprite"
-  data: "default_animation: \"square\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "size {\n"
-  "  x: 34.0\n"
-  "  y: 34.0\n"
-  "}\n"
-  "size_mode: SIZE_MODE_MANUAL\n"
-  "textures {\n"
-  "  sampler: \"texture_sampler\"\n"
-  "  texture: \"/main/main.atlas\"\n"
-  "}\n"
-  ""
-  position {
-    y: 84.0
-    z: 0.02
-  }
 }
 embedded_components {
   id: "snd_request"

@@ -1,0 +1,41 @@
+--------------------------------------------------------------------------------
+-- psycho_decor.script
+--
+-- Decoration that is invisible until the office goes mad: it has only a
+-- "psychotic" sprite, hidden at start, that becomes visible once the office
+-- psychosis reaches `psychosis_limit`. No footprint, no collisions.
+--
+-- The sprite colour is left untouched (the look lives in the image); this
+-- script only reveals it and sets the fake-isometric depth.
+--------------------------------------------------------------------------------
+
+local office = require("main.office")
+
+-- office psychosis (%) at which this object appears
+go.property("psychosis_limit", 50)
+
+-- reveal the psychotic sprite (permanent)
+local function reveal(self)
+	self.shown = true
+	msg.post("#psychotic", "enable")
+end
+
+function init(self)
+	self.shown = false
+	-- a psychosis_limit of 0 means the object is visible from the start;
+	-- otherwise it stays hidden until psychosis reaches the limit.
+	if self.psychosis_limit <= 0 then
+		reveal(self)
+	else
+		msg.post("#psychotic", "disable")
+	end
+
+	-- fake-isometric depth from WORLD Y (parent-aware; may be a child object)
+	office.apply_depth()
+end
+
+function update(self, dt)
+	if not self.shown and office.psychosis >= self.psychosis_limit then
+		reveal(self)
+	end
+end

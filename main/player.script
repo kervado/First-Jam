@@ -66,13 +66,13 @@ function init(self)
 	self.cur_anim    = "idle"
 
 	local size  = go.get("#sprite", "size")
-	local scale = go.get_scale()
-	local pos   = go.get_position()
+	local wp    = go.get_world_position()
+	local scale = go.get_world_scale()
 
 	msg.post(CONTROLLER, "register", {
 		kind = hash("player"),
 		id   = go.get_id(),
-		x = pos.x, y = pos.y, z = pos.z,
+		x = wp.x, y = wp.y, z = wp.z,
 		hw = 0.5 * size.x * scale.x,
 		hh = 0.5 * size.y * scale.y,
 	})

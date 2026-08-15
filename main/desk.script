@@ -11,8 +11,11 @@
 --        coffee=3, paper=4, cats=2  ->  3/9, 4/9, 2/9
 --   A weight of 0 disables that item for this desk.
 --
--- This script only presents state: it shows / hides the request icon (tinted to
--- the wanted item's colour) when the controller tells it to.
+-- The floating request icon is a SEPARATE game object (so it can bob up and
+-- down on its own -- a sprite component's position cannot be moved at runtime).
+-- Just make that icon object a CHILD of this desk; it auto-registers here at
+-- load (via go.get_parent), so no manual linking is needed. This script only
+-- tells it to show the wanted item or hide.
 --------------------------------------------------------------------------------
 
 local items = require("main.items")
@@ -20,6 +23,10 @@ local office = require("main.office")
 
 local CONTROLLER = "controller#controller"
 local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
+
+go.property("coffee", 3)
+go.property("paper", 2)
+go.property("cats", 1)
 
 -- sound played when a request of a given type is fulfilled
 local DELIVER_SOUND = {
@@ -33,26 +40,31 @@ local function play(url)
 	msg.post(url, "play_sound")
 end
 
-go.property("coffee", 3)
-go.property("paper", 2)
-go.property("cats", 1)
+-- forward a message to the request-icon object, if one has registered
+local function tell_icon(self, message_id, message)
+	if self.icon then
+		msg.post(self.icon, message_id, message or {})
+	end
+end
 
 function init(self)
+	self.icon = nil   -- set when the child request-icon registers itself
 	go.set("#sprite", "tint", TRANSPARENT)   -- body no longer drawn (footprint only)
-	msg.post("#icon", "disable")             -- hidden until a request comes in
 
-	-- fake-isometric depth from Y (same rule as the solid objects)
-	local pos = go.get_position()
-	local z = office.z_for_y(pos.y)
-	go.set_position(vmath.vector3(pos.x, pos.y, z))
+	-- world-space transform (this desk may be a child of another object)
+	local wp    = go.get_world_position()
+	local scale = go.get_world_scale()
 
-	local size  = go.get("#sprite", "size")
-	local scale = go.get_scale()
+	-- fake-isometric depth from WORLD Y (same rule as the solid objects)
+	local z = office.z_for_y(wp.y)
+	office.apply_depth(z)
+
+	local size = go.get("#sprite", "size")
 
 	msg.post(CONTROLLER, "register", {
 		kind = hash("desk"),
 		id   = go.get_id(),
-		x = pos.x, y = pos.y, z = z,
+		x = wp.x, y = wp.y, z = z,
 		hw = 0.5 * size.x * scale.x,
 		hh = 0.5 * size.y * scale.y,
 		w_coffee = self.coffee,
@@ -62,13 +74,14 @@ function init(self)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("show_icon") then
-		go.set("#icon", "tint", items.COLORS[message.type] or vmath.vector4(1, 1, 1, 1))
-		msg.post("#icon", "enable")
+	if message_id == hash("register_icon") then
+		self.icon = message.icon           -- the child request-icon linked itself
+	elseif message_id == hash("show_icon") then
+		tell_icon(self, "show_request", { type = message.type })   -- icon picks the image
 		play("#snd_request")                 -- a new request appeared
 	elseif message_id == hash("fulfilled") then
 		local snd = DELIVER_SOUND[message.type]
 		if snd then play(snd) end            -- worker got what they wanted
-		msg.post("#icon", "disable")
+		tell_icon(self, "hide_request")
 	end
 end

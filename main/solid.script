@@ -35,31 +35,45 @@ local CONTROLLER = "controller#controller"
 
 local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
 
+-- switch to the psychotic sprite (permanent)
+local function go_psychotic(self)
+	self.psychotic = true
+	msg.post("#normal", "disable")
+	msg.post("#psychotic", "enable")
+end
+
 function init(self)
 	-- the placeholder square no longer draws; keep it only for its footprint
 	go.set("#sprite", "tint", TRANSPARENT)
 
-	-- visible look: normal now, psychotic later. Colours come from the images
-	-- themselves -- we only choose which sprite is shown.
-	msg.post("#normal", "enable")
-	msg.post("#psychotic", "disable")
+	-- visible look: normal by default (colours come from the images themselves,
+	-- we only choose which sprite is shown). A psychosis_limit of 0 means the
+	-- object is born psychotic -- apply it immediately, with no one-frame normal.
 	self.psychotic = false
+	if self.psychosis_limit <= 0 then
+		go_psychotic(self)
+	else
+		msg.post("#normal", "enable")
+		msg.post("#psychotic", "disable")
+	end
 
-	-- fake-isometric depth from Y (the floor is always at the back)
-	local pos = go.get_position()
-	local z = (self.kind == hash("floor")) and office.Z_FLOOR or office.z_for_y(pos.y)
-	go.set_position(vmath.vector3(pos.x, pos.y, z))
+	-- world-space transform (this object may be a child of another object)
+	local wp    = go.get_world_position()
+	local scale = go.get_world_scale()
 
-	local size  = go.get("#sprite", "size")   -- base sprite size (unscaled)
-	local scale = go.get_scale()               -- per-instance scale
+	-- fake-isometric depth from WORLD Y (the floor is always at the back)
+	local z = (self.kind == hash("floor")) and office.Z_FLOOR or office.z_for_y(wp.y)
+	office.apply_depth(z)
+
+	local size = go.get("#sprite", "size")   -- base sprite size (unscaled)
 
 	-- The footprint (walkable area for the floor, collision box for the rest)
 	-- is the sprite rectangle, which may be offset from the object origin.
 	msg.post(CONTROLLER, "register", {
 		kind = self.kind,
 		id   = go.get_id(),
-		x = pos.x + self.footprint_offset_x * scale.x,
-		y = pos.y + self.footprint_offset_y * scale.y,
+		x = wp.x + self.footprint_offset_x * scale.x,
+		y = wp.y + self.footprint_offset_y * scale.y,
 		z = z,
 		hw = 0.5 * size.x * scale.x,
 		hh = 0.5 * size.y * scale.y,
@@ -69,8 +83,6 @@ end
 function update(self, dt)
 	-- once psychotic, always psychotic (never switches back)
 	if not self.psychotic and office.psychosis >= self.psychosis_limit then
-		self.psychotic = true
-		msg.post("#normal", "disable")
-		msg.post("#psychotic", "enable")
+		go_psychotic(self)
 	end
 end

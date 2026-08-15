@@ -42,4 +42,17 @@ function M.z_for_y(y)
 	return z
 end
 
+-- Set the calling object's Z from its WORLD Y (fake-isometric depth). Local X/Y
+-- are kept, and any parent's Z is compensated so the resulting WORLD Z is what
+-- z_for_y expects (objects may be children of other objects). Pass `world_z` to
+-- force a specific world Z (used by the floor). Returns the world Z applied.
+function M.apply_depth(world_z)
+	local wp = go.get_world_position()
+	local lp = go.get_position()
+	local target = world_z or M.z_for_y(wp.y)
+	local parent_z = wp.z - lp.z           -- the parent's world-Z contribution
+	go.set_position(vmath.vector3(lp.x, lp.y, target - parent_z))
+	return target
+end
+
 return M

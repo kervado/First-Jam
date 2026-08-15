@@ -1,0 +1,20 @@
+components {
+  id: "script"
+  component: "/main/psycho_decor.script"
+}
+embedded_components {
+  id: "psychotic"
+  type: "sprite"
+  data: "default_animation: \"square\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "size {\n"
+  "  x: 100.0\n"
+  "  y: 100.0\n"
+  "}\n"
+  "size_mode: SIZE_MODE_MANUAL\n"
+  "textures {\n"
+  "  sampler: \"texture_sampler\"\n"
+  "  texture: \"/main/main.atlas\"\n"
+  "}\n"
+  ""
+}

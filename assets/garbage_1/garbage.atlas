@@ -1,0 +1,82 @@
+images {
+  image: "/assets/garbage_1/garbage_1.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_2.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_3.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_4.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_5.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_6.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_7.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_8.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_9.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_10.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_11.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_12.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_13.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_14.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_15.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_16.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_17.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_18.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_19.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_20.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_21.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_22.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_23.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_24.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_25.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_26.png"
+}
+images {
+  image: "/assets/garbage_1/garbage_27.png"
+}
+extrude_borders: 2

@@ -1,0 +1,45 @@
+--------------------------------------------------------------------------------
+-- decor.script
+--
+-- Decoration that behaves visually like a solid object -- it shows a "normal"
+-- sprite and permanently switches to a "psychotic" sprite once the office
+-- psychosis reaches `psychosis_limit` -- but has NO "sprite" footprint, so it
+-- does not register with the controller and does not block movement.
+--
+-- Sprite colours are left untouched (the look lives in the images); this script
+-- only toggles which sprite is visible and sets the fake-isometric depth.
+--------------------------------------------------------------------------------
+
+local office = require("main.office")
+
+-- office psychosis (%) at which this object flips to its psychotic look
+go.property("psychosis_limit", 50)
+
+-- switch to the psychotic sprite (permanent)
+local function go_psychotic(self)
+	self.psychotic = true
+	msg.post("#normal", "disable")
+	msg.post("#psychotic", "enable")
+end
+
+function init(self)
+	-- normal by default; a psychosis_limit of 0 means the object is born
+	-- psychotic -- apply it immediately, with no one-frame normal.
+	self.psychotic = false
+	if self.psychosis_limit <= 0 then
+		go_psychotic(self)
+	else
+		msg.post("#normal", "enable")
+		msg.post("#psychotic", "disable")
+	end
+
+	-- fake-isometric depth from WORLD Y (parent-aware; may be a child object)
+	office.apply_depth()
+end
+
+function update(self, dt)
+	-- once psychotic, always psychotic (never switches back)
+	if not self.psychotic and office.psychosis >= self.psychosis_limit then
+		go_psychotic(self)
+	end
+end

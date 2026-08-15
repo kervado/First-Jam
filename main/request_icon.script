@@ -1,0 +1,61 @@
+--------------------------------------------------------------------------------
+-- request_icon.script
+--
+-- The floating request icon above a desk. It is its own game object (a sprite
+-- component's position cannot be moved at runtime, so the bob needs a real
+-- game object). A desk points its `icon` property here and sends:
+--   "show_request" { type }  -> show the image for that item and start bobbing
+--   "hide_request"           -> hide and stop
+--
+-- Colours are baked into the images -- the icon is never tinted.
+--------------------------------------------------------------------------------
+
+local items = require("main.items")
+
+-- request icon image (atlas animation) per item type. These live in the
+-- #sprite's atlas (/assets/player/player.atlas).
+local ICON = {
+	[items.COFFEE] = "Pixelated coffee cup icon",
+	[items.PAPER]  = "Stacked papers with ribbon",
+	[items.CAT]    = "Cartoon orange cat",
+}
+
+local BOB_AMP   = 6.0    -- how many pixels it rises/falls
+local BOB_SPEED = 4.0    -- radians per second (bob rate)
+
+function init(self)
+	self.base   = go.get_position()   -- rest position; we bob around its Y
+	self.phase  = 0
+	self.active = false
+	msg.post("#sprite", "disable")    -- hidden until a request comes in
+
+	-- auto-link: tell the parent desk that we are its request icon, so no manual
+	-- wiring is needed -- just make this object a child of the desk.
+	local parent = go.get_parent()
+	if parent then
+		msg.post(msg.url(nil, parent, "script"), "register_icon", { icon = msg.url() })
+	end
+end
+
+function update(self, dt)
+	if not self.active then return end
+	self.phase = self.phase + dt * BOB_SPEED
+	go.set_position(vmath.vector3(
+		self.base.x,
+		self.base.y + BOB_AMP * math.sin(self.phase),
+		self.base.z))
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show_request") then
+		local img = ICON[message.type]
+		if img then sprite.play_flipbook("#sprite", img) end
+		msg.post("#sprite", "enable")
+		self.phase  = 0
+		self.active = true
+	elseif message_id == hash("hide_request") then
+		self.active = false
+		msg.post("#sprite", "disable")
+		go.set_position(self.base)   -- back to rest
+	end
+end

@@ -1,148 +1,292 @@
 images {
-  image: "/assets/images/Blue and yellow objects.png"
+  image: "/assets/office_1_shadow/Blue and yellow objects.png"
 }
 images {
-  image: "/assets/images/Blurred computer mouse.png"
+  image: "/assets/office_1_shadow/Blurred computer mouse.png"
 }
 images {
-  image: "/assets/images/Blurred metallic object.png"
+  image: "/assets/office_1_shadow/Blurred metallic object.png"
 }
 images {
-  image: "/assets/images/board_big.png"
+  image: "/assets/office_1_shadow/board_big.png"
 }
 images {
-  image: "/assets/images/board_small.png"
+  image: "/assets/office_1_shadow/board_small.png"
 }
 images {
-  image: "/assets/images/boiler.png"
+  image: "/assets/office_1_shadow/boiler.png"
 }
 images {
-  image: "/assets/images/box.png"
+  image: "/assets/office_1_shadow/box.png"
 }
 images {
-  image: "/assets/images/box_small_1.png"
+  image: "/assets/office_1_shadow/box_small_1.png"
 }
 images {
-  image: "/assets/images/box_small_2.png"
+  image: "/assets/office_1_shadow/box_small_2.png"
 }
 images {
-  image: "/assets/images/Bronze desk lamp.png"
+  image: "/assets/office_1_shadow/Bronze desk lamp.png"
 }
 images {
-  image: "/assets/images/Brown container with pens.png"
+  image: "/assets/office_1_shadow/Brown container with pens.png"
 }
 images {
-  image: "/assets/images/Brown container with pens_2.png"
+  image: "/assets/office_1_shadow/Brown container with pens_2.png"
 }
 images {
-  image: "/assets/images/Brown object on black base.png"
+  image: "/assets/office_1_shadow/Brown object on black base.png"
 }
 images {
-  image: "/assets/images/Brown rectangular object.png"
+  image: "/assets/office_1_shadow/cabinet_1.png"
 }
 images {
-  image: "/assets/images/cabinet_1.png"
+  image: "/assets/office_1_shadow/cabinet_2.png"
 }
 images {
-  image: "/assets/images/cabinet_2.png"
+  image: "/assets/office_1_shadow/cabinet_3.png"
 }
 images {
-  image: "/assets/images/cabinet_3.png"
+  image: "/assets/office_1_shadow/cat.png"
 }
 images {
-  image: "/assets/images/cat.png"
+  image: "/assets/office_1_shadow/Clipboard with paper and pen.png"
 }
 images {
-  image: "/assets/images/Clipboard with paper and pen.png"
+  image: "/assets/office_1_shadow/coffee_machine.png"
 }
 images {
-  image: "/assets/images/coffee_machine.png"
+  image: "/assets/office_1_shadow/documents.png"
 }
 images {
-  image: "/assets/images/documents.png"
+  image: "/assets/office_1_shadow/folder_1.png"
 }
 images {
-  image: "/assets/images/folder_1.png"
+  image: "/assets/office_1_shadow/folder_2.png"
 }
 images {
-  image: "/assets/images/folder_2.png"
+  image: "/assets/office_1_shadow/folder_3.png"
 }
 images {
-  image: "/assets/images/folder_3.png"
+  image: "/assets/office_1_shadow/ginger_cat.png"
 }
 images {
-  image: "/assets/images/ginger_cat.png"
+  image: "/assets/office_1_shadow/Gray box with oval objects.png"
 }
 images {
-  image: "/assets/images/Gray box with oval objects.png"
+  image: "/assets/office_1_shadow/Keyboard with number pad.png"
 }
 images {
-  image: "/assets/images/Keyboard with number pad.png"
+  image: "/assets/office_1_shadow/Office chair cartoon drawing copy.png"
 }
 images {
-  image: "/assets/images/Office chair cartoon drawing copy.png"
+  image: "/assets/office_1_shadow/Old computer monitor.png"
 }
 images {
-  image: "/assets/images/Old-fashioned telephone.png"
+  image: "/assets/office_1_shadow/Old-fashioned telephone.png"
 }
 images {
-  image: "/assets/images/paper_glasses_1.png"
+  image: "/assets/office_1_shadow/paper_glasses_1.png"
 }
 images {
-  image: "/assets/images/paper_glasses_2.png"
+  image: "/assets/office_1_shadow/paper_glasses_2.png"
 }
 images {
-  image: "/assets/images/plant_1.png"
+  image: "/assets/office_1_shadow/plant_1.png"
 }
 images {
-  image: "/assets/images/plant_2.png"
+  image: "/assets/office_1_shadow/plant_2.png"
 }
 images {
-  image: "/assets/images/plant_3.png"
+  image: "/assets/office_1_shadow/plant_3.png"
 }
 images {
-  image: "/assets/images/plant_4.png"
+  image: "/assets/office_1_shadow/plant_4.png"
 }
 images {
-  image: "/assets/images/plant_5.png"
+  image: "/assets/office_1_shadow/plant_5.png"
 }
 images {
-  image: "/assets/images/plant_6.png"
+  image: "/assets/office_1_shadow/plant_6.png"
 }
 images {
-  image: "/assets/images/plant_7.png"
+  image: "/assets/office_1_shadow/plant_7.png"
 }
 images {
-  image: "/assets/images/plant_8.png"
+  image: "/assets/office_1_shadow/plant_8.png"
 }
 images {
-  image: "/assets/images/plant_9.png"
+  image: "/assets/office_1_shadow/plant_9.png"
 }
 images {
-  image: "/assets/images/printer.png"
+  image: "/assets/office_1_shadow/printer.png"
 }
 images {
-  image: "/assets/images/sheet_1.png"
+  image: "/assets/office_1_shadow/sheet_1.png"
 }
 images {
-  image: "/assets/images/sheet_2.png"
+  image: "/assets/office_1_shadow/sheet_2.png"
 }
 images {
-  image: "/assets/images/sheet_3.png"
+  image: "/assets/office_1_shadow/sheet_3.png"
 }
 images {
-  image: "/assets/images/square.png"
+  image: "/assets/office_1_shadow/Trash_can.png"
 }
 images {
-  image: "/assets/images/Trash_can.png"
+  image: "/assets/office_1_shadow/wardrobe_1.png"
 }
 images {
-  image: "/assets/images/wardrobe_1.png"
+  image: "/assets/office_1_shadow/wardrobe_2.png"
 }
 images {
-  image: "/assets/images/wardrobe_2.png"
+  image: "/assets/office_1_shadow/Wooden desk with drawers.png"
 }
 images {
-  image: "/assets/images/Wooden desk with drawers.png"
+  image: "/assets/office_2/Blue and yellow objects_p.png"
+}
+images {
+  image: "/assets/office_2/Blurred computer mouse_p.png"
+}
+images {
+  image: "/assets/office_2/Blurred metallic object_p.png"
+}
+images {
+  image: "/assets/office_2/board_big_p.png"
+}
+images {
+  image: "/assets/office_2/board_small_p.png"
+}
+images {
+  image: "/assets/office_2/boiler_p.png"
+}
+images {
+  image: "/assets/office_2/box_p.png"
+}
+images {
+  image: "/assets/office_2/box_small_1_p.png"
+}
+images {
+  image: "/assets/office_2/box_small_2_p.png"
+}
+images {
+  image: "/assets/office_2/Bronze desk lamp_p.png"
+}
+images {
+  image: "/assets/office_2/Brown container with pens_2_p.png"
+}
+images {
+  image: "/assets/office_2/Brown container with pens_p.png"
+}
+images {
+  image: "/assets/office_2/Brown object on black base_p.png"
+}
+images {
+  image: "/assets/office_2/cabinet_1_p.png"
+}
+images {
+  image: "/assets/office_2/cabinet_2_p.png"
+}
+images {
+  image: "/assets/office_2/cabinet_3_p.png"
+}
+images {
+  image: "/assets/office_2/cat_p.png"
+}
+images {
+  image: "/assets/office_2/Clipboard with paper and pen_p.png"
+}
+images {
+  image: "/assets/office_2/coffee_machine_p.png"
+}
+images {
+  image: "/assets/office_2/documents_p.png"
+}
+images {
+  image: "/assets/office_2/folder_1_p.png"
+}
+images {
+  image: "/assets/office_2/folder_2_p.png"
+}
+images {
+  image: "/assets/office_2/folder_3_p.png"
+}
+images {
+  image: "/assets/office_2/ginger_cat_p.png"
+}
+images {
+  image: "/assets/office_2/Gray box with oval objects_p.png"
+}
+images {
+  image: "/assets/office_2/Keyboard with number pad_p.png"
+}
+images {
+  image: "/assets/office_2/Office chair cartoon drawing_p.png"
+}
+images {
+  image: "/assets/office_2/Old computer monitor_p.png"
+}
+images {
+  image: "/assets/office_2/Old-fashioned telephone_p.png"
+}
+images {
+  image: "/assets/office_2/paper_glasses_1_p.png"
+}
+images {
+  image: "/assets/office_2/paper_glasses_2_p.png"
+}
+images {
+  image: "/assets/office_2/plant_1_p.png"
+}
+images {
+  image: "/assets/office_2/plant_2_p.png"
+}
+images {
+  image: "/assets/office_2/plant_3_p.png"
+}
+images {
+  image: "/assets/office_2/plant_4_p.png"
+}
+images {
+  image: "/assets/office_2/plant_5_p.png"
+}
+images {
+  image: "/assets/office_2/plant_6_p.png"
+}
+images {
+  image: "/assets/office_2/plant_7_p.png"
+}
+images {
+  image: "/assets/office_2/plant_8_p.png"
+}
+images {
+  image: "/assets/office_2/plant_9_p.png"
+}
+images {
+  image: "/assets/office_2/printer_p.png"
+}
+images {
+  image: "/assets/office_2/sheet_1_p.png"
+}
+images {
+  image: "/assets/office_2/sheet_2_p.png"
+}
+images {
+  image: "/assets/office_2/sheet_3_p.png"
+}
+images {
+  image: "/assets/office_2/Trash_can_p.png"
+}
+images {
+  image: "/assets/office_2/wardrobe_1_p.png"
+}
+images {
+  image: "/assets/office_2/wardrobe_2_p.png"
+}
+images {
+  image: "/assets/office_2/Wooden desk with drawers_p.png"
+}
+images {
+  image: "/assets/office_1_shadow/Brown rectangular object.png"
 }
 extrude_borders: 2
