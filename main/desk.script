@@ -16,9 +16,10 @@
 --------------------------------------------------------------------------------
 
 local items = require("main.items")
+local office = require("main.office")
 
 local CONTROLLER = "controller#controller"
-local C_DESK = vmath.vector4(0.25, 0.46, 0.86, 1.0)   -- blue desk
+local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
 
 -- sound played when a request of a given type is fulfilled
 local DELIVER_SOUND = {
@@ -37,17 +38,21 @@ go.property("paper", 2)
 go.property("cats", 1)
 
 function init(self)
-	go.set("#sprite", "tint", C_DESK)
-	msg.post("#icon", "disable")   -- hidden until a request comes in
+	go.set("#sprite", "tint", TRANSPARENT)   -- body no longer drawn (footprint only)
+	msg.post("#icon", "disable")             -- hidden until a request comes in
+
+	-- fake-isometric depth from Y (same rule as the solid objects)
+	local pos = go.get_position()
+	local z = office.z_for_y(pos.y)
+	go.set_position(vmath.vector3(pos.x, pos.y, z))
 
 	local size  = go.get("#sprite", "size")
 	local scale = go.get_scale()
-	local pos   = go.get_position()
 
 	msg.post(CONTROLLER, "register", {
 		kind = hash("desk"),
 		id   = go.get_id(),
-		x = pos.x, y = pos.y, z = pos.z,
+		x = pos.x, y = pos.y, z = z,
 		hw = 0.5 * size.x * scale.x,
 		hh = 0.5 * size.y * scale.y,
 		w_coffee = self.coffee,

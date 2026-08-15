@@ -20,6 +20,7 @@
 --------------------------------------------------------------------------------
 
 local items = require("main.items")
+local office = require("main.office")
 
 -- how many requests may be active at once. No new request is created while the
 -- active count is at this cap.
@@ -164,8 +165,10 @@ function init(self)
 	self.sources  = {}   -- item sources (subset of solids): coffee/paper/cat
 	self.player   = nil  -- filled in when the player registers
 
-	-- level-wide psychosis meter (0..100), raised by impatient workers
-	self.psychosis = 0
+	-- level-wide psychosis meter (0..100), raised by impatient workers.
+	-- lives in the shared office module so every object can read it; reset here
+	-- so it starts clean even if the level collection is reloaded.
+	office.psychosis = 0
 	self.psychosis_shown = 0
 
 	-- request pacing
@@ -232,7 +235,8 @@ function update(self, dt)
 		if is_free(self, p.x, ny) then p.y = ny end
 	end
 
-	go.set_position(vmath.vector3(p.x, p.y, p.z), p.id)
+	-- fake-isometric depth: the assistant's Z follows its Y, like every object
+	go.set_position(vmath.vector3(p.x, p.y, office.z_for_y(p.y)), p.id)
 
 	-- ---- desk timers: wait -> expiry (psychosis), and post-delivery cooldown ----
 	local expired = 0
@@ -251,8 +255,8 @@ function update(self, dt)
 
 	-- ---- psychosis: every impatient (expired) desk raises the level meter ----
 	if expired > 0 then
-		self.psychosis = math.min(100, self.psychosis + expired * (PSYCHOSIS_PER_MIN / 60) * dt)
-		local whole = math.floor(self.psychosis)
+		office.psychosis = math.min(100, office.psychosis + expired * (PSYCHOSIS_PER_MIN / 60) * dt)
+		local whole = math.floor(office.psychosis)
 		if whole > self.psychosis_shown then
 			self.psychosis_shown = whole
 			print("psychosis: " .. whole .. "%")

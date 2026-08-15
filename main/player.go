@@ -36,7 +36,7 @@ embedded_components {
   position {
     x: -16.0
     y: 48.0
-    z: 0.1
+    z: 0.02
   }
 }
 embedded_components {
@@ -54,7 +54,7 @@ embedded_components {
   position {
     x: 2.0
     y: 48.0
-    z: 0.1
+    z: 0.02
   }
 }
 embedded_components {

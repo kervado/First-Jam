@@ -10,7 +10,7 @@
 local items = require("main.items")
 
 local CONTROLLER = "controller#controller"
-local C_PLAYER = vmath.vector4(0.25, 0.82, 0.38, 1.0)   -- green assistant
+local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
 
 -- sound played when the assistant picks up a given item type from a source
 local PICKUP_SOUND = {
@@ -20,7 +20,7 @@ local PICKUP_SOUND = {
 }
 
 function init(self)
-	go.set("#sprite", "tint", C_PLAYER)
+	go.set("#sprite", "tint", TRANSPARENT)   -- body no longer drawn (footprint only)
 	msg.post("#icon", "disable")    -- carry indicator hidden until we hold something
 	msg.post("#count", "disable")
 

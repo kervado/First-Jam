@@ -2,20 +2,27 @@
 -- solid.script
 --
 -- Shared by every "dumb" static object. The `kind` property (set per .go)
--- decides its colour and how it registers with the controller:
---   obstacle -> grey, blocks the player
---   floor    -> dark, purely decorative (walkable, not registered)
---   coffee   -> brown coffee machine  (blocks + gives coffee on contact)
---   paper    -> beige paper cabinet   (blocks + gives paper on contact)
---   cat      -> purple cat house      (blocks + gives a cat on contact)
+-- decides how it registers with the controller:
+--   obstacle -> blocks the player
+--   floor    -> purely decorative (walkable, not registered)
+--   coffee   -> coffee machine  (blocks + gives coffee on contact)
+--   paper    -> paper cabinet   (blocks + gives paper on contact)
+--   cat      -> cat house       (blocks + gives a cat on contact)
 --
--- Source behaviour (coffee/paper/cat) lives in the controller, which knows the
--- carry limit for each item type. This script only draws the body and reports
--- its footprint: (sprite size x instance scale), so resizing the coloured
--- square on the field resizes the collision box.
+-- Visuals: the "sprite" component is kept for its footprint only and is made
+-- fully transparent at start. Two extra sprites carry the look: "normal" is
+-- shown from the start, and once the office psychosis reaches this object's
+-- `psychosis_limit` it switches to "psychotic" -- permanently.
+--
+-- Depth: the object's Z is derived from its Y for the fake-isometric look
+-- (the floor is pinned to the very back).
 --------------------------------------------------------------------------------
 
+local office = require("main.office")
+
 go.property("kind", hash("obstacle"))
+-- office psychosis (%) at which this object flips to its psychotic look
+go.property("psychosis_limit", 50)
 
 local CONTROLLER = "controller#controller"
 
@@ -27,23 +34,47 @@ local BODY = {
 	[hash("cat")]      = vmath.vector4(0.55, 0.40, 0.70, 1.0),
 }
 
-function init(self)
-	go.set("#sprite", "tint", BODY[self.kind] or vmath.vector4(1, 1, 1, 1))
+local PSYCHO       = vmath.vector4(0.75, 0.12, 0.12, 1.0)   -- crimson "gone mad"
+local TRANSPARENT  = vmath.vector4(1.0, 1.0, 1.0, 0.0)
 
-	-- the floor is walkable: it colours itself but never registers as a solid
+function init(self)
+	-- the placeholder square no longer draws; keep it only for its footprint
+	go.set("#sprite", "tint", TRANSPARENT)
+
+	-- visible look: normal now, psychotic later
+	go.set("#normal", "tint", BODY[self.kind] or vmath.vector4(1, 1, 1, 1))
+	go.set("#psychotic", "tint", PSYCHO)
+	msg.post("#normal", "enable")
+	msg.post("#psychotic", "disable")
+	self.psychotic = false
+
+	-- fake-isometric depth from Y (the floor is always at the back)
+	local pos = go.get_position()
+	local z = (self.kind == hash("floor")) and office.Z_FLOOR or office.z_for_y(pos.y)
+	go.set_position(vmath.vector3(pos.x, pos.y, z))
+
+	-- the floor is walkable: it draws itself but never registers as a solid
 	if self.kind == hash("floor") then
 		return
 	end
 
 	local size  = go.get("#sprite", "size")   -- base sprite size (unscaled)
 	local scale = go.get_scale()               -- per-instance scale
-	local pos   = go.get_position()
 
 	msg.post(CONTROLLER, "register", {
 		kind = self.kind,
 		id   = go.get_id(),
-		x = pos.x, y = pos.y, z = pos.z,
+		x = pos.x, y = pos.y, z = z,
 		hw = 0.5 * size.x * scale.x,
 		hh = 0.5 * size.y * scale.y,
 	})
+end
+
+function update(self, dt)
+	-- once psychotic, always psychotic (never switches back)
+	if not self.psychotic and office.psychosis >= self.psychosis_limit then
+		self.psychotic = true
+		msg.post("#normal", "disable")
+		msg.post("#psychotic", "enable")
+	end
 end
