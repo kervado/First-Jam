@@ -3,21 +3,19 @@
 --
 -- The assistant. It does not move itself: the controller owns movement,
 -- collision and the carried-item state. This script registers the player and
--- displays what it is currently carrying (up to three indicators above its
--- head, tinted to the carried item's colour).
+-- displays what it is currently carrying above its head: one coloured icon for
+-- the item type plus a number for how many are held.
 --------------------------------------------------------------------------------
 
 local items = require("main.items")
 
 local CONTROLLER = "controller#controller"
 local C_PLAYER = vmath.vector4(0.25, 0.82, 0.38, 1.0)   -- green assistant
-local CUPS = 3   -- max carried units of any type (coffee = 3 is the largest)
 
 function init(self)
 	go.set("#sprite", "tint", C_PLAYER)
-	for i = 1, CUPS do
-		msg.post("#cup" .. i, "disable")
-	end
+	msg.post("#icon", "disable")    -- carry indicator hidden until we hold something
+	msg.post("#count", "disable")
 
 	local size  = go.get("#sprite", "size")
 	local scale = go.get_scale()
@@ -35,13 +33,14 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("set_carry") then
 		local color = items.COLORS[message.type]   -- nil when carrying nothing
-		for i = 1, CUPS do
-			if color and i <= message.count then
-				go.set("#cup" .. i, "tint", color)
-				msg.post("#cup" .. i, "enable")
-			else
-				msg.post("#cup" .. i, "disable")
-			end
+		if color and message.count > 0 then
+			go.set("#icon", "tint", color)
+			label.set_text("#count", tostring(message.count))
+			msg.post("#icon", "enable")
+			msg.post("#count", "enable")
+		else
+			msg.post("#icon", "disable")
+			msg.post("#count", "disable")
 		end
 	end
 end

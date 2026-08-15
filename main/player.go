@@ -19,7 +19,7 @@ embedded_components {
   ""
 }
 embedded_components {
-  id: "cup1"
+  id: "icon"
   type: "sprite"
   data: "default_animation: \"square\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
@@ -28,56 +28,32 @@ embedded_components {
   "  texture: \"/main/main.atlas\"\n"
   "}\n"
   "size {\n"
-  "  x: 16.0\n"
-  "  y: 16.0\n"
+  "  x: 24.0\n"
+  "  y: 24.0\n"
   "}\n"
   "size_mode: SIZE_MODE_MANUAL\n"
   ""
   position {
-    x: -20.0
-    y: 42.0
+    x: -16.0
+    y: 48.0
     z: 0.1
   }
 }
 embedded_components {
-  id: "cup2"
-  type: "sprite"
-  data: "default_animation: \"square\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "textures {\n"
-  "  sampler: \"texture_sampler\"\n"
-  "  texture: \"/main/main.atlas\"\n"
+  id: "count"
+  type: "label"
+  data: "size {\n"
+  "  x: 64.0\n"
+  "  y: 32.0\n"
   "}\n"
-  "size {\n"
-  "  x: 16.0\n"
-  "  y: 16.0\n"
-  "}\n"
-  "size_mode: SIZE_MODE_MANUAL\n"
+  "text: \"0\"\n"
+  "font: \"/main/font_small.font\"\n"
+  "material: \"/builtins/fonts/label-df.material\"\n"
+  "pivot: PIVOT_W\n"
   ""
   position {
-    x: 0.0
-    y: 42.0
-    z: 0.1
-  }
-}
-embedded_components {
-  id: "cup3"
-  type: "sprite"
-  data: "default_animation: \"square\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "textures {\n"
-  "  sampler: \"texture_sampler\"\n"
-  "  texture: \"/main/main.atlas\"\n"
-  "}\n"
-  "size {\n"
-  "  x: 16.0\n"
-  "  y: 16.0\n"
-  "}\n"
-  "size_mode: SIZE_MODE_MANUAL\n"
-  ""
-  position {
-    x: 20.0
-    y: 42.0
+    x: 2.0
+    y: 48.0
     z: 0.1
   }
 }

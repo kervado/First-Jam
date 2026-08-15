@@ -23,9 +23,9 @@ M.COLORS = {
 -- how many units the assistant carries after touching each source, and the
 -- hard carry limit for that item type (they are the same thing).
 M.MAX = {
-	[M.COFFEE] = 3,
-	[M.PAPER]  = 2,
-	[M.CAT]    = 1,
+	[M.COFFEE] = 4,
+	[M.PAPER]  = 6,
+	[M.CAT]    = 2,
 }
 
 return M
