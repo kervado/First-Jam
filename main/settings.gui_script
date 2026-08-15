@@ -9,8 +9,8 @@
 
 local store = require("main.settings_store")
 
-local COLOR_IDLE  = vmath.vector4(0.5, 0.5, 0.5, 1.0)
-local COLOR_HOVER = vmath.vector4(1.0, 1.0, 1.0, 1.0)
+local COLOR_IDLE  = vmath.vector4(0.5764706, 0.5803922, 0.5882353, 1.0) -- gui default gray
+local COLOR_HOVER = vmath.vector4(0.8509804, 0.8549020, 0.8627451, 1.0) -- #D9DADC (as in the menu)
 local COLOR_ON    = vmath.vector4(0.35, 0.75, 0.40, 1.0) -- "ВКЛ"
 local COLOR_OFF   = vmath.vector4(0.55, 0.55, 0.55, 1.0) -- "ВЫКЛ"
 
@@ -33,10 +33,10 @@ local function play_click()
 	msg.post(CLICK_SOUND, "play_sound")
 end
 
--- slider geometry - must match settings.gui
-local TRACK_X = 224.0
+-- slider geometry - must match settings.gui (sl_track / sl_p0 / sl_p1)
+local TRACK_X = 254.0
 local TRACK_W = 420.0
-local TRACK_Y = 505.0
+local TRACK_Y = 634.0
 local TRACK_H = 6.0
 
 local function clamp01(v)
@@ -48,7 +48,6 @@ end
 local function set_highlight(btn, on)
 	gui.set_color(btn.text, on and COLOR_HOVER or COLOR_IDLE)
 	gui.set_enabled(btn.frame, on)
-	gui.set_enabled(btn.inner, on)
 	gui.set_enabled(btn.marker, on)
 end
 
@@ -132,9 +131,7 @@ function init(self)
 	self.buttons = {}
 	for i, def in ipairs(BUTTONS) do
 		self.buttons[i] = {
-			hit = gui.get_node(def.prefix .. "_hit"),
 			frame = gui.get_node(def.prefix .. "_frame"),
-			inner = gui.get_node(def.prefix .. "_inner"),
 			marker = gui.get_node(def.prefix .. "_marker"),
 			text = gui.get_node(def.prefix .. "_text"),
 			on_click = def.on_click,
@@ -176,9 +173,10 @@ function on_input(self, action_id, action)
 		return
 	end
 
-	-- refresh hover highlight for the clickable rows
+	-- refresh hover highlight for the clickable rows. The always-visible text
+	-- node is the hit area (frame is disabled off-hover, so it can't be picked).
 	for _, btn in ipairs(self.buttons) do
-		local now = gui.pick_node(btn.hit, action.x, action.y)
+		local now = gui.pick_node(btn.text, action.x, action.y)
 		if now and not btn.hovered then
 			play_hover()
 		end

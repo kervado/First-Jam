@@ -1,10 +1,11 @@
--- Main menu: gray items on a black screen. Hovering an item highlights it
--- with a thin frame, a red square marker and white text (mockup style).
--- Holding the left mouse button grows the label a bit; releasing over the
--- same item counts as a click.
+-- Main menu. Each item has: <name>_frame, <name>_marker (both start disabled,
+-- shown on hover) and <name>_text (always visible; used as the hit area).
+-- Hover  -> enable frame + marker, text color -> #D9DADC
+-- Press  -> grow the label
+-- Release-> label back to original size (a release over the same item = click)
 
-local COLOR_IDLE  = vmath.vector4(0.5, 0.5, 0.5, 1.0) -- default gray label
-local COLOR_HOVER = vmath.vector4(1.0, 1.0, 1.0, 1.0) -- white label on hover
+local COLOR_IDLE  = vmath.vector4(0.5764706, 0.5803922, 0.5882353, 1.0) -- gui default gray
+local COLOR_HOVER = vmath.vector4(0.8509804, 0.8549020, 0.8627451, 1.0) -- #D9DADC
 
 local SCALE_NORMAL  = vmath.vector3(1.0, 1.0, 1.0)
 local SCALE_PRESSED = vmath.vector3(1.12, 1.12, 1.0)  -- label grows while held
@@ -27,7 +28,6 @@ end
 local function set_highlight(btn, on)
 	gui.set_color(btn.text, on and COLOR_HOVER or COLOR_IDLE)
 	gui.set_enabled(btn.frame, on)
-	gui.set_enabled(btn.inner, on)
 	gui.set_enabled(btn.marker, on)
 end
 
@@ -76,9 +76,7 @@ function init(self)
 	self.buttons = {}
 	for i, def in ipairs(ITEMS) do
 		local btn = {
-			hit = gui.get_node(def.prefix .. "_hit"),
 			frame = gui.get_node(def.prefix .. "_frame"),
-			inner = gui.get_node(def.prefix .. "_inner"),
 			marker = gui.get_node(def.prefix .. "_marker"),
 			text = gui.get_node(def.prefix .. "_text"),
 			on_click = def.on_click,
@@ -106,10 +104,10 @@ function on_input(self, action_id, action)
 		return
 	end
 
-	-- Mouse movement arrives with action_id == nil; use every pointer action
-	-- to refresh the hover state against the invisible hit boxes.
+	-- Mouse movement arrives with action_id == nil; use every pointer action to
+	-- refresh the hover state. The always-visible text node is the hit area.
 	for _, btn in ipairs(self.buttons) do
-		local now = gui.pick_node(btn.hit, action.x, action.y)
+		local now = gui.pick_node(btn.text, action.x, action.y)
 		if now and not btn.hovered then
 			play_hover() -- play once when the cursor enters an item
 		end
