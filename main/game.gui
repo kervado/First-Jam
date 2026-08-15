@@ -218,6 +218,68 @@ nodes {
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
 }
+nodes {
+  position {
+    x: 110.0
+    y: 1014.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.4
+    y: 0.4
+    z: 0.4
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_MULT
+  id: "box_floor"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -89.0
+    y: 20.0
+  }
+  scale {
+    x: 0.6
+    y: 0.6
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "1 \320\255\320\242\320\220\320\226"
+  font: "font_small"
+  id: "text_floor"
+  pivot: PIVOT_W
+  parent: "box_floor"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -87.0
+    y: -31.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "08:00"
+  font: "font_small"
+  id: "text_clock"
+  pivot: PIVOT_W
+  parent: "box_floor"
+  inherit_alpha: true
+}
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
 max_nodes: 64

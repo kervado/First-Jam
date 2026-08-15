@@ -8,7 +8,7 @@ local COLOR_IDLE  = vmath.vector4(0.5764706, 0.5803922, 0.5882353, 1.0) -- gui d
 local COLOR_HOVER = vmath.vector4(0.8509804, 0.8549020, 0.8627451, 1.0) -- #D9DADC
 
 local SCALE_NORMAL  = vmath.vector3(1.0, 1.0, 1.0)
-local SCALE_PRESSED = vmath.vector3(1.12, 1.12, 1.0)  -- label grows while held
+local SCALE_PRESSED = vmath.vector3(1.06, 1.06, 1.0)  -- label grows while held
 
 -- UI feedback sounds (components on this game object). They play in the master
 -- group, so the volume slider already scales them.
