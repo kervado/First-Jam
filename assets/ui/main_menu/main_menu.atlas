@@ -1,0 +1,19 @@
+images {
+  image: "/assets/ui/main_menu/background.png"
+}
+images {
+  image: "/assets/ui/main_menu/frame.png"
+}
+images {
+  image: "/assets/ui/main_menu/logo.png"
+}
+images {
+  image: "/assets/ui/main_menu/logo_brain.png"
+}
+images {
+  image: "/assets/ui/main_menu/square.png"
+}
+images {
+  image: "/assets/ui/main_menu/back1.png"
+}
+extrude_borders: 2

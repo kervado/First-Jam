@@ -11,26 +11,46 @@ fonts {
   name: "small"
   font: "/main/font_small.font"
 }
+textures {
+  name: "main_menu"
+  texture: "/assets/ui/main_menu/main_menu.atlas"
+}
 nodes {
+  position {
+    x: 960.0
+    y: 540.0
+  }
   size {
     x: 1920.0
     y: 1080.0
   }
-  color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+  type: TYPE_BOX
+  id: "box_center"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  visible: false
+}
+nodes {
+  position {
+    x: -960.0
+    y: -540.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
   }
   type: TYPE_BOX
+  texture: "main_menu/back1"
   id: "root"
   pivot: PIVOT_SW
+  parent: "box_center"
   inherit_alpha: true
-  enabled: false
+  size_mode: SIZE_MODE_AUTO
 }
 nodes {
   position {
     x: 220.0
-    y: 880.0
+    y: 1382.0
   }
   size {
     x: 900.0
@@ -51,96 +71,45 @@ nodes {
 }
 nodes {
   position {
-    x: 196.0
-    y: 680.0
-  }
-  size {
-    x: 520.0
-    y: 56.0
+    x: 214.0
+    y: 968.0
   }
   type: TYPE_BOX
-  id: "fs_hit"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-  alpha: 0.0
-}
-nodes {
-  position {
-    x: 196.0
-    y: 680.0
-  }
-  size {
-    x: 520.0
-    y: 56.0
-  }
-  color {
-    x: 0.6
-    y: 0.6
-    z: 0.6
-  }
-  type: TYPE_BOX
+  texture: "main_menu/frame"
   id: "fs_frame"
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
   enabled: false
 }
 nodes {
   position {
-    x: 198.0
-    y: 680.0
-  }
-  size {
-    x: 516.0
-    y: 52.0
-  }
-  color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1210.0
+    y: 968.0
   }
   type: TYPE_BOX
-  id: "fs_inner"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-  enabled: false
-}
-nodes {
-  position {
-    x: 570.0
-    y: 680.0
-  }
-  size {
-    x: 22.0
-    y: 22.0
-  }
-  color {
-    x: 0.82
-    y: 0.1
-    z: 0.12
-  }
-  type: TYPE_BOX
+  texture: "main_menu/square"
   id: "fs_marker"
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
   enabled: false
 }
 nodes {
   position {
-    x: 220.0
-    y: 680.0
+    x: 238.0
+    y: 968.0
   }
   size {
-    x: 520.0
-    y: 56.0
+    x: 1059.0
+    y: 124.0
   }
   color {
-    x: 0.5
-    y: 0.5
-    z: 0.5
+    x: 0.5764706
+    y: 0.5803922
+    z: 0.5882353
   }
   type: TYPE_TEXT
   text: "\320\237\320\236\320\233\320\235\320\253\320\231 \320\255\320\232\320\240\320\220\320\235"
@@ -152,12 +121,12 @@ nodes {
 }
 nodes {
   position {
-    x: 744.0
-    y: 680.0
+    x: 1366.0
+    y: 968.0
   }
   size {
-    x: 220.0
-    y: 56.0
+    x: 356.0
+    y: 107.0
   }
   color {
     x: 0.35
@@ -174,17 +143,17 @@ nodes {
 }
 nodes {
   position {
-    x: 220.0
-    y: 575.0
+    x: 238.0
+    y: 780.0
   }
   size {
-    x: 500.0
-    y: 56.0
+    x: 729.0
+    y: 97.0
   }
   color {
-    x: 0.5
-    y: 0.5
-    z: 0.5
+    x: 0.5764706
+    y: 0.5803922
+    z: 0.5882353
   }
   type: TYPE_TEXT
   text: "\320\223\320\240\320\236\320\234\320\232\320\236\320\241\320\242\320\254"
@@ -193,11 +162,13 @@ nodes {
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
+  outline_alpha: 0.0
+  shadow_alpha: 0.0
 }
 nodes {
   position {
-    x: 224.0
-    y: 505.0
+    x: 254.0
+    y: 634.0
   }
   size {
     x: 420.0
@@ -212,8 +183,8 @@ nodes {
 }
 nodes {
   position {
-    x: 224.0
-    y: 505.0
+    x: 254.0
+    y: 634.0
   }
   size {
     x: 420.0
@@ -232,8 +203,8 @@ nodes {
 }
 nodes {
   position {
-    x: 224.0
-    y: 505.0
+    x: 254.0
+    y: 634.0
   }
   size {
     x: 210.0
@@ -252,8 +223,8 @@ nodes {
 }
 nodes {
   position {
-    x: 434.0
-    y: 505.0
+    x: 464.0
+    y: 634.0
   }
   size {
     x: 14.0
@@ -271,8 +242,8 @@ nodes {
 }
 nodes {
   position {
-    x: 224.0
-    y: 505.0
+    x: 254.0
+    y: 634.0
   }
   size {
     x: 2.0
@@ -286,8 +257,8 @@ nodes {
 }
 nodes {
   position {
-    x: 644.0
-    y: 505.0
+    x: 674.0
+    y: 634.0
   }
   size {
     x: 2.0
@@ -301,12 +272,12 @@ nodes {
 }
 nodes {
   position {
-    x: 684.0
-    y: 505.0
+    x: 714.0
+    y: 634.0
   }
   size {
-    x: 200.0
-    y: 56.0
+    x: 260.0
+    y: 84.0
   }
   color {
     x: 0.85
@@ -323,96 +294,45 @@ nodes {
 }
 nodes {
   position {
-    x: 196.0
-    y: 320.0
-  }
-  size {
-    x: 430.0
-    y: 56.0
+    x: 214.0
+    y: 404.0
   }
   type: TYPE_BOX
-  id: "back_hit"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-  alpha: 0.0
-}
-nodes {
-  position {
-    x: 196.0
-    y: 320.0
-  }
-  size {
-    x: 430.0
-    y: 56.0
-  }
-  color {
-    x: 0.6
-    y: 0.6
-    z: 0.6
-  }
-  type: TYPE_BOX
+  texture: "main_menu/frame"
   id: "back_frame"
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
   enabled: false
 }
 nodes {
   position {
-    x: 198.0
-    y: 320.0
-  }
-  size {
-    x: 426.0
-    y: 52.0
-  }
-  color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 1210.0
+    y: 404.0
   }
   type: TYPE_BOX
-  id: "back_inner"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-  enabled: false
-}
-nodes {
-  position {
-    x: 383.0
-    y: 320.0
-  }
-  size {
-    x: 22.0
-    y: 22.0
-  }
-  color {
-    x: 0.82
-    y: 0.1
-    z: 0.12
-  }
-  type: TYPE_BOX
+  texture: "main_menu/square"
   id: "back_marker"
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
   enabled: false
 }
 nodes {
   position {
-    x: 220.0
-    y: 320.0
+    x: 238.0
+    y: 404.0
   }
   size {
-    x: 430.0
-    y: 56.0
+    x: 1060.0
+    y: 124.0
   }
   color {
-    x: 0.5
-    y: 0.5
-    z: 0.5
+    x: 0.5764706
+    y: 0.5803922
+    z: 0.5882353
   }
   type: TYPE_TEXT
   text: "\320\235\320\220\320\227\320\220\320\224"
@@ -421,6 +341,57 @@ nodes {
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
+}
+nodes {
+  position {
+    x: 214.0
+    y: 1180.0
+  }
+  type: TYPE_BOX
+  texture: "main_menu/frame"
+  id: "menu_frame"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  position {
+    x: 1210.0
+    y: 1180.0
+  }
+  type: TYPE_BOX
+  texture: "main_menu/square"
+  id: "menu_marker"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  position {
+    x: 238.0
+    y: 1180.0
+  }
+  size {
+    x: 1060.0
+    y: 124.0
+  }
+  color {
+    x: 0.5764706
+    y: 0.5803922
+    z: 0.5882353
+  }
+  type: TYPE_TEXT
+  text: "\320\222\320\253\320\245\320\236\320\224 \320\222 \320\234\320\225\320\235\320\256"
+  font: "menu"
+  id: "menu_text"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+  enabled: false
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

@@ -1,10 +1,11 @@
--- Main menu: gray items on a black screen. Hovering an item highlights it
--- with a thin frame, a red square marker and white text (mockup style).
--- Holding the left mouse button grows the label a bit; releasing over the
--- same item counts as a click.
+-- Main menu. Each item has: <name>_frame, <name>_marker (both start disabled,
+-- shown on hover) and <name>_text (always visible; used as the hit area).
+-- Hover  -> enable frame + marker, text color -> #D9DADC
+-- Press  -> grow the label
+-- Release-> label back to original size (a release over the same item = click)
 
-local COLOR_IDLE  = vmath.vector4(0.5, 0.5, 0.5, 1.0) -- default gray label
-local COLOR_HOVER = vmath.vector4(1.0, 1.0, 1.0, 1.0) -- white label on hover
+local COLOR_IDLE  = vmath.vector4(0.5764706, 0.5803922, 0.5882353, 1.0) -- gui default gray
+local COLOR_HOVER = vmath.vector4(0.8509804, 0.8549020, 0.8627451, 1.0) -- #D9DADC
 
 local SCALE_NORMAL  = vmath.vector3(1.0, 1.0, 1.0)
 local SCALE_PRESSED = vmath.vector3(1.12, 1.12, 1.0)  -- label grows while held
@@ -27,14 +28,60 @@ end
 local function set_highlight(btn, on)
 	gui.set_color(btn.text, on and COLOR_HOVER or COLOR_IDLE)
 	gui.set_enabled(btn.frame, on)
-	gui.set_enabled(btn.inner, on)
 	gui.set_enabled(btn.marker, on)
+end
+
+-- ------------------------------------------------------- psychosis background
+-- The root node is the background image. Periodically we run a short "seizure":
+-- a jittery flicker between the normal and the "psychosis" variant of the same
+-- picture, ending on a longer psycho hold, then snap back to normal.
+-- back1 = normal picture, background = the "psychosis" variant (both already
+-- in main_menu.atlas). pcall keeps the swap safe even if an image is missing.
+local BG_NORMAL = hash("back1")
+local BG_PSYCHO = hash("background")
+
+-- logo2 is the white brain; it glows red while the background is in psycho mode
+local LOGO_NORMAL = vmath.vector4(1.0, 1.0, 1.0, 1.0)
+local LOGO_PSYCHO = vmath.vector4(0.82, 0.10, 0.12, 1.0)
+
+local IDLE_MIN, IDLE_MAX = 12.0, 24.0  -- seconds of calm between seizures
+-- durations of the flicker steps; step 1 = psycho, then alternating. Odd count
+-- so it ends on a psycho "hold" before snapping back to normal.
+local FLICKER = { 0.05, 0.04, 0.08, 0.04, 0.13, 0.05, 0.10, 0.04, 0.45 }
+
+local function set_bg(self, psycho)
+	-- pcall: if the psycho image isn't in the atlas yet, stay on whatever shows
+	pcall(gui.play_flipbook, self.root, psycho and BG_PSYCHO or BG_NORMAL)
+	if self.logo2 then
+		gui.set_color(self.logo2, psycho and LOGO_PSYCHO or LOGO_NORMAL)
+	end
+end
+
+local function schedule_idle(self)
+	self.fx_mode = "idle"
+	self.fx_timer = IDLE_MIN + math.random() * (IDLE_MAX - IDLE_MIN)
+end
+
+local function start_seizure(self)
+	self.fx_mode = "seizure"
+	self.fx_i = 1
+	self.fx_seq = {}
+	for i, d in ipairs(FLICKER) do
+		self.fx_seq[i] = d * (0.7 + math.random() * 0.6) -- jitter for chaos
+	end
+	msg.post("#psycho_sound", "stop_sound")
+	msg.post("#psycho_sound", "play_sound") -- horror sting on the flicker
+	set_bg(self, true) -- step 1 shows the psycho variant
+	self.fx_timer = self.fx_seq[1]
 end
 
 local function set_active(self, on)
 	self.active = on
 	gui.set_enabled(self.root, on)
-	if not on then
+	set_bg(self, false)     -- always come back to the normal background
+	if on then
+		schedule_idle(self) -- (re)start the seizure timer when shown
+	else
 		-- drop any hover/press state so it doesn't linger when we return
 		for _, btn in ipairs(self.buttons) do
 			btn.hovered = false
@@ -50,8 +97,8 @@ local function quit_game()
 end
 
 local function open_settings(self)
-	set_active(self, false)                 -- hide this menu
-	msg.post("/settings#settings", "show")  -- and reveal the settings screen
+	set_active(self, false)                                 -- hide this menu
+	msg.post("/settings#settings", "show", { from = "menu" }) -- reveal settings
 end
 
 local function start_game(self)
@@ -72,13 +119,12 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	self.root = gui.get_node("root")
+	self.logo2 = gui.get_node("logo2")
 	self.active = true
 	self.buttons = {}
 	for i, def in ipairs(ITEMS) do
 		local btn = {
-			hit = gui.get_node(def.prefix .. "_hit"),
 			frame = gui.get_node(def.prefix .. "_frame"),
-			inner = gui.get_node(def.prefix .. "_inner"),
 			marker = gui.get_node(def.prefix .. "_marker"),
 			text = gui.get_node(def.prefix .. "_text"),
 			on_click = def.on_click,
@@ -89,6 +135,31 @@ function init(self)
 		set_highlight(btn, false)
 		gui.set_scale(btn.text, SCALE_NORMAL)
 	end
+
+	set_bg(self, false)     -- start on the normal background
+	schedule_idle(self)     -- and arm the first psychosis seizure
+end
+
+function update(self, dt)
+	if not self.active then
+		return
+	end
+	self.fx_timer = self.fx_timer - dt
+	if self.fx_timer > 0 then
+		return
+	end
+	if self.fx_mode == "idle" then
+		start_seizure(self)
+	else
+		self.fx_i = self.fx_i + 1
+		if self.fx_i > #self.fx_seq then
+			set_bg(self, false) -- seizure over: back to normal, wait again
+			schedule_idle(self)
+		else
+			set_bg(self, self.fx_i % 2 == 1) -- odd step = psycho, even = normal
+			self.fx_timer = self.fx_seq[self.fx_i]
+		end
+	end
 end
 
 function on_message(self, message_id, message, sender)
@@ -98,6 +169,11 @@ function on_message(self, message_id, message, sender)
 		-- game.collection finished loading: init + enable it
 		msg.post(sender, "init")
 		msg.post(sender, "enable")
+	elseif message_id == hash("return_to_menu") then
+		-- settings (opened from the game) asked to quit the game and show the menu
+		msg.post("#gameproxy", "disable")
+		msg.post("#gameproxy", "unload")
+		set_active(self, true)
 	end
 end
 
@@ -105,11 +181,14 @@ function on_input(self, action_id, action)
 	if not self.active then
 		return
 	end
+	if action.x == nil then
+		return -- ignore key actions (WASD/arrows) - no cursor position
+	end
 
-	-- Mouse movement arrives with action_id == nil; use every pointer action
-	-- to refresh the hover state against the invisible hit boxes.
+	-- Mouse movement arrives with action_id == nil; use every pointer action to
+	-- refresh the hover state. The always-visible text node is the hit area.
 	for _, btn in ipairs(self.buttons) do
-		local now = gui.pick_node(btn.hit, action.x, action.y)
+		local now = gui.pick_node(btn.text, action.x, action.y)
 		if now and not btn.hovered then
 			play_hover() -- play once when the cursor enters an item
 		end

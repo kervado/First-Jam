@@ -184,3 +184,31 @@ embedded_instances {
     y: 540.0
   }
 }
+embedded_instances {
+  id: "game_ui"
+  data: "components {\n"
+  "  id: \"game_gui\"\n"
+  "  component: \"/main/game.gui\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "settings"
+  data: "components {\n"
+  "  id: \"settings\"\n"
+  "  component: \"/main/settings.gui\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"hover_sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/assets/audio/ui_hover.wav\\\"\\n"
+  "\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"touch_icon_sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/assets/audio/ui_click.wav\\\"\\n"
+  "\"\n"
+  "}\n"
+  ""
+}
