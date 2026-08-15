@@ -12,6 +12,13 @@ local items = require("main.items")
 local CONTROLLER = "controller#controller"
 local C_PLAYER = vmath.vector4(0.25, 0.82, 0.38, 1.0)   -- green assistant
 
+-- sound played when the assistant picks up a given item type from a source
+local PICKUP_SOUND = {
+	[items.COFFEE] = "#snd_coffee",   -- coffee-pouring.wav
+	[items.PAPER]  = "#snd_paper",    -- paper-rustle.wav
+	[items.CAT]    = "#snd_cat",      -- cat-meow.wav
+}
+
 function init(self)
 	go.set("#sprite", "tint", C_PLAYER)
 	msg.post("#icon", "disable")    -- carry indicator hidden until we hold something
@@ -41,6 +48,12 @@ function on_message(self, message_id, message, sender)
 		else
 			msg.post("#icon", "disable")
 			msg.post("#count", "disable")
+		end
+	elseif message_id == hash("play_pickup") then
+		local snd = PICKUP_SOUND[message.type]
+		if snd then
+			msg.post(snd, "stop_sound")
+			msg.post(snd, "play_sound")
 		end
 	end
 end

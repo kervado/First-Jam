@@ -20,6 +20,18 @@ local items = require("main.items")
 local CONTROLLER = "controller#controller"
 local C_DESK = vmath.vector4(0.25, 0.46, 0.86, 1.0)   -- blue desk
 
+-- sound played when a request of a given type is fulfilled
+local DELIVER_SOUND = {
+	[items.COFFEE] = "#snd_coffee",   -- gulp.wav
+	[items.PAPER]  = "#snd_paper",    -- laser-printer.wav
+	[items.CAT]    = "#snd_cat",      -- cat-purring.wav
+}
+
+local function play(url)
+	msg.post(url, "stop_sound")
+	msg.post(url, "play_sound")
+end
+
 go.property("coffee", 3)
 go.property("paper", 2)
 go.property("cats", 1)
@@ -48,7 +60,10 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("show_icon") then
 		go.set("#icon", "tint", items.COLORS[message.type] or vmath.vector4(1, 1, 1, 1))
 		msg.post("#icon", "enable")
-	elseif message_id == hash("hide_icon") then
+		play("#snd_request")                 -- a new request appeared
+	elseif message_id == hash("fulfilled") then
+		local snd = DELIVER_SOUND[message.type]
+		if snd then play(snd) end            -- worker got what they wanted
 		msg.post("#icon", "disable")
 	end
 end

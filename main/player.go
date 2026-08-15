@@ -57,3 +57,27 @@ embedded_components {
     z: 0.1
   }
 }
+embedded_components {
+  id: "snd_coffee"
+  type: "sound"
+  data: "sound: \"/assets/audio/coffee-pouring.wav\"\n"
+  "group: \"master\"\n"
+  "gain: 1.0\n"
+  ""
+}
+embedded_components {
+  id: "snd_paper"
+  type: "sound"
+  data: "sound: \"/assets/audio/paper-rustle.wav\"\n"
+  "group: \"master\"\n"
+  "gain: 1.0\n"
+  ""
+}
+embedded_components {
+  id: "snd_cat"
+  type: "sound"
+  data: "sound: \"/assets/audio/cat-meow.wav\"\n"
+  "group: \"master\"\n"
+  "gain: 1.0\n"
+  ""
+}

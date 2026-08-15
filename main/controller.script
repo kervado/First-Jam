@@ -14,9 +14,18 @@
 -- refills that type to its limit and drops whatever else was held. A worker
 -- wants exactly one item type (chosen by that desk's weights) and is only
 -- satisfied by that type.
+--
+-- Requests / psychosis (see the block comments below the constants) drive the
+-- pacing of the level.
 --------------------------------------------------------------------------------
 
 local items = require("main.items")
+
+-- how many requests may be active at once. No new request is created while the
+-- active count is at this cap.
+go.property("MaxActiveRequests", 3)
+-- how often (seconds) the controller tries to hand out a new request.
+go.property("ChekFrequency", 1.0)
 
 local SPEED         = 320      -- horizontal pixels / second
 local ISO_RATIO     = 0.58     -- classic isometric height/width; movement only
@@ -25,11 +34,31 @@ local CONTACT_PAD   = 8        -- how close counts as "touching" for interaction
 local ROOM_W        = 1920
 local ROOM_H        = 1080
 
-local DESK_MIN_WAIT = 4.0      -- seconds before a satisfied worker may ask again
-local DESK_MAX_WAIT = 11.0
+-- When a request appears, the worker will wait patiently for this many seconds
+-- (random in the range for the requested type). After that the request stays
+-- active but the desk starts raising the level psychosis.
+local WAIT_RANGE = {
+	[items.COFFEE] = { 5, 10 },
+	[items.PAPER]  = { 15, 20 },
+	[items.CAT]    = { 8, 13 },
+}
 
-local function rand_wait()
-	return DESK_MIN_WAIT + math.random() * (DESK_MAX_WAIT - DESK_MIN_WAIT)
+-- After a request is fulfilled the desk waits this cooldown (seconds, by the
+-- delivered type) before it re-joins the pool of desks able to request again.
+local COOLDOWN = {
+	[items.COFFEE] = 3,
+	[items.PAPER]  = 5,
+	[items.CAT]    = 8,
+}
+
+-- Each desk whose wait time has expired (but is still undelivered) adds this
+-- many psychosis percent per minute. Psychosis is clamped to 0..100.
+local PSYCHOSIS_PER_MIN = 1.0
+
+--------------------------------------------------------------------------------
+
+local function rand_range(range)
+	return range[1] + math.random() * (range[2] - range[1])
 end
 
 -- pick an item type from relative weights {coffee, paper, cats}
@@ -65,6 +94,60 @@ local function touching(self, b)
 	return aabb(p.x, p.y, p.hw + CONTACT_PAD, p.hh + CONTACT_PAD, b.x, b.y, b.hw, b.hh)
 end
 
+-- number of desks that currently have an undelivered request
+local function count_active(self)
+	local n = 0
+	for _, d in ipairs(self.desks) do
+		if d.active then n = n + 1 end
+	end
+	return n
+end
+
+-- desks ready to request again, in random order (Fisher-Yates shuffle)
+local function shuffled_ready(self)
+	local list = {}
+	for _, d in ipairs(self.desks) do
+		if d.ready then list[#list + 1] = d end
+	end
+	for i = #list, 2, -1 do
+		local j = math.random(i)
+		list[i], list[j] = list[j], list[i]
+	end
+	return list
+end
+
+-- hand a fresh request to desk d
+local function give_request(self, d)
+	d.active  = true
+	d.ready   = false
+	d.want    = weighted_pick(d.w)
+	d.wait    = rand_range(WAIT_RANGE[d.want])
+	d.expired = false
+	msg.post(msg.url(nil, d.id, "script"), "show_icon", { type = d.want })
+end
+
+-- once per ChekFrequency: maybe promote ONE ready desk to a new request
+local function try_new_request(self)
+	local maxreq = self.MaxActiveRequests
+	if maxreq <= 0 then return end
+
+	local active = count_active(self)
+	if active >= maxreq then return end          -- never exceed the cap
+
+	-- probability that a checked desk raises a request this pass
+	local prob = 1 - (active / maxreq)
+	if prob <= 0 then return end
+
+	for _, d in ipairs(shuffled_ready(self)) do
+		if math.random() < prob then
+			give_request(self, d)
+			return                               -- one request per check, then stop
+		end
+	end
+end
+
+--------------------------------------------------------------------------------
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	math.randomseed(os.time())
@@ -80,6 +163,13 @@ function init(self)
 	self.desks    = {}   -- desks (subset of solids) with request state
 	self.sources  = {}   -- item sources (subset of solids): coffee/paper/cat
 	self.player   = nil  -- filled in when the player registers
+
+	-- level-wide psychosis meter (0..100), raised by impatient workers
+	self.psychosis = 0
+	self.psychosis_shown = 0
+
+	-- request pacing
+	self.check_timer = self.ChekFrequency
 end
 
 function on_message(self, message_id, message, sender)
@@ -95,9 +185,13 @@ function on_message(self, message_id, message, sender)
 	if kind == hash("player") then
 		self.player = box
 	elseif kind == hash("desk") then
-		box.needs = false
-		box.timer = rand_wait()
-		box.want  = nil
+		-- every desk starts idle and ready to request (zero cooldown)
+		box.active   = false
+		box.want     = nil
+		box.wait     = 0
+		box.expired  = false
+		box.cooldown = 0
+		box.ready    = true
 		box.w = { coffee = message.w_coffee, paper = message.w_paper, cats = message.w_cats }
 		table.insert(self.desks, box)
 		table.insert(self.solids, box)
@@ -140,37 +234,65 @@ function update(self, dt)
 
 	go.set_position(vmath.vector3(p.x, p.y, p.z), p.id)
 
-	-- ---- desk requests: tick timers, raise a (weighted) request ----
+	-- ---- desk timers: wait -> expiry (psychosis), and post-delivery cooldown ----
+	local expired = 0
 	for _, d in ipairs(self.desks) do
-		if not d.needs then
-			d.timer = d.timer - dt
-			if d.timer <= 0 then
-				d.needs = true
-				d.want  = weighted_pick(d.w)
-				msg.post(msg.url(nil, d.id, "script"), "show_icon", { type = d.want })
+		if d.active then
+			if not d.expired then
+				d.wait = d.wait - dt
+				if d.wait <= 0 then d.expired = true end
 			end
+			if d.expired then expired = expired + 1 end
+		elseif not d.ready then
+			d.cooldown = d.cooldown - dt
+			if d.cooldown <= 0 then d.ready = true end
 		end
+	end
+
+	-- ---- psychosis: every impatient (expired) desk raises the level meter ----
+	if expired > 0 then
+		self.psychosis = math.min(100, self.psychosis + expired * (PSYCHOSIS_PER_MIN / 60) * dt)
+		local whole = math.floor(self.psychosis)
+		if whole > self.psychosis_shown then
+			self.psychosis_shown = whole
+			print("psychosis: " .. whole .. "%")
+		end
+	end
+
+	-- ---- request pacing: try to raise a new request every ChekFrequency ----
+	self.check_timer = self.check_timer - dt
+	if self.check_timer <= 0 then
+		self.check_timer = (self.ChekFrequency > 0) and self.ChekFrequency or 1.0
+		try_new_request(self)
 	end
 
 	-- ---- pick up items from sources (only one type at a time) ----
 	for _, s in ipairs(self.sources) do
 		if touching(self, s) then
-			-- refill this type to its limit; a different held type is dropped
-			self.carry_type  = s.item
-			self.carry_count = s.max
+			-- refill this type to its limit; a different held type is dropped.
+			-- only fire the pickup sound on a real change (not every frame we
+			-- keep standing on the source).
+			if self.carry_type ~= s.item or self.carry_count ~= s.max then
+				self.carry_type  = s.item
+				self.carry_count = s.max
+				msg.post(msg.url(nil, p.id, "script"), "play_pickup", { type = s.item })
+			end
 		end
 	end
 
 	-- ---- deliver to a worker who wants exactly what we carry ----
 	for _, d in ipairs(self.desks) do
-		if d.needs and self.carry_type == d.want and self.carry_count > 0 and touching(self, d) then
+		if d.active and self.carry_type == d.want and self.carry_count > 0 and touching(self, d) then
 			self.carry_count = self.carry_count - 1
 			if self.carry_count <= 0 then
 				self.carry_type = nil
 			end
-			d.needs = false
-			d.timer = rand_wait()
-			msg.post(msg.url(nil, d.id, "script"), "hide_icon")
+			-- request satisfied: stop raising psychosis, start the type cooldown
+			d.active   = false
+			d.expired  = false
+			d.ready    = false
+			d.cooldown = COOLDOWN[d.want] or 0
+			msg.post(msg.url(nil, d.id, "script"), "fulfilled", { type = d.want })
 		end
 	end
 

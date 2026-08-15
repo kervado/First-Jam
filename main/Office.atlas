@@ -1,0 +1,148 @@
+images {
+  image: "/assets/images/Blue and yellow objects.png"
+}
+images {
+  image: "/assets/images/Blurred computer mouse.png"
+}
+images {
+  image: "/assets/images/Blurred metallic object.png"
+}
+images {
+  image: "/assets/images/board_big.png"
+}
+images {
+  image: "/assets/images/board_small.png"
+}
+images {
+  image: "/assets/images/boiler.png"
+}
+images {
+  image: "/assets/images/box.png"
+}
+images {
+  image: "/assets/images/box_small_1.png"
+}
+images {
+  image: "/assets/images/box_small_2.png"
+}
+images {
+  image: "/assets/images/Bronze desk lamp.png"
+}
+images {
+  image: "/assets/images/Brown container with pens.png"
+}
+images {
+  image: "/assets/images/Brown container with pens_2.png"
+}
+images {
+  image: "/assets/images/Brown object on black base.png"
+}
+images {
+  image: "/assets/images/Brown rectangular object.png"
+}
+images {
+  image: "/assets/images/cabinet_1.png"
+}
+images {
+  image: "/assets/images/cabinet_2.png"
+}
+images {
+  image: "/assets/images/cabinet_3.png"
+}
+images {
+  image: "/assets/images/cat.png"
+}
+images {
+  image: "/assets/images/Clipboard with paper and pen.png"
+}
+images {
+  image: "/assets/images/coffee_machine.png"
+}
+images {
+  image: "/assets/images/documents.png"
+}
+images {
+  image: "/assets/images/folder_1.png"
+}
+images {
+  image: "/assets/images/folder_2.png"
+}
+images {
+  image: "/assets/images/folder_3.png"
+}
+images {
+  image: "/assets/images/ginger_cat.png"
+}
+images {
+  image: "/assets/images/Gray box with oval objects.png"
+}
+images {
+  image: "/assets/images/Keyboard with number pad.png"
+}
+images {
+  image: "/assets/images/Office chair cartoon drawing copy.png"
+}
+images {
+  image: "/assets/images/Old-fashioned telephone.png"
+}
+images {
+  image: "/assets/images/paper_glasses_1.png"
+}
+images {
+  image: "/assets/images/paper_glasses_2.png"
+}
+images {
+  image: "/assets/images/plant_1.png"
+}
+images {
+  image: "/assets/images/plant_2.png"
+}
+images {
+  image: "/assets/images/plant_3.png"
+}
+images {
+  image: "/assets/images/plant_4.png"
+}
+images {
+  image: "/assets/images/plant_5.png"
+}
+images {
+  image: "/assets/images/plant_6.png"
+}
+images {
+  image: "/assets/images/plant_7.png"
+}
+images {
+  image: "/assets/images/plant_8.png"
+}
+images {
+  image: "/assets/images/plant_9.png"
+}
+images {
+  image: "/assets/images/printer.png"
+}
+images {
+  image: "/assets/images/sheet_1.png"
+}
+images {
+  image: "/assets/images/sheet_2.png"
+}
+images {
+  image: "/assets/images/sheet_3.png"
+}
+images {
+  image: "/assets/images/square.png"
+}
+images {
+  image: "/assets/images/Trash_can.png"
+}
+images {
+  image: "/assets/images/wardrobe_1.png"
+}
+images {
+  image: "/assets/images/wardrobe_2.png"
+}
+images {
+  image: "/assets/images/Wooden desk with drawers.png"
+}
+extrude_borders: 2

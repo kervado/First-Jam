@@ -44,6 +44,24 @@ instances {
     x: 1000.0
     y: 250.0
   }
+  component_properties {
+    id: "script"
+    properties {
+      id: "coffee"
+      value: "1.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "paper"
+      value: "1.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "cats"
+      value: "1.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
 }
 instances {
   id: "desk3"
@@ -51,6 +69,24 @@ instances {
   position {
     x: 1450.0
     y: 550.0
+  }
+  component_properties {
+    id: "script"
+    properties {
+      id: "coffee"
+      value: "0.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "paper"
+      value: "3.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "cats"
+      value: "2.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
   }
 }
 instances {
