@@ -42,7 +42,7 @@ nodes {
     y: 0.5
   }
   type: TYPE_BOX
-  texture: "main_menu/background"
+  texture: "main_menu/back1"
   id: "root"
   xanchor: XANCHOR_LEFT
   yanchor: YANCHOR_BOTTOM

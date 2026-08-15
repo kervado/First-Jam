@@ -34,6 +34,12 @@ embedded_instances {
   "  data: \"sound: \\\"/assets/audio/ui_click.wav\\\"\\n"
   "\"\n"
   "}\n"
+  "embedded_components {\n"
+  "  id: \"psycho_sound\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/assets/audio/psycho_sting.ogg\\\"\\n"
+  "\"\n"
+  "}\n"
   ""
 }
 embedded_instances {

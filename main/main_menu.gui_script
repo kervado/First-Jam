@@ -31,10 +31,57 @@ local function set_highlight(btn, on)
 	gui.set_enabled(btn.marker, on)
 end
 
+-- ------------------------------------------------------- psychosis background
+-- The root node is the background image. Periodically we run a short "seizure":
+-- a jittery flicker between the normal and the "psychosis" variant of the same
+-- picture, ending on a longer psycho hold, then snap back to normal.
+-- back1 = normal picture, background = the "psychosis" variant (both already
+-- in main_menu.atlas). pcall keeps the swap safe even if an image is missing.
+local BG_NORMAL = hash("back1")
+local BG_PSYCHO = hash("background")
+
+-- logo2 is the white brain; it glows red while the background is in psycho mode
+local LOGO_NORMAL = vmath.vector4(1.0, 1.0, 1.0, 1.0)
+local LOGO_PSYCHO = vmath.vector4(0.82, 0.10, 0.12, 1.0)
+
+local IDLE_MIN, IDLE_MAX = 20.0, 40.0  -- seconds of calm between seizures
+-- durations of the flicker steps; step 1 = psycho, then alternating. Odd count
+-- so it ends on a psycho "hold" before snapping back to normal.
+local FLICKER = { 0.05, 0.04, 0.08, 0.04, 0.13, 0.05, 0.10, 0.04, 0.45 }
+
+local function set_bg(self, psycho)
+	-- pcall: if the psycho image isn't in the atlas yet, stay on whatever shows
+	pcall(gui.play_flipbook, self.root, psycho and BG_PSYCHO or BG_NORMAL)
+	if self.logo2 then
+		gui.set_color(self.logo2, psycho and LOGO_PSYCHO or LOGO_NORMAL)
+	end
+end
+
+local function schedule_idle(self)
+	self.fx_mode = "idle"
+	self.fx_timer = IDLE_MIN + math.random() * (IDLE_MAX - IDLE_MIN)
+end
+
+local function start_seizure(self)
+	self.fx_mode = "seizure"
+	self.fx_i = 1
+	self.fx_seq = {}
+	for i, d in ipairs(FLICKER) do
+		self.fx_seq[i] = d * (0.7 + math.random() * 0.6) -- jitter for chaos
+	end
+	msg.post("#psycho_sound", "stop_sound")
+	msg.post("#psycho_sound", "play_sound") -- horror sting on the flicker
+	set_bg(self, true) -- step 1 shows the psycho variant
+	self.fx_timer = self.fx_seq[1]
+end
+
 local function set_active(self, on)
 	self.active = on
 	gui.set_enabled(self.root, on)
-	if not on then
+	set_bg(self, false)     -- always come back to the normal background
+	if on then
+		schedule_idle(self) -- (re)start the seizure timer when shown
+	else
 		-- drop any hover/press state so it doesn't linger when we return
 		for _, btn in ipairs(self.buttons) do
 			btn.hovered = false
@@ -72,6 +119,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	self.root = gui.get_node("root")
+	self.logo2 = gui.get_node("logo2")
 	self.active = true
 	self.buttons = {}
 	for i, def in ipairs(ITEMS) do
@@ -86,6 +134,31 @@ function init(self)
 		self.buttons[i] = btn
 		set_highlight(btn, false)
 		gui.set_scale(btn.text, SCALE_NORMAL)
+	end
+
+	set_bg(self, false)     -- start on the normal background
+	schedule_idle(self)     -- and arm the first psychosis seizure
+end
+
+function update(self, dt)
+	if not self.active then
+		return
+	end
+	self.fx_timer = self.fx_timer - dt
+	if self.fx_timer > 0 then
+		return
+	end
+	if self.fx_mode == "idle" then
+		start_seizure(self)
+	else
+		self.fx_i = self.fx_i + 1
+		if self.fx_i > #self.fx_seq then
+			set_bg(self, false) -- seizure over: back to normal, wait again
+			schedule_idle(self)
+		else
+			set_bg(self, self.fx_i % 2 == 1) -- odd step = psycho, even = normal
+			self.fx_timer = self.fx_seq[self.fx_i]
+		end
 	end
 end
 
