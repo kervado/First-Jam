@@ -28,8 +28,9 @@ go.property("MaxActiveRequests", 3)
 -- how often (seconds) the controller tries to hand out a new request.
 go.property("ChekFrequency", 1.0)
 
-local SPEED         = 320      -- horizontal pixels / second
+local SPEED         = 320      -- max horizontal pixels / second
 local ISO_RATIO     = 0.58     -- classic isometric height/width; movement only
+local ACCEL_TIME    = 0.5      -- seconds to reach max speed, and to brake to 0
 local CONTACT_PAD   = 8        -- how close counts as "touching" for interactions
 
 local ROOM_W        = 1920
@@ -54,12 +55,19 @@ local COOLDOWN = {
 
 -- Each desk whose wait time has expired (but is still undelivered) adds this
 -- many psychosis percent per minute. Psychosis is clamped to 0..100.
-local PSYCHOSIS_PER_MIN = 1.0
+local PSYCHOSIS_PER_MIN = 60.0
 
 --------------------------------------------------------------------------------
 
 local function rand_range(range)
 	return range[1] + math.random() * (range[2] - range[1])
+end
+
+-- move `cur` towards `target` by at most `maxstep`
+local function approach(cur, target, maxstep)
+	if cur < target then return math.min(cur + maxstep, target) end
+	if cur > target then return math.max(cur - maxstep, target) end
+	return cur
 end
 
 -- pick an item type from relative weights {coffee, paper, cats}
@@ -155,6 +163,10 @@ function init(self)
 	math.random(); math.random()
 
 	self.move             = { up = false, down = false, left = false, right = false }
+	self.vx               = 0       -- current velocity (accelerates / brakes)
+	self.vy               = 0
+	self.facing           = 0       -- euler.y: 0 faces right, 180 faces left
+	self.last_moving      = false   -- last reported walking/standing state
 	self.carry_type       = nil    -- item type currently held (hash) or nil
 	self.carry_count      = 0
 	self.last_carry_type  = false   -- forces a first HUD refresh
@@ -164,6 +176,7 @@ function init(self)
 	self.desks    = {}   -- desks (subset of solids) with request state
 	self.sources  = {}   -- item sources (subset of solids): coffee/paper/cat
 	self.player   = nil  -- filled in when the player registers
+	self.floor    = nil  -- walkable rectangle {x, y, hw, hh}, from the floor object
 
 	-- level-wide psychosis meter (0..100), raised by impatient workers.
 	-- lives in the shared office module so every object can read it; reset here
@@ -187,6 +200,9 @@ function on_message(self, message_id, message, sender)
 
 	if kind == hash("player") then
 		self.player = box
+	elseif kind == hash("floor") then
+		-- the floor is walkable, not a solid: it defines the movement bounds
+		self.floor = box
 	elseif kind == hash("desk") then
 		-- every desk starts idle and ready to request (zero cooldown)
 		box.active   = false
@@ -214,25 +230,58 @@ function update(self, dt)
 	local p = self.player
 	if not p then return end
 
-	-- ---- movement (per-axis so the player can slide along walls) ----
-	local dx, dy = 0, 0
-	if self.move.left  then dx = dx - 1 end
-	if self.move.right then dx = dx + 1 end
-	if self.move.down  then dy = dy - 1 end
-	if self.move.up    then dy = dy + 1 end
+	-- ---- movement: accelerate toward a target velocity, brake to a stop ----
+	local dirx, diry = 0, 0
+	if self.move.left  then dirx = dirx - 1 end
+	if self.move.right then dirx = dirx + 1 end
+	if self.move.down  then diry = diry - 1 end
+	if self.move.up    then diry = diry + 1 end
 
-	-- the classic isometric ratio applies to movement only: the vertical
-	-- (screen y) axis moves at 0.58x the horizontal speed.
-	local step_x = dx * SPEED * dt
-	local step_y = dy * SPEED * ISO_RATIO * dt
+	-- target velocity (the classic isometric ratio applies to the Y axis only)
+	local tvx = dirx * SPEED
+	local tvy = diry * SPEED * ISO_RATIO
 
-	if step_x ~= 0 then
-		local nx = math.max(p.hw, math.min(ROOM_W - p.hw, p.x + step_x))
-		if is_free(self, nx, p.y) then p.x = nx end
+	-- ramp to max speed (or to a full stop) over ACCEL_TIME seconds
+	self.vx = approach(self.vx, tvx, (SPEED / ACCEL_TIME) * dt)
+	self.vy = approach(self.vy, tvy, (SPEED * ISO_RATIO / ACCEL_TIME) * dt)
+
+	-- face the direction of horizontal travel (euler.y: 0 = right, 180 = left)
+	if self.vx > 0 and self.facing ~= 0 then
+		self.facing = 0
+		go.set(p.id, "euler.y", 0)
+	elseif self.vx < 0 and self.facing ~= 180 then
+		self.facing = 180
+		go.set(p.id, "euler.y", 180)
 	end
-	if step_y ~= 0 then
-		local ny = math.max(p.hh, math.min(ROOM_H - p.hh, p.y + step_y))
-		if is_free(self, p.x, ny) then p.y = ny end
+
+	-- movement limits: inside the floor rectangle if known, else the whole room
+	local minx, maxx = p.hw, ROOM_W - p.hw
+	local miny, maxy = p.hh, ROOM_H - p.hh
+	if self.floor then
+		minx = self.floor.x - self.floor.hw + p.hw
+		maxx = self.floor.x + self.floor.hw - p.hw
+		miny = self.floor.y - self.floor.hh + p.hh
+		maxy = self.floor.y + self.floor.hh - p.hh
+	end
+
+	-- move per-axis (so the player slides along walls); a blocked axis stops
+	local oldx, oldy = p.x, p.y
+	if self.vx ~= 0 then
+		local nx = math.max(minx, math.min(maxx, p.x + self.vx * dt))
+		if is_free(self, nx, p.y) then p.x = nx else self.vx = 0 end
+	end
+	if self.vy ~= 0 then
+		local ny = math.max(miny, math.min(maxy, p.y + self.vy * dt))
+		if is_free(self, p.x, ny) then p.y = ny else self.vy = 0 end
+	end
+
+	-- report walking (actually moved) vs standing so the assistant can switch
+	-- between its walk and idle animations (position-based, so pushing into a
+	-- wall reads as standing rather than flickering)
+	local moving = (math.abs(p.x - oldx) + math.abs(p.y - oldy)) > 0.1
+	if moving ~= self.last_moving then
+		self.last_moving = moving
+		msg.post(msg.url(nil, p.id, "script"), "set_moving", { moving = moving })
 	end
 
 	-- fake-isometric depth: the assistant's Z follows its Y, like every object
@@ -256,11 +305,12 @@ function update(self, dt)
 	-- ---- psychosis: every impatient (expired) desk raises the level meter ----
 	if expired > 0 then
 		office.psychosis = math.min(100, office.psychosis + expired * (PSYCHOSIS_PER_MIN / 60) * dt)
-		local whole = math.floor(office.psychosis)
-		if whole ~= self.psychosis_shown then
-			self.psychosis_shown = whole
-			-- push the new stress value to the in-game HUD
-			msg.post("/game_ui#game_gui", "stress", { value = self.psychosis })
+		-- push the real value to the in-game HUD whenever it changes: the fill
+		-- bar slides continuously, so sub-percent growth is visible immediately
+		-- (the % text is rounded on the HUD side).
+		if office.psychosis ~= self.psychosis_shown then
+			self.psychosis_shown = office.psychosis
+			msg.post("/game_ui#game_gui", "stress", { value = office.psychosis })
 		end
 	end
 

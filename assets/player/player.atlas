@@ -1,0 +1,55 @@
+images {
+  image: "/assets/player/Animated character head.png"
+}
+images {
+  image: "/assets/player/Arm in black jacket.png"
+}
+images {
+  image: "/assets/player/Arm in black sleeve.png"
+}
+images {
+  image: "/assets/player/Black framed eyewear.png"
+}
+images {
+  image: "/assets/player/Blurry black circle.png"
+}
+images {
+  image: "/assets/player/Brown leafy plant.png"
+}
+images {
+  image: "/assets/player/Cartoon orange cat.png"
+}
+images {
+  image: "/assets/player/Clipboard with colored tabs.png"
+}
+images {
+  image: "/assets/player/Four-hole container.png"
+}
+images {
+  image: "/assets/player/Person wearing boots.png"
+}
+images {
+  image: "/assets/player/Person wearing pants and boots.png"
+}
+images {
+  image: "/assets/player/Pixelated book with notes.png"
+}
+images {
+  image: "/assets/player/Pixelated coffee cup icon.png"
+}
+images {
+  image: "/assets/player/Pixelated suit on white background.png"
+}
+images {
+  image: "/assets/player/Red object on white background.png"
+}
+images {
+  image: "/assets/player/Sleeping cat cartoon image.png"
+}
+images {
+  image: "/assets/player/Stacked objects with tags.png"
+}
+images {
+  image: "/assets/player/Stacked papers with ribbon.png"
+}
+extrude_borders: 2

@@ -12,7 +12,9 @@
 -- Visuals: the "sprite" component is kept for its footprint only and is made
 -- fully transparent at start. Two extra sprites carry the look: "normal" is
 -- shown from the start, and once the office psychosis reaches this object's
--- `psychosis_limit` it switches to "psychotic" -- permanently.
+-- `psychosis_limit` it switches to "psychotic" -- permanently. Their colours
+-- are left untouched (the look lives in the images themselves); this script
+-- only toggles which one is visible.
 --
 -- Depth: the object's Z is derived from its Y for the fake-isometric look
 -- (the floor is pinned to the very back).
@@ -23,27 +25,22 @@ local office = require("main.office")
 go.property("kind", hash("obstacle"))
 -- office psychosis (%) at which this object flips to its psychotic look
 go.property("psychosis_limit", 50)
+-- offset (in this object's local space) of the collision/walkable footprint
+-- relative to the object position -- used when the "sprite" is not centred
+-- (e.g. the floor, whose walkable region sits below the object origin)
+go.property("footprint_offset_x", 0)
+go.property("footprint_offset_y", 0)
 
 local CONTROLLER = "controller#controller"
 
-local BODY = {
-	[hash("obstacle")] = vmath.vector4(0.40, 0.40, 0.46, 1.0),
-	[hash("floor")]    = vmath.vector4(0.12, 0.14, 0.13, 1.0),
-	[hash("coffee")]   = vmath.vector4(0.62, 0.36, 0.14, 1.0),
-	[hash("paper")]    = vmath.vector4(0.85, 0.78, 0.55, 1.0),
-	[hash("cat")]      = vmath.vector4(0.55, 0.40, 0.70, 1.0),
-}
-
-local PSYCHO       = vmath.vector4(0.75, 0.12, 0.12, 1.0)   -- crimson "gone mad"
-local TRANSPARENT  = vmath.vector4(1.0, 1.0, 1.0, 0.0)
+local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
 
 function init(self)
 	-- the placeholder square no longer draws; keep it only for its footprint
 	go.set("#sprite", "tint", TRANSPARENT)
 
-	-- visible look: normal now, psychotic later
-	go.set("#normal", "tint", BODY[self.kind] or vmath.vector4(1, 1, 1, 1))
-	go.set("#psychotic", "tint", PSYCHO)
+	-- visible look: normal now, psychotic later. Colours come from the images
+	-- themselves -- we only choose which sprite is shown.
 	msg.post("#normal", "enable")
 	msg.post("#psychotic", "disable")
 	self.psychotic = false
@@ -53,18 +50,17 @@ function init(self)
 	local z = (self.kind == hash("floor")) and office.Z_FLOOR or office.z_for_y(pos.y)
 	go.set_position(vmath.vector3(pos.x, pos.y, z))
 
-	-- the floor is walkable: it draws itself but never registers as a solid
-	if self.kind == hash("floor") then
-		return
-	end
-
 	local size  = go.get("#sprite", "size")   -- base sprite size (unscaled)
 	local scale = go.get_scale()               -- per-instance scale
 
+	-- The footprint (walkable area for the floor, collision box for the rest)
+	-- is the sprite rectangle, which may be offset from the object origin.
 	msg.post(CONTROLLER, "register", {
 		kind = self.kind,
 		id   = go.get_id(),
-		x = pos.x, y = pos.y, z = z,
+		x = pos.x + self.footprint_offset_x * scale.x,
+		y = pos.y + self.footprint_offset_y * scale.y,
+		z = z,
 		hw = 0.5 * size.x * scale.x,
 		hh = 0.5 * size.y * scale.y,
 	})

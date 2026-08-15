@@ -1,10 +1,12 @@
 --------------------------------------------------------------------------------
 -- player.script
 --
--- The assistant. It does not move itself: the controller owns movement,
--- collision and the carried-item state. This script registers the player and
--- displays what it is currently carrying above its head: one coloured icon for
--- the item type plus a number for how many are held.
+-- The assistant. Movement, collision and the carried-item state are owned by the
+-- controller; this script drives the visuals of the Spine model:
+--   * the SKIN shows what is carried and how many (base / coffee1..4 /
+--     papper1..4 / cat1..2);
+--   * the ANIMATION is the idle/walk variant matching that skin, chosen by
+--     whether the assistant is standing still or moving.
 --------------------------------------------------------------------------------
 
 local items = require("main.items")
@@ -12,17 +14,56 @@ local items = require("main.items")
 local CONTROLLER = "controller#controller"
 local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
 
--- sound played when the assistant picks up a given item type from a source
+-- carried item type -> spine look. `skin` is suffixed with the carried count
+-- (clamped to `skins`, the number of skins that actually exist for that item).
+local CARRY = {
+	[items.COFFEE] = { skin = "coffee", skins = 4, idle = "idle_coffee", walk = "walk_coffee" },
+	[items.PAPER]  = { skin = "papper", skins = 4, idle = "idle_paper",  walk = "walk_paper"  },
+	[items.CAT]    = { skin = "cat",    skins = 2, idle = "idle_cat",    walk = "walk_cat"    },
+}
+local EMPTY = { skin = "base", idle = "idle", walk = "walk" }
+
+-- pickup sound per item type
 local PICKUP_SOUND = {
-	[items.COFFEE] = "#snd_coffee",   -- coffee-pouring.wav
-	[items.PAPER]  = "#snd_paper",    -- paper-rustle.wav
-	[items.CAT]    = "#snd_cat",      -- cat-meow.wav
+	[items.COFFEE] = "#snd_coffee",
+	[items.PAPER]  = "#snd_paper",
+	[items.CAT]    = "#snd_cat",
 }
 
+-- resolve the current skin + animation from carry state and movement, and push
+-- only the changes to the Spine model (so animations are not restarted every frame)
+local function apply(self)
+	local skin, idle, walk
+	local def = self.carry_type and CARRY[self.carry_type]
+	if def and self.carry_count > 0 then
+		local idx = math.min(self.carry_count, def.skins)
+		skin = def.skin .. idx
+		idle, walk = def.idle, def.walk
+	else
+		skin, idle, walk = EMPTY.skin, EMPTY.idle, EMPTY.walk
+	end
+
+	local anim = self.moving and walk or idle
+
+	if skin ~= self.cur_skin then
+		spine.set_skin("#spinemodel", skin)
+		self.cur_skin = skin
+	end
+	if anim ~= self.cur_anim then
+		spine.play_anim("#spinemodel", anim, go.PLAYBACK_LOOP_FORWARD)
+		self.cur_anim = anim
+	end
+end
+
 function init(self)
-	go.set("#sprite", "tint", TRANSPARENT)   -- body no longer drawn (footprint only)
-	msg.post("#icon", "disable")    -- carry indicator hidden until we hold something
-	msg.post("#count", "disable")
+	go.set("#sprite", "tint", TRANSPARENT)   -- footprint square stays invisible
+
+	self.carry_type  = nil
+	self.carry_count = 0
+	self.moving      = false
+	-- the .go defaults the spine model to skin "base" / animation "idle"
+	self.cur_skin    = "base"
+	self.cur_anim    = "idle"
 
 	local size  = go.get("#sprite", "size")
 	local scale = go.get_scale()
@@ -39,16 +80,13 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("set_carry") then
-		local color = items.COLORS[message.type]   -- nil when carrying nothing
-		if color and message.count > 0 then
-			go.set("#icon", "tint", color)
-			label.set_text("#count", tostring(message.count))
-			msg.post("#icon", "enable")
-			msg.post("#count", "enable")
-		else
-			msg.post("#icon", "disable")
-			msg.post("#count", "disable")
-		end
+		local t = message.type
+		self.carry_type  = (t ~= hash("none")) and t or nil
+		self.carry_count = message.count
+		apply(self)
+	elseif message_id == hash("set_moving") then
+		self.moving = message.moving
+		apply(self)
 	elseif message_id == hash("play_pickup") then
 		local snd = PICKUP_SOUND[message.type]
 		if snd then
