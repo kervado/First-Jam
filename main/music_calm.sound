@@ -1,0 +1,4 @@
+sound: "/assets/audio_fon/no_stress.wav"
+looping: 1
+group: "master"
+gain: 1.0

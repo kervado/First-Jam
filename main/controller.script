@@ -61,6 +61,9 @@ local COOLDOWN = {
 -- many psychosis percent per minute. Psychosis is clamped to 0..100.
 local PSYCHOSIS_PER_MIN = 60.0
 
+-- adaptive music cross-fade speed (gain units per second; ~1.5s for a full swap)
+local MUSIC_FADE = 0.66
+
 --------------------------------------------------------------------------------
 
 local function rand_range(range)
@@ -199,6 +202,19 @@ function init(self)
 
 	-- looping office ambience (master group -> the volume slider controls it)
 	msg.post("#ambience", "play_sound")
+
+	-- adaptive music: three looping tracks played at once, cross-faded by stress
+	-- (0-33 calm, 34-66 stress, 67+ psycho). All start silent; the active one
+	-- fades in. gain is driven per-frame in update().
+	self.music = {
+		{ url = "#music_calm",   gain = 0 },
+		{ url = "#music_stress", gain = 0 },
+		{ url = "#music_psycho", gain = 0 },
+	}
+	for _, m in ipairs(self.music) do
+		sound.play(m.url)
+		sound.set_gain(m.url, 0)
+	end
 end
 
 function on_message(self, message_id, message, sender)
@@ -258,6 +274,18 @@ function update(self, dt)
 		if self.time_left <= 0 then
 			self.round_over = true
 			msg.post("/game_ui#game_gui", "level_win")
+		end
+	end
+
+	-- ---- adaptive music: cross-fade to the track for the current stress ----
+	-- 0-33 calm, 34-66 stress, 67+ psycho
+	local ps = office.psychosis
+	local target = (ps < 34) and 1 or (ps < 67) and 2 or 3
+	for i, m in ipairs(self.music) do
+		local want = (i == target) and 1.0 or 0.0
+		if m.gain ~= want then
+			m.gain = approach(m.gain, want, MUSIC_FADE * dt)
+			sound.set_gain(m.url, m.gain)
 		end
 	end
 
