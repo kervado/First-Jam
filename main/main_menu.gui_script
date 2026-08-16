@@ -149,8 +149,16 @@ local function quit_game()
 end
 
 local function open_settings(self)
-	set_active(self, false)                                 -- hide this menu
-	msg.post("/settings#settings", "show", { from = "menu" }) -- reveal settings
+	-- keep the menu visible behind the settings window, just stop catching input
+	self.active = false
+	set_bg(self, false) -- normal background (pauses the seizure flicker)
+	for _, btn in ipairs(self.buttons) do
+		btn.hovered = false
+		btn.pressed = false
+		set_highlight(btn, false)
+		gui.set_scale(btn.text, SCALE_NORMAL)
+	end
+	msg.post("/settings#settings", "show", { from = "menu" })
 end
 
 local function start_game(self)
