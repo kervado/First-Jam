@@ -5,22 +5,22 @@ instances {
   component_properties {
     id: "controller"
     properties {
-      id: "RoundTime"
-      value: "25.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "Floor"
-      value: "3.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
       id: "MaxActiveRequests"
       value: "3.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
       id: "ChekFrequency"
+      value: "3.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "RoundTime"
+      value: "180.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "Floor"
       value: "3.0"
       type: PROPERTY_TYPE_NUMBER
     }

@@ -5,11 +5,6 @@ instances {
   component_properties {
     id: "controller"
     properties {
-      id: "Floor"
-      value: "4.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
       id: "MaxActiveRequests"
       value: "3.0"
       type: PROPERTY_TYPE_NUMBER
@@ -17,6 +12,11 @@ instances {
     properties {
       id: "ChekFrequency"
       value: "3.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "Floor"
+      value: "4.0"
       type: PROPERTY_TYPE_NUMBER
     }
   }
