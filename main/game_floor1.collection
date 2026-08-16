@@ -29,6 +29,7 @@ instances {
 instances {
   id: "floor"
   prototype: "/main/floor.go"
+  children: "psycho_decor_garbage_"
   position {
     x: 960.0
     y: 390.0
@@ -36,6 +37,11 @@ instances {
   }
   component_properties {
     id: "script"
+    properties {
+      id: "psychosis_limit"
+      value: "120.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
     properties {
       id: "footprint_offset_y"
       value: "0.0"
@@ -49,20 +55,44 @@ instances {
   position {
     x: 940.0
     y: 673.0
-    z: 0.2
+    z: 1.0
   }
 }
 instances {
   id: "cat_house"
   prototype: "/main/cat_house.go"
+  component_properties {
+    id: "script"
+    properties {
+      id: "psychosis_limit"
+      value: "120.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
 }
 instances {
   id: "coffee_machine"
   prototype: "/main/coffee_machine.go"
+  component_properties {
+    id: "script"
+    properties {
+      id: "psychosis_limit"
+      value: "120.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
 }
 instances {
   id: "paper_cabinet"
   prototype: "/main/paper_cabinet.go"
+  component_properties {
+    id: "script"
+    properties {
+      id: "psychosis_limit"
+      value: "90.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
 }
 instances {
   id: "request_icon"
@@ -154,7 +184,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -229,8 +259,8 @@ embedded_instances {
   children: "decor2"
   data: ""
   position {
-    x: 1308.0
-    y: 787.0
+    x: 1587.0
+    y: 789.0
   }
 }
 embedded_instances {
@@ -238,6 +268,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -288,6 +323,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -367,7 +407,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -442,7 +482,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -517,7 +557,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -581,8 +621,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 82.0
-    y: 86.0
+    x: 48.0
+    y: 63.0
   }
 }
 embedded_instances {
@@ -592,7 +632,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -666,7 +706,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -730,8 +770,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 70.0
-    y: 463.0
+    x: 495.0
+    y: 767.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -741,7 +782,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -815,7 +856,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -890,7 +931,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -964,8 +1005,9 @@ embedded_instances {
   children: "decor9"
   data: ""
   position {
-    x: 492.0
-    y: 777.0
+    x: 943.0
+    y: 49.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -990,7 +1032,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 77.0\n"
-  "    z: 1.0E-6\n"
+  "    z: 2.0E-6\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1010,6 +1052,7 @@ embedded_instances {
   "  position {\n"
   "    x: 2.0\n"
   "    y: 77.0\n"
+  "    z: 2.0E-6\n"
   "  }\n"
   "}\n"
   ""
@@ -1025,7 +1068,7 @@ embedded_instances {
   children: "paper_cabinet"
   data: ""
   position {
-    x: 1589.0
+    x: 1305.0
     y: 782.0
   }
 }
@@ -1083,6 +1126,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"80.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -1234,7 +1282,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"60.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -1309,7 +1357,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -1384,7 +1432,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"80.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -1446,8 +1494,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 667.0
-    y: 760.0
+    x: 55.0
+    y: 420.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -1457,7 +1506,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -1530,7 +1579,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"90.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -1603,7 +1652,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"50.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -1674,6 +1723,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -1739,7 +1793,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 7.0\n"
-  "    z: 1.0E-6\n"
+  "    z: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1759,6 +1813,7 @@ embedded_instances {
   "  position {\n"
   "    x: 1.0\n"
   "    y: 7.0\n"
+  "    z: 1.0\n"
   "  }\n"
   "}\n"
   ""
@@ -1788,7 +1843,7 @@ embedded_instances {
   "}\\n"
   "\"\n"
   "  position {\n"
-  "    z: 1.0E-6\n"
+  "    z: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1807,12 +1862,14 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    x: 1.0\n"
+  "    z: 1.0\n"
   "  }\n"
   "}\n"
   ""
   position {
     x: 177.0
     y: 883.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -1820,6 +1877,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -1837,7 +1899,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 11.0\n"
-  "    z: 1.0E-6\n"
+  "    z: 1.0\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -1857,6 +1919,7 @@ embedded_instances {
   "  position {\n"
   "    x: 3.0\n"
   "    y: 11.0\n"
+  "    z: 1.0\n"
   "  }\n"
   "}\n"
   ""
@@ -1870,6 +1933,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -1906,6 +1974,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 63.0\n"
+  "    z: 1.0E-6\n"
   "  }\n"
   "}\n"
   ""
@@ -2108,8 +2177,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 1330.0
-    y: 922.0
+    x: 1615.0
+    y: 927.0
   }
 }
 embedded_instances {
@@ -2152,12 +2221,13 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    x: 1.0\n"
+  "    z: 1.0E-6\n"
   "  }\n"
   "}\n"
   ""
   position {
-    x: 1344.0
-    y: 910.0
+    x: 1629.0
+    y: 915.0
   }
 }
 embedded_instances {
@@ -2202,12 +2272,13 @@ embedded_instances {
   "  position {\n"
   "    x: 3.0\n"
   "    y: 11.0\n"
+  "    z: 1.0E-6\n"
   "  }\n"
   "}\n"
   ""
   position {
-    x: 1280.0
-    y: 922.0
+    x: 1565.0
+    y: 927.0
   }
 }
 embedded_instances {
@@ -2254,8 +2325,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 1308.0
-    y: 923.0
+    x: 1593.0
+    y: 928.0
   }
 }
 embedded_instances {
@@ -2363,6 +2434,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"25.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -2824,8 +2900,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 263.0
-    y: -318.0
+    x: 405.0
+    y: -362.0
   }
 }
 embedded_instances {
@@ -3056,8 +3132,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 358.0
-    y: -497.0
+    x: 461.0
+    y: -161.0
   }
 }
 embedded_instances {
@@ -3493,8 +3569,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 68.0
-    y: -300.0
+    x: 1446.0
+    y: 956.0
   }
 }
 embedded_instances {
@@ -3567,8 +3643,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 78.0
-    y: -368.0
+    x: 95.0
+    y: -369.0
   }
 }
 embedded_instances {
@@ -3604,8 +3680,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 96.0
-    y: -231.0
+    x: 77.0
+    y: -242.0
   }
 }
 embedded_instances {
@@ -4796,6 +4872,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -4846,6 +4927,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -4897,12 +4983,10 @@ embedded_instances {
   id: "desk"
   children: "decor_Blue_and_yellow_objects1"
   children: "decor_Blurred_computer_mouse1"
-  children: "decor_Blurred_metallic_object1"
   children: "decor_Bronze_desk_lamp1"
   children: "decor_Brown_container_with_pens1"
   children: "decor_Brown_object_on_black_base1"
   children: "decor_Clipboard_with_paper_and_pen1"
-  children: "decor_Gray_box_with_oval_objects1"
   children: "decor_Keyboard_with_number_pad1"
   children: "decor_Old_computer_monitor1"
   children: "decor_Old_fashioned_telephone1"
@@ -4968,8 +5052,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 963.0
-    y: 289.0
+    x: 727.0
+    y: 517.0
   }
 }
 embedded_instances {
@@ -5050,6 +5134,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5098,6 +5187,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5139,8 +5233,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -5.0
-    y: -1.0
+    x: 16.0
+    y: 1.0
   }
 }
 embedded_instances {
@@ -5198,6 +5292,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5234,62 +5333,13 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 44.0\n"
+  "    z: 1.0E-5\n"
   "  }\n"
   "}\n"
   ""
   position {
-    x: -74.0
+    x: -91.0
     y: 5.0
-  }
-}
-embedded_instances {
-  id: "decor_Gray_box_with_oval_objects1"
-  data: "components {\n"
-  "  id: \"script\"\n"
-  "  component: \"/main/decor.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"normal\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Gray box with oval objects\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 42.0\\n"
-  "  y: 26.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 45.0\n"
-  "    z: 1.0E-6\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"psychotic\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Gray box with oval objects_p\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 48.0\\n"
-  "  y: 52.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 4.0\n"
-  "    y: 45.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: -88.0
-    y: 4.0
   }
 }
 embedded_instances {
@@ -5314,7 +5364,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 107.0\n"
-  "    z: 1.0E-6\n"
+  "    z: 1.0E-5\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -5333,6 +5383,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 107.0\n"
+  "    z: 1.0E-5\n"
   "  }\n"
   "}\n"
   ""
@@ -5346,6 +5397,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"80.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5396,6 +5452,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5413,7 +5474,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 85.0\n"
-  "    z: 1.0E-6\n"
+  "    z: 1.0E-5\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -5432,7 +5493,8 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    x: 2.0\n"
-  "    y: 80.0\n"
+  "    y: 85.0\n"
+  "    z: 1.0E-5\n"
   "  }\n"
   "}\n"
   ""
@@ -5440,12 +5502,20 @@ embedded_instances {
     x: 79.0
     y: 5.0
   }
+  scale3 {
+    z: 2.0
+  }
 }
 embedded_instances {
   id: "decor_Blurred_computer_mouse1"
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5487,8 +5557,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 47.0
-    y: 4.0
+    x: -45.0
+    y: 3.0
   }
 }
 embedded_instances {
@@ -5496,6 +5566,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5533,6 +5608,7 @@ embedded_instances {
   "  position {\n"
   "    x: 3.0\n"
   "    y: 38.0\n"
+  "    z: 1.0E-5\n"
   "  }\n"
   "}\n"
   ""
@@ -5542,59 +5618,15 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "decor_Blurred_metallic_object1"
-  data: "components {\n"
-  "  id: \"script\"\n"
-  "  component: \"/main/decor.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"normal\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Blurred metallic object\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 46.0\\n"
-  "  y: 18.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 31.0\n"
-  "    z: 1.0E-6\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"psychotic\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Blurred metallic object_p\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 46.0\\n"
-  "  y: 18.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 31.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: 69.0
-    y: 3.0
-  }
-}
-embedded_instances {
   id: "decor_c"
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5645,6 +5677,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5692,17 +5729,16 @@ embedded_instances {
 }
 embedded_instances {
   id: "desk1"
+  children: "0000000000000"
   children: "decor_Blue_and_yellow_objects2"
   children: "decor_Blurred_computer_mouse2"
   children: "decor_Blurred_metallic_object2"
-  children: "decor_Bronze_desk_lamp2"
   children: "decor_Brown_container_with_pens2"
   children: "decor_Brown_object_on_black_base2"
-  children: "decor_Clipboard_with_paper_and_pen2"
-  children: "decor_Gray_box_with_oval_objects2"
   children: "decor_Keyboard_with_number_pad2"
   children: "decor_Old_computer_monitor2"
   children: "decor_Old_fashioned_telephone2"
+  children: "decor_ashtray1"
   children: "decor_c2"
   children: "decor_c3"
   children: "obstacle18"
@@ -5765,8 +5801,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 414.0
-    y: 510.0
+    x: 388.0
+    y: 517.0
   }
 }
 embedded_instances {
@@ -5776,7 +5812,7 @@ embedded_instances {
   "  component: \"/main/solid.script\"\n"
   "  properties {\n"
   "    id: \"psychosis_limit\"\n"
-  "    value: \"10.0\"\n"
+  "    value: \"120.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "}\n"
@@ -5847,6 +5883,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5938,6 +5979,7 @@ embedded_instances {
   position {
     x: -5.0
     y: -1.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -5945,6 +5987,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -5988,105 +6035,7 @@ embedded_instances {
   position {
     x: -89.0
     y: 6.0
-  }
-}
-embedded_instances {
-  id: "decor_Clipboard_with_paper_and_pen2"
-  data: "components {\n"
-  "  id: \"script\"\n"
-  "  component: \"/main/decor.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"normal\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Clipboard with paper and pen\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 56.0\\n"
-  "  y: 46.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 44.0\n"
-  "    z: 1.0E-6\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"psychotic\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Clipboard with paper and pen_p\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 50.0\\n"
-  "  y: 46.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 44.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: -74.0
-    y: 5.0
-  }
-}
-embedded_instances {
-  id: "decor_Gray_box_with_oval_objects2"
-  data: "components {\n"
-  "  id: \"script\"\n"
-  "  component: \"/main/decor.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"normal\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Gray box with oval objects\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 42.0\\n"
-  "  y: 26.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 45.0\n"
-  "    z: 1.0E-6\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"psychotic\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Gray box with oval objects_p\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 48.0\\n"
-  "  y: 52.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 4.0\n"
-  "    y: 45.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: -88.0
-    y: 4.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -6094,6 +6043,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -6111,7 +6065,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 107.0\n"
-  "    z: 1.0E-6\n"
+  "    z: 5.0E-4\n"
   "  }\n"
   "}\n"
   "embedded_components {\n"
@@ -6134,8 +6088,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 64.0
-    y: 6.0
+    x: 62.0
+    y: -1.0
   }
 }
 embedded_instances {
@@ -6143,6 +6097,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -6186,56 +6145,7 @@ embedded_instances {
   position {
     x: 99.0
     y: 6.0
-  }
-}
-embedded_instances {
-  id: "decor_Bronze_desk_lamp2"
-  data: "components {\n"
-  "  id: \"script\"\n"
-  "  component: \"/main/decor.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"normal\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Bronze desk lamp\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 70.0\\n"
-  "  y: 84.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 85.0\n"
-  "    z: 1.0E-6\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"psychotic\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Bronze desk lamp_p\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 78.0\\n"
-  "  y: 92.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 2.0\n"
-  "    y: 80.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: 79.0
-    y: 5.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -6243,6 +6153,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -6286,6 +6201,9 @@ embedded_instances {
   position {
     x: 47.0
     y: 4.0
+  }
+  scale3 {
+    z: 2.0
   }
 }
 embedded_instances {
@@ -6343,6 +6261,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -6383,8 +6306,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 69.0
-    y: 3.0
+    x: 82.0
+    y: -88.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -6392,6 +6316,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -6442,6 +6371,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"120.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"normal\"\n"
@@ -6491,7 +6425,6 @@ embedded_instances {
   children: "decor_Blue_and_yellow_objects3"
   children: "decor_Blurred_computer_mouse3"
   children: "decor_Blurred_metallic_object3"
-  children: "decor_Bronze_desk_lamp3"
   children: "decor_Brown_container_with_pens3"
   children: "decor_Brown_object_on_black_base3"
   children: "decor_Clipboard_with_paper_and_pen3"
@@ -6501,6 +6434,7 @@ embedded_instances {
   children: "decor_Old_fashioned_telephone3"
   children: "decor_c4"
   children: "decor_c5"
+  children: "decor_lamp_"
   children: "obstacle19"
   children: "request_icon2"
   data: "components {\n"
@@ -6561,8 +6495,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 604.0
-    y: 182.0
+    x: 381.0
+    y: 233.0
   }
 }
 embedded_instances {
@@ -6684,6 +6618,7 @@ embedded_instances {
   ""
   position {
     x: -6.0
+    z: 1.0E-4
   }
 }
 embedded_instances {
@@ -6784,6 +6719,7 @@ embedded_instances {
   position {
     x: -89.0
     y: 6.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -6833,6 +6769,7 @@ embedded_instances {
   position {
     x: -74.0
     y: 5.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -6982,56 +6919,7 @@ embedded_instances {
   position {
     x: 99.0
     y: 6.0
-  }
-}
-embedded_instances {
-  id: "decor_Bronze_desk_lamp3"
-  data: "components {\n"
-  "  id: \"script\"\n"
-  "  component: \"/main/decor.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"normal\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Bronze desk lamp\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 70.0\\n"
-  "  y: 84.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    y: 85.0\n"
-  "    z: 1.0E-6\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"psychotic\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"Bronze desk lamp_p\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 78.0\\n"
-  "  y: 92.0\\n"
-  "}\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/main/Office.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 2.0\n"
-  "    y: 80.0\n"
-  "  }\n"
-  "}\n"
-  ""
-  position {
-    x: 79.0
-    y: 5.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -7132,6 +7020,7 @@ embedded_instances {
   position {
     x: 103.0
     y: 4.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -7181,6 +7070,7 @@ embedded_instances {
   position {
     x: 69.0
     y: 3.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -7231,6 +7121,7 @@ embedded_instances {
   position {
     x: -5.0
     y: -54.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -7242,7 +7133,7 @@ embedded_instances {
   "embedded_components {\n"
   "  id: \"normal\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"employee_3\\\"\\n"
+  "  data: \"default_animation: \\\"employee_6\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "size {\\n"
   "  x: 94.0\\n"
@@ -7280,6 +7171,7 @@ embedded_instances {
   position {
     x: -5.0
     y: -20.0
+    z: 1.0
   }
 }
 embedded_instances {
@@ -7298,6 +7190,7 @@ embedded_instances {
   children: "decor_c6"
   children: "decor_c7"
   children: "obstacle20"
+  children: "psycho_decor_garbage_2"
   children: "request_icon3"
   data: "components {\n"
   "  id: \"script\"\n"
@@ -7357,8 +7250,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 1378.0
-    y: 400.0
+    x: 727.0
+    y: 233.0
   }
 }
 embedded_instances {
@@ -8147,8 +8040,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 1308.0
-    y: 153.0
+    x: 1266.0
+    y: -280.0
   }
 }
 embedded_instances {
@@ -8220,7 +8113,606 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 742.0
-    y: 560.0
+    x: 1819.0
+    y: -229.0
+  }
+}
+embedded_instances {
+  id: "psycho_decor_garbage_"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/psycho_decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"20.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"garbage_21\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 98.0\\n"
+  "  y: 78.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/garbage_1/garbage.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -87.0
+    y: -223.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "psycho_decor_garbage_1"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/psycho_decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"15.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"garbage_20\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 72.0\\n"
+  "  y: 60.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/garbage_1/garbage.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 87.0
+    y: 376.0
+  }
+}
+embedded_instances {
+  id: "psycho_decor_garbage_2"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/psycho_decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"10.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"garbage_5\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 28.0\\n"
+  "  y: 22.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/garbage_1/garbage.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -58.0
+    y: 43.0
+    z: 2.0
+  }
+}
+embedded_instances {
+  id: "decor_fire_extinguisher1"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"fire_extinguisher\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 52.0\\n"
+  "  y: 126.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0E-7\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"fire_extinguisher_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 70.0\\n"
+  "  y: 120.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 2.0\n"
+  "    y: 4.0\n"
+  "    z: 1.0E-7\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 679.0
+    y: 811.0
+  }
+}
+embedded_instances {
+  id: "decor_lamp_"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"lamp_1\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 74.0\\n"
+  "  y: 78.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0E-6\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"lamp_1_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 72.0\\n"
+  "  y: 76.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -2.0\n"
+  "    y: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 77.0
+    y: 101.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "0000000000000"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"lamp_6\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 60.0\\n"
+  "  y: 80.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"lamp_6_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 66.0\\n"
+  "  y: 87.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    y: -1.0\n"
+  "    z: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 92.0
+    y: 104.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "decor_calendar1"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"calendar\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 42.0\\n"
+  "  y: 40.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0E-6\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"calendar_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 38.0\\n"
+  "  y: 40.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 751.0
+    y: -44.0
+  }
+}
+embedded_instances {
+  id: "decor_frame1"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"frame\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 38.0\\n"
+  "  y: 44.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0E-6\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"frame_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 34.0\\n"
+  "  y: 42.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 1.0\n"
+  "    y: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 682.0
+    y: -39.0
+  }
+}
+embedded_instances {
+  id: "psycho_decor_garbage_28"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/psycho_decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"15.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"garbage_25\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 76.0\\n"
+  "  y: 66.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/garbage_1/garbage.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 541.0
+    y: 728.0
+  }
+}
+embedded_instances {
+  id: "psycho_decor_garbage_29"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/psycho_decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"80.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"garbage_3\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 92.0\\n"
+  "  y: 76.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/garbage_1/garbage.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 1403.0
+    y: 697.0
+  }
+}
+embedded_instances {
+  id: "decor_tablet_"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"tablet_6\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 86.0\\n"
+  "  y: 58.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0E-6\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"tablet_6_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 84.0\\n"
+  "  y: 54.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 683.0
+    y: 929.0
+  }
+}
+embedded_instances {
+  id: "decor_Blue_and_yellow_objects5"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"Blue and yellow objects\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 48.0\\n"
+  "  y: 56.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0E-6\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"Blue and yellow objects_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 50.0\\n"
+  "  y: 62.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 61.0
+    y: 571.0
+  }
+}
+embedded_instances {
+  id: "decor_ashtray1"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"ashtray\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 36.0\\n"
+  "  y: 40.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"ashtray_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 36.0\\n"
+  "  y: 38.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -94.0
+    y: 52.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "decor_cup1"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/decor.script\"\n"
+  "  properties {\n"
+  "    id: \"psychosis_limit\"\n"
+  "    value: \"30.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"normal\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"cup\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 28.0\\n"
+  "  y: 42.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: 1.0E-5\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"psychotic\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"cup_p\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 28.0\\n"
+  "  y: 28.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/Office.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    y: -3.0\n"
+  "    z: 1.0E-5\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 437.0
+    y: 301.0
   }
 }
