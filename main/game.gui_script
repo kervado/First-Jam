@@ -1,14 +1,34 @@
--- In-game HUD: a small square button in the top-right corner that opens the
--- settings screen (the settings instance living in this game collection).
--- While settings is open the button hides; settings posts "game_ui_show" to
--- bring it back when the player returns to the game.
+-- In-game HUD:
+--  * gear button (btn)      -> opens settings (and pauses)
+--  * pause button (btn_pauze) / Space -> toggles pause
+--  * stress bar + chaos-level face
+-- Pausing freezes the whole game collection (proxy time step = 0) and pauses the
+-- office ambience. Settings living in this collection stays responsive because
+-- it is input-driven, not update-driven.
 
 local COLOR_IDLE  = vmath.vector4(0.16, 0.16, 0.20, 0.90)
 local COLOR_HOVER = vmath.vector4(0.30, 0.30, 0.38, 0.95)
 
+local GAME_PROXY = "main:/menu#gameproxy"   -- the collectionproxy that hosts this level
+local AMBIENCE   = "/controller#ambience"   -- looping office ambience sound
+
 local function set_button(self, on)
 	self.active = on
 	gui.set_enabled(self.btn, on) -- disabling the button hides its icon too
+end
+
+-- Freeze/unfreeze the level and its background music, and flip the button icon
+-- (pause bars ln3/ln4 while running, play triangle while paused).
+local function set_paused(self, paused)
+	if self.paused == paused then
+		return
+	end
+	self.paused = paused
+	msg.post(GAME_PROXY, "set_time_step", { factor = paused and 0 or 1, mode = 0 })
+	sound.pause(AMBIENCE, paused)
+	gui.set_enabled(self.ln3, not paused)
+	gui.set_enabled(self.ln4, not paused)
+	gui.set_enabled(self.play, paused)
 end
 
 -- Chaos level -> smile_stress face, by office stress (0..100):
@@ -51,14 +71,24 @@ end
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.btn = gui.get_node("btn")
+	self.btn_pauze = gui.get_node("btn_pauze")
+	self.ln3 = gui.get_node("ln3")
+	self.ln4 = gui.get_node("ln4")
+	self.play = gui.get_node("play")
 	self.text_stress = gui.get_node("text_stress")
 	self.level_stress = gui.get_node("level_stress")
 	self.smile_stress = gui.get_node("smile_stress")
 	-- read the bar width from the mask node, so resizing base_level in the gui
 	-- needs no script change
 	self.stress_w = gui.get_size(gui.get_node("base_level")).x
+
 	self.active = true
+	self.paused = false
 	gui.set_color(self.btn, COLOR_IDLE)
+	-- initial icon: running -> pause bars visible, play hidden
+	gui.set_enabled(self.ln3, true)
+	gui.set_enabled(self.ln4, true)
+	gui.set_enabled(self.play, false)
 	set_stress(self, 0) -- start empty
 end
 
@@ -66,6 +96,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("game_ui_show") then
 		set_button(self, true)
 		gui.set_color(self.btn, COLOR_IDLE)
+		set_paused(self, false) -- resume when returning from settings
 	elseif message_id == hash("stress") then
 		set_stress(self, message.value)
 	end
@@ -75,20 +106,35 @@ function on_input(self, action_id, action)
 	if not self.active then
 		return
 	end
-	if action.x == nil then
-		return -- key actions (WASD/arrows) have no cursor position; ignore them
+
+	-- Space toggles pause (key action -> no cursor position)
+	if action_id == hash("pause") then
+		if action.pressed then
+			set_paused(self, not self.paused)
+		end
+		return true
 	end
 
-	local hover = gui.pick_node(self.btn, action.x, action.y)
-	gui.set_color(self.btn, hover and COLOR_HOVER or COLOR_IDLE)
+	if action.x == nil then
+		return -- other key actions (WASD/arrows) have no cursor position
+	end
+
+	local hover_gear  = gui.pick_node(self.btn, action.x, action.y)
+	local hover_pause = gui.pick_node(self.btn_pauze, action.x, action.y)
+	gui.set_color(self.btn, hover_gear and COLOR_HOVER or COLOR_IDLE)
 
 	if action_id == hash("touch") then
-		if action.released and hover then
-			set_button(self, false)                                 -- hide while in settings
-			msg.post("/settings#settings", "show", { from = "game" }) -- open this collection's settings
+		if action.released then
+			if hover_gear then
+				set_button(self, false)                                    -- hide while in settings
+				set_paused(self, true)                                     -- pause on entering settings
+				msg.post("/settings#settings", "show", { from = "game" })  -- open this collection's settings
+			elseif hover_pause then
+				set_paused(self, not self.paused)                          -- toggle pause
+			end
 		end
-		if hover then
-			return true -- swallow clicks on the button so they don't reach the game
+		if hover_gear or hover_pause then
+			return true -- swallow clicks on either button
 		end
 	end
 end

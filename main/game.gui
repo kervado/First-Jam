@@ -379,7 +379,7 @@ nodes {
     y: 70.0
   }
   type: TYPE_PIE
-  id: "pie"
+  id: "play"
   parent: "btn_pauze"
   inherit_alpha: true
   outerBounds: PIEBOUNDS_RECTANGLE

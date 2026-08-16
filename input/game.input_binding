@@ -11,6 +11,10 @@ mouse_trigger {
   action: "wheel_down"
 }
 key_trigger {
+  input: KEY_SPACE
+  action: "pause"
+}
+key_trigger {
   input: KEY_W
   action: "up"
 }
