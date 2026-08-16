@@ -15,6 +15,10 @@ textures {
   name: "main_menu"
   texture: "/assets/ui/main_menu/main_menu.atlas"
 }
+textures {
+  name: "settings"
+  texture: "/assets/ui/settings/settings.atlas"
+}
 nodes {
   position {
     x: 960.0
@@ -35,12 +39,7 @@ nodes {
     x: -960.0
     y: -540.0
   }
-  scale {
-    x: 0.5
-    y: 0.5
-  }
   type: TYPE_BOX
-  texture: "main_menu/back1"
   id: "root"
   pivot: PIVOT_SW
   parent: "box_center"
@@ -49,145 +48,117 @@ nodes {
 }
 nodes {
   position {
-    x: 220.0
-    y: 1382.0
+    x: 960.0
+    y: 540.0
+  }
+  type: TYPE_BOX
+  texture: "settings/window_settings"
+  id: "box_window"
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: 82.0
+  }
+  scale {
+    x: 0.3
+    y: 0.3
   }
   size {
     x: 900.0
     y: 90.0
   }
   color {
-    x: 0.93
-    y: 0.93
-    z: 0.93
+    x: 0.5882353
+    y: 0.18039216
+    z: 0.11372549
   }
   type: TYPE_TEXT
   text: "\320\235\320\220\320\241\320\242\320\240\320\236\320\231\320\232\320\230"
   font: "title"
   id: "title"
-  pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
 }
 nodes {
   position {
-    x: 214.0
-    y: 968.0
+    x: -198.0
+    y: 14.0
   }
-  type: TYPE_BOX
-  texture: "main_menu/frame"
-  id: "fs_frame"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-  size_mode: SIZE_MODE_AUTO
-  enabled: false
-}
-nodes {
-  position {
-    x: 1210.0
-    y: 968.0
-  }
-  type: TYPE_BOX
-  texture: "main_menu/square"
-  id: "fs_marker"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-  size_mode: SIZE_MODE_AUTO
-  enabled: false
-}
-nodes {
-  position {
-    x: 238.0
-    y: 968.0
+  scale {
+    x: 0.23
+    y: 0.23
   }
   size {
     x: 1059.0
     y: 124.0
   }
   color {
-    x: 0.5764706
-    y: 0.5803922
-    z: 0.5882353
+    x: 0.13725491
+    y: 0.09803922
+    z: 0.07450981
   }
   type: TYPE_TEXT
   text: "\320\237\320\236\320\233\320\235\320\253\320\231 \320\255\320\232\320\240\320\220\320\235"
   font: "menu"
   id: "fs_text"
   pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
 }
 nodes {
   position {
-    x: 1366.0
-    y: 968.0
+    x: -198.0
+    y: -27.0
   }
-  size {
-    x: 356.0
-    y: 107.0
-  }
-  color {
-    x: 0.35
-    y: 0.75
-    z: 0.4
-  }
-  type: TYPE_TEXT
-  text: "\320\222\320\232\320\233"
-  font: "menu"
-  id: "fs_state"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-}
-nodes {
-  position {
-    x: 238.0
-    y: 780.0
+  scale {
+    x: 0.23
+    y: 0.23
   }
   size {
     x: 729.0
     y: 97.0
   }
   color {
-    x: 0.5764706
-    y: 0.5803922
-    z: 0.5882353
+    x: 0.13725491
+    y: 0.09803922
+    z: 0.07450981
   }
   type: TYPE_TEXT
   text: "\320\223\320\240\320\236\320\234\320\232\320\236\320\241\320\242\320\254"
   font: "menu"
   id: "vol_label"
   pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
   outline_alpha: 0.0
   shadow_alpha: 0.0
 }
 nodes {
   position {
-    x: 254.0
-    y: 634.0
+    x: -196.0
+    y: -64.0
   }
   size {
-    x: 420.0
-    y: 44.0
+    x: 386.0
+    y: 19.0
   }
   type: TYPE_BOX
   id: "sl_hit"
   pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
   alpha: 0.0
 }
 nodes {
   position {
-    x: 254.0
-    y: 634.0
+    x: -196.0
+    y: -64.0
   }
   size {
-    x: 420.0
+    x: 386.0
     y: 6.0
   }
   color {
@@ -198,52 +169,26 @@ nodes {
   type: TYPE_BOX
   id: "sl_track"
   pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
+  visible: false
 }
 nodes {
   position {
-    x: 254.0
-    y: 634.0
-  }
-  size {
-    x: 210.0
-    y: 6.0
-  }
-  color {
-    x: 0.82
-    y: 0.1
-    z: 0.12
+    x: -4.0
+    y: -67.0
   }
   type: TYPE_BOX
-  id: "sl_fill"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-}
-nodes {
-  position {
-    x: 464.0
-    y: 634.0
-  }
-  size {
-    x: 14.0
-    y: 34.0
-  }
-  color {
-    x: 0.85
-    y: 0.85
-    z: 0.85
-  }
-  type: TYPE_BOX
+  texture: "settings/switch"
   id: "sl_handle"
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
 }
 nodes {
   position {
-    x: 254.0
-    y: 634.0
+    x: -195.0
+    y: -64.0
   }
   size {
     x: 2.0
@@ -251,14 +196,14 @@ nodes {
   }
   type: TYPE_BOX
   id: "sl_p0"
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
   alpha: 0.0
 }
 nodes {
   position {
-    x: 674.0
-    y: 634.0
+    x: 189.0
+    y: -64.0
   }
   size {
     x: 2.0
@@ -266,169 +211,86 @@ nodes {
   }
   type: TYPE_BOX
   id: "sl_p1"
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
   alpha: 0.0
 }
 nodes {
   position {
-    x: 714.0
-    y: 634.0
+    x: 174.0
+    y: 12.0
   }
-  size {
-    x: 260.0
-    y: 84.0
-  }
-  color {
-    x: 0.85
-    y: 0.85
-    z: 0.85
-  }
-  type: TYPE_TEXT
-  text: "50%"
-  font: "menu"
-  id: "vol_value"
-  pivot: PIVOT_W
-  parent: "root"
+  type: TYPE_BOX
+  texture: "settings/checkbox"
+  id: "full_screen_checkbox"
+  parent: "box_window"
   inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
 }
 nodes {
   position {
-    x: 214.0
-    y: 404.0
+    x: 4.0
+    y: 5.0
   }
   type: TYPE_BOX
-  texture: "main_menu/frame"
-  id: "back_frame"
-  pivot: PIVOT_W
-  parent: "root"
+  texture: "settings/check"
+  id: "check"
+  parent: "full_screen_checkbox"
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
   enabled: false
 }
 nodes {
   position {
-    x: 1210.0
-    y: 404.0
+    x: 181.0
+    y: 115.0
   }
   type: TYPE_BOX
-  texture: "main_menu/square"
-  id: "back_marker"
+  texture: "settings/button_close"
+  id: "back_button"
   pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
-  enabled: false
 }
 nodes {
   position {
-    x: 238.0
-    y: 404.0
-  }
-  size {
-    x: 1060.0
-    y: 124.0
-  }
-  color {
-    x: 0.5764706
-    y: 0.5803922
-    z: 0.5882353
-  }
-  type: TYPE_TEXT
-  text: "\320\235\320\220\320\227\320\220\320\224"
-  font: "menu"
-  id: "back_text"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-}
-nodes {
-  position {
-    x: 214.0
-    y: 1180.0
+    x: -26.0
+    y: -120.0
   }
   type: TYPE_BOX
-  texture: "main_menu/frame"
-  id: "menu_frame"
-  pivot: PIVOT_W
-  parent: "root"
-  inherit_alpha: true
-  size_mode: SIZE_MODE_AUTO
-  enabled: false
-}
-nodes {
-  position {
-    x: 1210.0
-    y: 1180.0
-  }
-  type: TYPE_BOX
-  texture: "main_menu/square"
+  texture: "settings/icon_brain"
   id: "menu_marker"
   pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
   enabled: false
 }
 nodes {
   position {
-    x: 238.0
-    y: 1180.0
+    y: -150.0
+  }
+  scale {
+    x: 0.23
+    y: 0.23
   }
   size {
-    x: 1060.0
-    y: 124.0
+    x: 1467.0
+    y: 95.0
   }
   color {
-    x: 0.5764706
-    y: 0.5803922
-    z: 0.5882353
+    x: 0.13725491
+    y: 0.09803922
+    z: 0.07450981
   }
   type: TYPE_TEXT
-  text: "\320\222\320\253\320\245\320\236\320\224 \320\222 \320\234\320\225\320\235\320\256"
+  text: "\320\222\320\253\320\231\320\242\320\230 \320\222 \320\223\320\233\320\220\320\222\320\235\320\236\320\225 \320\234\320\225\320\235\320\256"
   font: "menu"
   id: "menu_text"
-  pivot: PIVOT_W
-  parent: "root"
+  parent: "box_window"
   inherit_alpha: true
   enabled: false
-}
-nodes {
-  size {
-    x: 1600.0
-    y: 2160.0
-  }
-  color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  type: TYPE_BOX
-  id: "box"
-  pivot: PIVOT_SE
-  parent: "root"
-  inherit_alpha: true
-  size_mode: SIZE_MODE_AUTO
-}
-nodes {
-  position {
-    x: 3840.0
-  }
-  size {
-    x: 1600.0
-    y: 2160.0
-  }
-  color {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  type: TYPE_BOX
-  id: "box1"
-  pivot: PIVOT_SW
-  parent: "root"
-  inherit_alpha: true
-  size_mode: SIZE_MODE_AUTO
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
