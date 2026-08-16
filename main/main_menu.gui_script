@@ -78,6 +78,7 @@ end
 local function set_active(self, on)
 	self.active = on
 	gui.set_enabled(self.root, on)
+	sound.pause("#menu_music", not on) -- music plays in the menu, paused during a game
 	set_bg(self, false)     -- always come back to the normal background
 	if on then
 		schedule_idle(self) -- (re)start the seizure timer when shown
@@ -208,6 +209,7 @@ function init(self)
 
 	set_bg(self, false)     -- start on the normal background
 	schedule_idle(self)     -- and arm the first psychosis seizure
+	msg.post("#menu_music", "play_sound") -- looping menu background music
 end
 
 function update(self, dt)

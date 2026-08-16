@@ -59,6 +59,10 @@ embedded_instances {
   "group: \\\"master\\\"\\n"
   "\"\n"
   "}\n"
+  "components {\n"
+  "  id: \"menu_music\"\n"
+  "  component: \"/main/menu_music.sound\"\n"
+  "}\n"
   ""
 }
 embedded_instances {
