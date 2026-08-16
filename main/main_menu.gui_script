@@ -101,6 +101,10 @@ local function cancel_finish_timer(self)
 		timer.cancel(self.finish_timer)
 		self.finish_timer = nil
 	end
+	if self.banner_timer then
+		timer.cancel(self.banner_timer)
+		self.banner_timer = nil
+	end
 end
 
 local function load_level(self, proxy)
@@ -136,7 +140,7 @@ local function do_next_level(self)
 	if self.level_index <= #LEVELS then
 		load_level(self, LEVELS[self.level_index])
 	else
-		load_level(self, FINISH_PROXY) -- all floors done -> victory screen (WIP)
+		load_level(self, FINISH_PROXY) -- all floors done -> victory screen
 	end
 end
 
@@ -173,6 +177,7 @@ function init(self)
 	self.active = true
 	self.returning = false
 	self.finish_timer = nil
+	self.banner_timer = nil
 	self.level_index = 1
 	self.cur_proxy = nil
 	self.buttons = {}
@@ -250,6 +255,20 @@ function on_message(self, message_id, message, sender)
 				self.finish_timer = nil
 				do_next_level(self)
 			end)
+		end
+	elseif message_id == hash("begin_banner") then
+		-- floor 1 start banner: auto-dismiss after 15s (timer runs here, in the
+		-- main collection, because the level is paused/frozen)
+		if not self.banner_timer then
+			self.banner_timer = timer.delay(12, false, function()
+				self.banner_timer = nil
+				msg.post("game:/game_ui#game_gui", "banner_timeout")
+			end)
+		end
+	elseif message_id == hash("cancel_banner") then
+		if self.banner_timer then
+			timer.cancel(self.banner_timer)
+			self.banner_timer = nil
 		end
 	end
 end

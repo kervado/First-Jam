@@ -1,0 +1,7 @@
+images {
+  image: "/assets/ui/finish_scen/finish background_1.png"
+}
+images {
+  image: "/assets/ui/finish_scen/finish background_2.png"
+}
+extrude_borders: 2

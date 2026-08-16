@@ -217,6 +217,7 @@ embedded_instances {
   children: "cat_house"
   children: "decor1"
   children: "decor2"
+  children: "source_icon1"
   data: ""
   position {
     x: 1308.0
@@ -952,6 +953,7 @@ embedded_instances {
   children: "decor7"
   children: "decor8"
   children: "decor9"
+  children: "source_icon"
   data: ""
   position {
     x: 492.0
@@ -1013,6 +1015,7 @@ embedded_instances {
   children: "decor12"
   children: "decor13"
   children: "paper_cabinet"
+  children: "source_icon2"
   data: ""
   position {
     x: 1589.0
@@ -8212,5 +8215,89 @@ embedded_instances {
   position {
     x: 742.0
     y: 560.0
+  }
+}
+embedded_instances {
+  id: "source_icon2"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/source_icon.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"icon_space_paper 1\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 100.0\\n"
+  "  y: 100.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/icons/Icons.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    y: 179.0
+    z: 0.01
+  }
+}
+embedded_instances {
+  id: "source_icon"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/source_icon.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"icon_space_coffee 1\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 100.0\\n"
+  "  y: 100.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/icons/Icons.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    y: 179.0
+    z: 0.01
+  }
+}
+embedded_instances {
+  id: "source_icon1"
+  data: "components {\n"
+  "  id: \"script\"\n"
+  "  component: \"/main/source_icon.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"icon_space_cat 1\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 100.0\\n"
+  "  y: 100.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/assets/icons/Icons.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    y: 179.0
+    z: 0.01
   }
 }
