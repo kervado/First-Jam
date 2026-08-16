@@ -1,0 +1,73 @@
+images {
+  image: "/assets/employee/employee_1.png"
+}
+images {
+  image: "/assets/employee/employee_2.png"
+}
+images {
+  image: "/assets/employee/employee_3.png"
+}
+images {
+  image: "/assets/employee/employee_4.png"
+}
+images {
+  image: "/assets/employee/employee_5.png"
+}
+images {
+  image: "/assets/employee/employee_6.png"
+}
+images {
+  image: "/assets/employee/employee_7.png"
+}
+images {
+  image: "/assets/employee/employee_8.png"
+}
+images {
+  image: "/assets/employee/employee_p_1.png"
+}
+images {
+  image: "/assets/employee/employee_p_2.png"
+}
+images {
+  image: "/assets/employee/employee_p_3.png"
+}
+images {
+  image: "/assets/employee/employee_p_4.png"
+}
+images {
+  image: "/assets/employee/employee_p_5.png"
+}
+images {
+  image: "/assets/employee/employee_p_6.png"
+}
+images {
+  image: "/assets/employee/employee_p_7.png"
+}
+images {
+  image: "/assets/employee/employee_p_8.png"
+}
+images {
+  image: "/assets/employee/employee_s_1.png"
+}
+images {
+  image: "/assets/employee/employee_s_2.png"
+}
+images {
+  image: "/assets/employee/employee_s_3.png"
+}
+images {
+  image: "/assets/employee/employee_s_4.png"
+}
+images {
+  image: "/assets/employee/employee_s_5.png"
+}
+images {
+  image: "/assets/employee/employee_s_6.png"
+}
+images {
+  image: "/assets/employee/employee_s_7.png"
+}
+images {
+  image: "/assets/employee/employee_s_8.png"
+}
+extrude_borders: 2

@@ -35,10 +35,10 @@ function M.z_for_y(y)
 	local t = y / M.ROOM_H
 	if t < 0 then t = 0 elseif t > 1 then t = 1 end
 	local z = 1 - t * 2
-	-- keep a little headroom inside [-1, 1] so per-component offsets (the icon
-	-- and number above a head) never cross the far plane, and so objects stay
-	-- in front of the floor at Z_FLOOR
-	if z > 0.96 then z = 0.96 elseif z < -0.96 then z = -0.96 end
+	-- keep headroom inside [-1, 1] so per-child / per-component offsets (e.g. a
+	-- request icon sitting at local z +0.1 on a desk) never cross the far plane,
+	-- and so objects stay in front of the floor at Z_FLOOR
+	if z > 0.85 then z = 0.85 elseif z < -0.85 then z = -0.85 end
 	return z
 end
 

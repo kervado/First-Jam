@@ -27,39 +27,41 @@ embedded_components {
   "  texture: \"/main/main.atlas\"\n"
   "}\n"
   ""
-  position {
-    y: -150.0
-  }
 }
 embedded_components {
   id: "normal"
   type: "sprite"
-  data: "default_animation: \"Brown rectangular object\"\n"
+  data: "default_animation: \"paul\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "size {\n"
   "  x: 1920.0\n"
   "  y: 1080.0\n"
   "}\n"
-  "size_mode: SIZE_MODE_MANUAL\n"
   "textures {\n"
   "  sampler: \"texture_sampler\"\n"
-  "  texture: \"/main/Office.atlas\"\n"
+  "  texture: \"/main/Back.atlas\"\n"
   "}\n"
   ""
+  position {
+    y: -2.0
+    z: 1.0E-6
+  }
 }
 embedded_components {
   id: "psychotic"
   type: "sprite"
-  data: "default_animation: \"Brown rectangular object\"\n"
+  data: "default_animation: \"paul_p\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "size {\n"
   "  x: 1920.0\n"
   "  y: 1080.0\n"
   "}\n"
-  "size_mode: SIZE_MODE_MANUAL\n"
   "textures {\n"
   "  sampler: \"texture_sampler\"\n"
-  "  texture: \"/main/Office.atlas\"\n"
+  "  texture: \"/main/Back.atlas\"\n"
   "}\n"
   ""
+  position {
+    y: -2.0
+  }
 }

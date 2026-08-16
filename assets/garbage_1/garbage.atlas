@@ -79,4 +79,58 @@ images {
 images {
   image: "/assets/garbage_1/garbage_27.png"
 }
+images {
+  image: "/assets/office_root/root_1.png"
+}
+images {
+  image: "/assets/office_root/root_2.png"
+}
+images {
+  image: "/assets/office_root/root_3.png"
+}
+images {
+  image: "/assets/office_root/root_4.png"
+}
+images {
+  image: "/assets/office_root/root_5.png"
+}
+images {
+  image: "/assets/office_root/root_6.png"
+}
+images {
+  image: "/assets/office_root/root_7.png"
+}
+images {
+  image: "/assets/office_root/root_8.png"
+}
+images {
+  image: "/assets/office_root/root_9.png"
+}
+images {
+  image: "/assets/office_root/root_10.png"
+}
+images {
+  image: "/assets/office_root/root_11.png"
+}
+images {
+  image: "/assets/office_root/root_12.png"
+}
+images {
+  image: "/assets/office_root/root_13.png"
+}
+images {
+  image: "/assets/office_root/root_14.png"
+}
+images {
+  image: "/assets/office_root/root_15.png"
+}
+images {
+  image: "/assets/office_root/root_16.png"
+}
+images {
+  image: "/assets/office_root/root_17.png"
+}
+images {
+  image: "/assets/office_root/root_18.png"
+}
 extrude_borders: 2

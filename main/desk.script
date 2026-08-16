@@ -59,6 +59,10 @@ function init(self)
 	local z = office.z_for_y(wp.y)
 	office.apply_depth(z)
 
+	-- if this desk is a child of another object, re-apply depth each frame so a
+	-- parent that applies its depth after us cannot push our world Z off-screen
+	self.reapply_depth = go.get_parent() ~= nil
+
 	local size = go.get("#sprite", "size")
 
 	msg.post(CONTROLLER, "register", {
@@ -71,6 +75,12 @@ function init(self)
 		w_paper  = self.paper,
 		w_cats   = self.cats,
 	})
+end
+
+function update(self, dt)
+	if self.reapply_depth then
+		office.apply_depth()
+	end
 end
 
 function on_message(self, message_id, message, sender)

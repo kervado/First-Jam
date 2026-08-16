@@ -32,9 +32,16 @@ function init(self)
 
 	-- fake-isometric depth from WORLD Y (parent-aware; may be a child object)
 	office.apply_depth()
+	-- children re-apply depth each frame so a parent applying its own depth
+	-- after us cannot push our world Z past the clip plane
+	self.reapply_depth = go.get_parent() ~= nil
 end
 
 function update(self, dt)
+	if self.reapply_depth then
+		office.apply_depth()
+	end
+
 	if not self.shown and office.psychosis >= self.psychosis_limit then
 		reveal(self)
 	end

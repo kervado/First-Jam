@@ -65,6 +65,11 @@ function init(self)
 	local z = (self.kind == hash("floor")) and office.Z_FLOOR or office.z_for_y(wp.y)
 	office.apply_depth(z)
 
+	-- children must re-apply depth every frame: a parent that runs apply_depth
+	-- after this object (init order is not guaranteed) would otherwise shift our
+	-- world Z and push it past the clip plane. Re-applying self-corrects it.
+	self.reapply_depth = go.get_parent() ~= nil
+
 	local size = go.get("#sprite", "size")   -- base sprite size (unscaled)
 
 	-- The footprint (walkable area for the floor, collision box for the rest)
@@ -81,6 +86,10 @@ function init(self)
 end
 
 function update(self, dt)
+	if self.reapply_depth then
+		office.apply_depth(self.kind == hash("floor") and office.Z_FLOOR or nil)
+	end
+
 	-- once psychotic, always psychotic (never switches back)
 	if not self.psychotic and office.psychosis >= self.psychosis_limit then
 		go_psychotic(self)

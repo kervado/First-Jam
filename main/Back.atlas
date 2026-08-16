@@ -1,0 +1,25 @@
+images {
+  image: "/assets/office_1_back/elevator.png"
+}
+images {
+  image: "/assets/office_1_back/elevator_cabin.png"
+}
+images {
+  image: "/assets/office_1_back/paul.png"
+}
+images {
+  image: "/assets/office_1_back/wall.png"
+}
+images {
+  image: "/assets/office_2_back/elevator_cabin_p.png"
+}
+images {
+  image: "/assets/office_2_back/elevator_p.png"
+}
+images {
+  image: "/assets/office_2_back/paul_p.png"
+}
+images {
+  image: "/assets/office_2_back/wall_p.png"
+}
+extrude_borders: 2

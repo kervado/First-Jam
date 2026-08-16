@@ -289,4 +289,127 @@ images {
 images {
   image: "/assets/office_1_shadow/Brown rectangular object.png"
 }
+images {
+  image: "/assets/office_1_tablet/fire_extinguisher.png"
+}
+images {
+  image: "/assets/office_1_tablet/tablet_1.png"
+}
+images {
+  image: "/assets/office_1_tablet/tablet_2.png"
+}
+images {
+  image: "/assets/office_1_tablet/tablet_3.png"
+}
+images {
+  image: "/assets/office_1_tablet/tablet_4.png"
+}
+images {
+  image: "/assets/office_1_tablet/tablet_5.png"
+}
+images {
+  image: "/assets/office_1_tablet/tablet_6.png"
+}
+images {
+  image: "/assets/office_2_tablet/fire_extinguisher_p.png"
+}
+images {
+  image: "/assets/office_2_tablet/tablet_1_p.png"
+}
+images {
+  image: "/assets/office_2_tablet/tablet_2_p.png"
+}
+images {
+  image: "/assets/office_2_tablet/tablet_3_p.png"
+}
+images {
+  image: "/assets/office_2_tablet/tablet_4_p.png"
+}
+images {
+  image: "/assets/office_2_tablet/tablet_5_p.png"
+}
+images {
+  image: "/assets/office_2_tablet/tablet_6_p.png"
+}
+images {
+  image: "/assets/office_1_props_desk/ashtray.png"
+}
+images {
+  image: "/assets/office_1_props_desk/calendar.png"
+}
+images {
+  image: "/assets/office_1_props_desk/calendar_1.png"
+}
+images {
+  image: "/assets/office_1_props_desk/cassettes.png"
+}
+images {
+  image: "/assets/office_1_props_desk/cup.png"
+}
+images {
+  image: "/assets/office_1_props_desk/frame.png"
+}
+images {
+  image: "/assets/office_1_props_desk/lamp_1.png"
+}
+images {
+  image: "/assets/office_1_props_desk/lamp_2.png"
+}
+images {
+  image: "/assets/office_1_props_desk/lamp_3.png"
+}
+images {
+  image: "/assets/office_1_props_desk/lamp_4.png"
+}
+images {
+  image: "/assets/office_1_props_desk/lamp_5.png"
+}
+images {
+  image: "/assets/office_1_props_desk/lamp_6.png"
+}
+images {
+  image: "/assets/office_2_props_desk/ashtray_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/calendar_1_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/calendar_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/cassettes_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/cup_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/frame_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/lamp_1_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/lamp_2_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/lamp_3_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/lamp_4_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/lamp_5_p.png"
+}
+images {
+  image: "/assets/office_2_props_desk/lamp_6_p.png"
+}
+images {
+  image: "/assets/broken_desk_p.png"
+}
+images {
+  image: "/assets/office_1_props_desk/chair.png"
+}
+images {
+  image: "/assets/office_1_props_desk/chair_p.png"
+}
 extrude_borders: 2
