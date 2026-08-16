@@ -1,0 +1,40 @@
+images {
+  image: "/assets/ui/settings/bar.png"
+}
+images {
+  image: "/assets/ui/settings/base_bar.png"
+}
+images {
+  image: "/assets/ui/settings/base_floor_time.png"
+}
+images {
+  image: "/assets/ui/settings/button_pause.png"
+}
+images {
+  image: "/assets/ui/settings/button_pause_down.png"
+}
+images {
+  image: "/assets/ui/settings/button_pause_focus.png"
+}
+images {
+  image: "/assets/ui/settings/button_settings.png"
+}
+images {
+  image: "/assets/ui/settings/button_settings_down.png"
+}
+images {
+  image: "/assets/ui/settings/button_settings_focus.png"
+}
+images {
+  image: "/assets/ui/settings/list.png"
+}
+images {
+  image: "/assets/ui/settings/button_play.png"
+}
+images {
+  image: "/assets/ui/settings/button_play_down.png"
+}
+images {
+  image: "/assets/ui/settings/button_play_focus.png"
+}
+extrude_borders: 2

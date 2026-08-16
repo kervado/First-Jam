@@ -15,6 +15,10 @@ key_trigger {
   action: "pause"
 }
 key_trigger {
+  input: KEY_ESC
+  action: "escape"
+}
+key_trigger {
   input: KEY_W
   action: "up"
 }

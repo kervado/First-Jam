@@ -1,13 +1,11 @@
 -- In-game HUD:
---  * gear button (btn)      -> opens settings (and pauses)
---  * pause button (btn_pauze) / Space -> toggles pause
---  * stress bar + chaos-level face
--- Pausing freezes the whole game collection (proxy time step = 0) and pauses the
--- office ambience. Settings living in this collection stays responsive because
--- it is input-driven, not update-driven.
-
-local COLOR_IDLE  = vmath.vector4(0.16, 0.16, 0.20, 0.90)
-local COLOR_HOVER = vmath.vector4(0.30, 0.30, 0.38, 0.95)
+--  * gear button (btn)        -> opens settings (image: button_settings/_focus/_down)
+--  * pause button (btn_pauze) / Space -> toggles pause (button_pause/_focus/_down)
+--  * stress bar (level_stress grows by size.x), chaos-level face, floor + clock
+--  * start_banner: shown on floor 1 only; the level is paused until it is
+--    dismissed (15s via the menu timer, or a click anywhere).
+-- Pausing freezes the level (proxy time step = 0, via the menu) and pauses all
+-- looping audio.
 
 -- all looping audio in the level; paused/resumed together with the game
 local GAME_SOUNDS = {
@@ -17,19 +15,38 @@ local GAME_SOUNDS = {
 	"/controller#music_psycho",
 }
 
-local function set_button(self, on)
-	self.active = on
-	gui.set_enabled(self.btn, on) -- disabling the button hides its icon too
-end
+local STRESS_MAX = 244.0 -- level_stress width (px) at 100% stress
 
 local function fmt_clock(sec)
 	sec = math.max(0, math.floor(sec))
 	return string.format("%d:%02d", math.floor(sec / 60), sec % 60)
 end
 
--- Freeze/unfreeze the level and its background music, and flip the button icon
--- (pause bars ln3/ln4 while running, play triangle while paused). The menu owns
--- the current level's proxy, so it applies the time step.
+-- swap a node's atlas image, only when it actually changes
+local function set_img(self, key, node, img)
+	if self[key] ~= img then
+		self[key] = img
+		gui.play_flipbook(node, hash(img))
+	end
+end
+
+-- pick the focus/down/idle image name for a button
+local function btn_img(base, hovered, pressed)
+	if pressed and hovered then return base .. "_down" end
+	if hovered then return base .. "_focus" end
+	return base
+end
+
+local function set_button(self, on)
+	self.active = on
+	gui.set_enabled(self.btn, on)
+	if on then
+		set_img(self, "gear_img", self.btn, "button_settings")
+	end
+end
+
+-- Freeze/unfreeze the level and its audio. The menu owns the current proxy, so
+-- it applies the time step.
 local function set_paused(self, paused)
 	if self.paused == paused then
 		return
@@ -37,28 +54,24 @@ local function set_paused(self, paused)
 	self.paused = paused
 	msg.post("main:/menu#menu", "set_game_paused", { paused = paused })
 	for _, url in ipairs(GAME_SOUNDS) do
-		sound.pause(url, paused) -- stop/resume ambience + music on pause
+		sound.pause(url, paused)
 	end
-	gui.set_enabled(self.ln3, not paused)
-	gui.set_enabled(self.ln4, not paused)
-	gui.set_enabled(self.play, paused)
+	-- while paused the button shows "play", otherwise "pause"
+	set_img(self, "pause_img", self.btn_pauze, paused and "button_play" or "button_pause")
 end
 
--- Stress reached 100%: freeze the level, dim the screen with the "ВЫ УВОЛЕНЫ"
--- overlay, and ask the menu to auto-return after 5s (a click returns instantly).
 local function game_over(self)
 	if self.finished then
 		return
 	end
 	self.finished = true
 	self.result = "lose"
-	set_paused(self, true)               -- freeze the level + pause the music
+	set_paused(self, true)
 	gui.set_text(self.text_finish, "ВЫ УВОЛЕНЫ")
-	gui.set_enabled(self.shadow, true)   -- shadow contains the text_finish label
+	gui.set_enabled(self.shadow, true)
 	msg.post("main:/menu#menu", "begin_finish")
 end
 
--- Round timer ran out: the level is passed.
 local function win_level(self)
 	if self.finished then
 		return
@@ -68,11 +81,21 @@ local function win_level(self)
 	set_paused(self, true)
 	gui.set_text(self.text_finish, "УРОВЕНЬ ПРОЙДЕН")
 	gui.set_enabled(self.shadow, true)
-	msg.post("main:/menu#menu", "level_complete") -- menu loads the next level after 5s
+	msg.post("main:/menu#menu", "level_complete")
 end
 
--- Chaos level -> smile_stress face, by office stress (0..100):
--- 0-29 NORMAL, 30-59 TENSION, 60-79 CHAOS, 80-99 CRITICAL, 100 FAILURE
+-- Hide the start banner and resume play (floor 1 only).
+local function dismiss_banner(self)
+	if not self.banner_active then
+		return
+	end
+	self.banner_active = false
+	gui.set_enabled(self.start_banner, false)
+	set_paused(self, false)
+	msg.post("main:/menu#menu", "cancel_banner") -- stop the 15s auto-dismiss
+end
+
+-- Chaos level -> smile_stress face, by office stress (0..100).
 local function chaos_face(value)
 	if value < 30 then return "emoji_normal"
 	elseif value < 60 then return "emoji_tension"
@@ -85,22 +108,11 @@ local function set_stress(self, value)
 	value = math.max(0, math.min(100, value or 0))
 	gui.set_text(self.text_stress, string.format("%d%%", math.floor(value + 0.5)))
 
-	local p = gui.get_position(self.level_stress)
-	p.x = self.stress_w * value / 100 -- slide the fill by x
-	gui.set_position(self.level_stress, p)
+	-- grow the fill by size.x (0 .. STRESS_MAX)
+	local sz = gui.get_size(self.level_stress)
+	sz.x = STRESS_MAX * value / 100
+	gui.set_size(self.level_stress, sz)
 
-	-- gradient: 0 = green, 50 = yellow, 100 = red (keep the node's alpha)
-	local r, g
-	if value <= 50 then
-		r, g = value / 50, 1.0
-	else
-		r, g = 1.0, 1.0 - (value - 50) / 50
-	end
-	local c = gui.get_color(self.level_stress)
-	c.x, c.y, c.z = r, g, 0.0
-	gui.set_color(self.level_stress, c)
-
-	-- swap the chaos-level face only when the tier actually changes
 	local face = chaos_face(value)
 	if face ~= self.smile_face then
 		self.smile_face = face
@@ -116,9 +128,6 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.btn = gui.get_node("btn")
 	self.btn_pauze = gui.get_node("btn_pauze")
-	self.ln3 = gui.get_node("ln3")
-	self.ln4 = gui.get_node("ln4")
-	self.play = gui.get_node("play")
 	self.text_stress = gui.get_node("text_stress")
 	self.level_stress = gui.get_node("level_stress")
 	self.smile_stress = gui.get_node("smile_stress")
@@ -126,36 +135,43 @@ function init(self)
 	self.text_finish = gui.get_node("text_finish")
 	self.text_floor = gui.get_node("text_floor")
 	self.text_clock = gui.get_node("text_clock")
-	-- read the bar width from the mask node, so resizing base_level in the gui
-	-- needs no script change
-	self.stress_w = gui.get_size(gui.get_node("base_level")).x
+	self.start_banner = gui.get_node("start_banner")
 
 	self.active = true
 	self.paused = false
 	self.finished = false
-	gui.set_enabled(self.shadow, false) -- hidden until game over
-	gui.set_color(self.btn, COLOR_IDLE)
-	gui.set_color(self.btn_pauze, COLOR_IDLE)
-	-- initial icon: running -> pause bars visible, play hidden
-	gui.set_enabled(self.ln3, true)
-	gui.set_enabled(self.ln4, true)
-	gui.set_enabled(self.play, false)
-	set_stress(self, 0) -- start empty
+	self.banner_active = false
+	self.gear_pressed = false
+	self.pause_pressed = false
+
+	gui.set_enabled(self.shadow, false)
+	gui.set_enabled(self.start_banner, false)
+	set_img(self, "gear_img", self.btn, "button_settings")
+	set_img(self, "pause_img", self.btn_pauze, "button_pause")
+	set_stress(self, 0)
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("game_ui_show") then
 		set_button(self, true)
-		gui.set_color(self.btn, COLOR_IDLE)
 		set_paused(self, false) -- resume when returning from settings
 	elseif message_id == hash("stress") then
 		set_stress(self, message.value)
 	elseif message_id == hash("set_floor") then
-		gui.set_text(self.text_floor, string.format("%d ЭТАЖ", message.floor))
+		gui.set_text(self.text_floor, string.format("%d", message.floor))
+		if message.floor == 1 then
+			-- first floor: show the start banner and pause until dismissed
+			self.banner_active = true
+			gui.set_enabled(self.start_banner, true)
+			set_paused(self, true)
+			msg.post("main:/menu#menu", "begin_banner")
+		end
 	elseif message_id == hash("set_clock") then
 		gui.set_text(self.text_clock, fmt_clock(message.time))
 	elseif message_id == hash("level_win") then
 		win_level(self)
+	elseif message_id == hash("banner_timeout") then
+		dismiss_banner(self)
 	end
 end
 
@@ -164,8 +180,17 @@ function on_input(self, action_id, action)
 		return
 	end
 
-	-- finished: on a LOSS a left click returns to the menu immediately;
-	-- on a WIN the menu advances to the next level on its own timer.
+	-- start banner: a click (or the menu's 15s timer) dismisses it; block the
+	-- rest of the input while it is up
+	if self.banner_active then
+		if action_id == hash("touch") and action.pressed then
+			dismiss_banner(self)
+		end
+		return true
+	end
+
+	-- finished: on a LOSS a left click returns to the menu; on a WIN the menu
+	-- advances on its own timer
 	if self.finished then
 		if self.result == "lose" and action_id == hash("touch") and action.pressed then
 			msg.post("main:/menu#menu", "return_to_menu")
@@ -173,10 +198,20 @@ function on_input(self, action_id, action)
 		return true
 	end
 
-	-- Space toggles pause (key action -> no cursor position)
+	-- Space toggles pause
 	if action_id == hash("pause") then
 		if action.pressed then
 			set_paused(self, not self.paused)
+		end
+		return true
+	end
+
+	-- Esc opens settings (same as clicking the gear)
+	if action_id == hash("escape") then
+		if action.pressed then
+			set_button(self, false)                                    -- hide gear while in settings
+			set_paused(self, true)                                     -- pause on entering settings
+			msg.post("/settings#settings", "show", { from = "game" })
 		end
 		return true
 	end
@@ -185,23 +220,32 @@ function on_input(self, action_id, action)
 		return -- other key actions (WASD/arrows) have no cursor position
 	end
 
-	local hover_gear  = gui.pick_node(self.btn, action.x, action.y)
-	local hover_pause = gui.pick_node(self.btn_pauze, action.x, action.y)
-	gui.set_color(self.btn, hover_gear and COLOR_HOVER or COLOR_IDLE)
-	gui.set_color(self.btn_pauze, hover_pause and COLOR_HOVER or COLOR_IDLE)
+	local hg = gui.pick_node(self.btn, action.x, action.y)
+	local hp = gui.pick_node(self.btn_pauze, action.x, action.y)
 
 	if action_id == hash("touch") then
-		if action.released then
-			if hover_gear then
-				set_button(self, false)                                    -- hide while in settings
+		if action.pressed then
+			if hg then self.gear_pressed = true end
+			if hp then self.pause_pressed = true end
+		elseif action.released then
+			if self.gear_pressed and hg then
+				set_button(self, false)                                    -- hide gear while in settings
 				set_paused(self, true)                                     -- pause on entering settings
-				msg.post("/settings#settings", "show", { from = "game" })  -- open this collection's settings
-			elseif hover_pause then
+				msg.post("/settings#settings", "show", { from = "game" })
+			elseif self.pause_pressed and hp then
 				set_paused(self, not self.paused)                          -- toggle pause
 			end
+			self.gear_pressed = false
+			self.pause_pressed = false
 		end
-		if hover_gear or hover_pause then
-			return true -- swallow clicks on either button
-		end
+	end
+
+	-- reflect hover/press on the button images (pause button base depends on state)
+	local pause_base = self.paused and "button_play" or "button_pause"
+	set_img(self, "gear_img", self.btn, btn_img("button_settings", hg, self.gear_pressed))
+	set_img(self, "pause_img", self.btn_pauze, btn_img(pause_base, hp, self.pause_pressed))
+
+	if (hg or hp) and action_id == hash("touch") then
+		return true -- swallow clicks on the buttons
 	end
 end
