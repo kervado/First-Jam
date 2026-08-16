@@ -18,3 +18,7 @@ components {
   id: "music_psycho"
   component: "/main/music_psycho.sound"
 }
+components {
+  id: "lose_sound"
+  component: "/main/lose.sound"
+}

@@ -1,0 +1,49 @@
+-- Final victory scene: two full-screen slides, each shown for SLIDE_TIME
+-- seconds (or skipped with a left click), then back to the main menu.
+-- This collection isn't paused, so a plain update() timer drives it.
+
+local SLIDE_TIME = 10.0
+local SLIDES = { hash("finish background_1"), hash("finish background_2") }
+
+local function advance(self)
+	if self.done then
+		return
+	end
+	self.index = self.index + 1
+	if self.index <= #SLIDES then
+		gui.play_flipbook(self.slide, SLIDES[self.index])
+		self.t = SLIDE_TIME
+	else
+		self.done = true
+		msg.post("main:/menu#menu", "return_to_menu") -- unloads this scene, shows the menu
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	msg.post("#win_sound", "play_sound") -- victory music on the finish scene
+	self.slide = gui.get_node("slide")
+	self.index = 1          -- slide 1 is the gui's default texture
+	self.t = SLIDE_TIME
+	self.done = false
+end
+
+function update(self, dt)
+	if self.done then
+		return
+	end
+	self.t = self.t - dt
+	if self.t <= 0 then
+		advance(self)
+	end
+end
+
+function on_input(self, action_id, action)
+	if self.done then
+		return
+	end
+	if action_id == hash("touch") and action.pressed then
+		advance(self) -- click skips to the next slide / to the menu
+		return true
+	end
+end
