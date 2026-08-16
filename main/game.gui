@@ -12,8 +12,16 @@ fonts {
   font: "/main/font_title.font"
 }
 textures {
-  name: "emoji"
-  texture: "/assets/ui/emoji/emoji.atlas"
+  name: "emoji1"
+  texture: "/assets/ui/emoji/emoji1.atlas"
+}
+textures {
+  name: "emoji2"
+  texture: "/assets/ui/emoji/emoji2.atlas"
+}
+textures {
+  name: "emoji3"
+  texture: "/assets/ui/emoji/emoji3.atlas"
 }
 textures {
   name: "game_ui"
@@ -234,12 +242,8 @@ nodes {
     x: 124.0
     y: -18.0
   }
-  scale {
-    x: 0.4
-    y: 0.4
-  }
   type: TYPE_BOX
-  texture: "emoji/emoji_normal"
+  texture: "emoji1/1"
   id: "smile_stress"
   parent: "box_haos"
   inherit_alpha: true

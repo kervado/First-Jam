@@ -1,0 +1,3 @@
+sound: "/assets/audio_fon/win.ogg"
+group: "master"
+gain: 1.0

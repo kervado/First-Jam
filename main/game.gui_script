@@ -16,6 +16,7 @@ local GAME_SOUNDS = {
 }
 
 local STRESS_MAX = 244.0 -- level_stress width (px) at 100% stress
+local WIN_COLOR  = vmath.vector4(0.35, 0.78, 0.40, 1.0) -- green "УРОВЕНЬ ПРОЙДЕН"
 
 local function fmt_clock(sec)
 	sec = math.max(0, math.floor(sec))
@@ -69,6 +70,7 @@ local function game_over(self)
 	set_paused(self, true)
 	gui.set_text(self.text_finish, "ВЫ УВОЛЕНЫ")
 	gui.set_enabled(self.shadow, true)
+	msg.post("/controller#lose_sound", "play_sound") -- lose music (stops on unload)
 	msg.post("main:/menu#menu", "begin_finish")
 end
 
@@ -80,7 +82,9 @@ local function win_level(self)
 	self.result = "win"
 	set_paused(self, true)
 	gui.set_text(self.text_finish, "УРОВЕНЬ ПРОЙДЕН")
+	gui.set_color(self.text_finish, WIN_COLOR)        -- green on a win
 	gui.set_enabled(self.shadow, true)
+	msg.post("main:/menu#lift_sound", "play_sound")   -- elevator ride now, on the win
 	msg.post("main:/menu#menu", "level_complete")
 end
 
@@ -95,13 +99,13 @@ local function dismiss_banner(self)
 	msg.post("main:/menu#menu", "cancel_banner") -- stop the 15s auto-dismiss
 end
 
--- Chaos level -> smile_stress face, by office stress (0..100).
+-- Chaos level -> smile_stress face (image "1".."4" in the per-floor emoji atlas).
+-- The image is NOT changed at 100% (handled in set_stress).
 local function chaos_face(value)
-	if value < 30 then return "emoji_normal"
-	elseif value < 60 then return "emoji_tension"
-	elseif value < 80 then return "emoji_chaos"
-	elseif value < 100 then return "emoji_critical"
-	else return "emoji_failure" end
+	if value < 30 then return "1"
+	elseif value < 60 then return "2"
+	elseif value < 80 then return "3"
+	else return "4" end
 end
 
 local function set_stress(self, value)
@@ -113,10 +117,13 @@ local function set_stress(self, value)
 	sz.x = STRESS_MAX * value / 100
 	gui.set_size(self.level_stress, sz)
 
-	local face = chaos_face(value)
-	if face ~= self.smile_face then
-		self.smile_face = face
-		pcall(gui.play_flipbook, self.smile_stress, hash(face))
+	-- keep the current face at 100% (don't switch on the failure threshold)
+	if value < 100 then
+		local face = chaos_face(value)
+		if face ~= self.smile_face then
+			self.smile_face = face
+			pcall(gui.play_flipbook, self.smile_stress, hash(face))
+		end
 	end
 
 	if value >= 100 then
@@ -159,6 +166,11 @@ function on_message(self, message_id, message, sender)
 		set_stress(self, message.value)
 	elseif message_id == hash("set_floor") then
 		gui.set_text(self.text_floor, string.format("%d", message.floor))
+		-- pick the per-floor emoji set (emoji1/emoji2/emoji3), then show face "1"
+		local n = math.max(1, math.min(3, math.floor(message.floor)))
+		gui.set_texture(self.smile_stress, "emoji" .. n)
+		gui.play_flipbook(self.smile_stress, hash("1"))
+		self.smile_face = "1"
 		if message.floor == 1 then
 			-- first floor: show the start banner and pause until dismissed
 			self.banner_active = true

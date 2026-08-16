@@ -140,7 +140,7 @@ local function do_next_level(self)
 	if self.level_index <= #LEVELS then
 		load_level(self, LEVELS[self.level_index])
 	else
-		load_level(self, FINISH_PROXY) -- all floors done -> victory screen (WIP)
+		load_level(self, FINISH_PROXY) -- all floors done -> victory screen
 	end
 end
 

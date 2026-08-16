@@ -6,5 +6,9 @@ embedded_instances {
   "  id: \"finish_gui\"\n"
   "  component: \"/main/finish.gui\"\n"
   "}\n"
+  "components {\n"
+  "  id: \"win_sound\"\n"
+  "  component: \"/main/win.sound\"\n"
+  "}\n"
   ""
 }

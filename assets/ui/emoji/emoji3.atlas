@@ -1,0 +1,13 @@
+images {
+  image: "/assets/ui/emoji/3_lvl/1.png"
+}
+images {
+  image: "/assets/ui/emoji/3_lvl/2.png"
+}
+images {
+  image: "/assets/ui/emoji/3_lvl/3.png"
+}
+images {
+  image: "/assets/ui/emoji/3_lvl/4.png"
+}
+extrude_borders: 2

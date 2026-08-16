@@ -21,6 +21,7 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	msg.post("#win_sound", "play_sound") -- victory music on the finish scene
 	self.slide = gui.get_node("slide")
 	self.index = 1          -- slide 1 is the gui's default texture
 	self.t = SLIDE_TIME
