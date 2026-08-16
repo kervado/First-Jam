@@ -69,3 +69,16 @@ embedded_components {
   data: "sound: \"/assets/audio/grunt2.wav\"\n"
   ""
 }
+embedded_components {
+  id: "spinemodel"
+  type: "spinemodel"
+  data: "spine_scene: \"/main/employees.spinescene\"\n"
+  "default_animation: \"calm_idle\"\n"
+  "skin: \"employee_normal/employee1/employee_1\"\n"
+  "material: \"/defold-spine/assets/spine.material\"\n"
+  ""
+  position {
+    y: -53.0
+    z: 0.002
+  }
+}

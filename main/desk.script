@@ -1,21 +1,24 @@
 --------------------------------------------------------------------------------
 -- desk.script
 --
--- A worker's desk. Blocks the player and registers as a "desk". A worker wants
--- exactly one thing at a time; the type is chosen by the controller using the
--- per-desk weights below.
+-- A worker's desk with a Spine "employee" model.
 --
--- Request weights (edit per desk in the .go or per instance in the collection):
---   coffee / paper / cats -> relative chance of wanting each item.
---   e.g. coffee=3, paper=2, cats=1  ->  3/6, 2/6, 1/6
---        coffee=3, paper=4, cats=2  ->  3/9, 4/9, 2/9
---   A weight of 0 disables that item for this desk.
+-- Request weights (per desk): coffee / paper / cats -> relative chance of the
+-- worker wanting each item (a weight of 0 disables that item).
 --
--- The floating request icon is a SEPARATE game object (so it can bob up and
--- down on its own -- a sprite component's position cannot be moved at runtime).
--- Just make that icon object a CHILD of this desk; it auto-registers here at
--- load (via go.get_parent), so no manual linking is needed. This script only
--- tells it to show the wanted item or hide.
+-- skin_variant (1..8, set per desk): which employee look to use. Each variant
+-- has three skin versions and a matching base animation, driven by the level
+-- psychosis (office.psychosis):
+--     < 34%  -> calm   : anim "calm_idle", skin employee_<n>
+--   34..67%  -> stress : anim "stress",    skin employee_s_<n>
+--    >= 67%  -> psycho  : anim "psycho",    skin employee_p_<n>
+-- When a coffee/cat request is fulfilled the matching one-shot animation plays
+-- over the base state while its sound plays. While this desk is fuelling the
+-- level psychosis (its request expired unfilled) it flashes a red "!" next to
+-- the request icon and grunts every few seconds.
+--
+-- The floating request icon is a child object that auto-registers via
+-- go.get_parent(); this script tells it what to show.
 --------------------------------------------------------------------------------
 
 local items = require("main.items")
@@ -23,10 +26,19 @@ local office = require("main.office")
 
 local CONTROLLER = "controller#controller"
 local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
+local GRUNT_INTERVAL = 5.0   -- seconds between grunts while fuelling psychosis
 
 go.property("coffee", 3)
 go.property("paper", 2)
 go.property("cats", 1)
+go.property("skin_variant", 1)       -- 1..8: which employee skin to use
+go.property("stress_threshold", 34)  -- level psychosis (%) to enter the stress state
+go.property("psycho_threshold", 67)  -- level psychosis (%) to enter the psycho state
+
+-- base looping animation per psychosis state
+local BASE_ANIM = { calm = "calm_idle", stress = "stress", psycho = "psycho" }
+-- one-shot animation played when a request of this type is fulfilled
+local FULFIL_ANIM = { [items.COFFEE] = "coffee", [items.CAT] = "cat" }
 
 -- sound played when a request of a given type is fulfilled
 local DELIVER_SOUND = {
@@ -34,6 +46,22 @@ local DELIVER_SOUND = {
 	[items.PAPER]  = "#snd_paper",    -- laser-printer.wav
 	[items.CAT]    = "#snd_cat",      -- cat-purring.wav
 }
+
+-- level psychosis (%) -> state name, using this desk's thresholds
+local function state_for(self, p)
+	if p < self.stress_threshold then return "calm"
+	elseif p < self.psycho_threshold then return "stress"
+	else return "psycho" end
+end
+
+-- skin name for this desk's variant in a given state
+local function skin_for(variant, state)
+	local n = string.format("%d", variant)
+	local base = "employee_normal/employee" .. n .. "/employee_"
+	if state == "stress" then return base .. "s_" .. n end
+	if state == "psycho" then return base .. "p_" .. n end
+	return base .. n
+end
 
 local function play(url)
 	msg.post(url, "stop_sound")
@@ -47,20 +75,35 @@ local function tell_icon(self, message_id, message)
 	end
 end
 
+-- pick the skin (always) and, unless a one-shot overlay is playing, the base
+-- animation, according to the current level psychosis
+local function apply_state(self)
+	local st = state_for(self, office.psychosis)
+	if st == self.state then return end
+	self.state = st
+	spine.set_skin("#spinemodel", skin_for(self.skin_variant, st))
+	if not self.overlay then
+		spine.play_anim("#spinemodel", BASE_ANIM[st], go.PLAYBACK_LOOP_FORWARD)
+	end
+end
+
 function init(self)
-	self.icon = nil   -- set when the child request-icon registers itself
-	go.set("#sprite", "tint", TRANSPARENT)   -- body no longer drawn (footprint only)
+	self.icon        = nil     -- set when the child request-icon registers itself
+	self.state       = nil     -- current psychosis state (calm/stress/psycho)
+	self.overlay     = false   -- a one-shot fulfil animation is playing
+	self.grunting    = false   -- this desk is fuelling the level psychosis
+	self.grunt_timer = 0
+
+	go.set("#sprite", "tint", TRANSPARENT)   -- footprint square is never drawn
+
+	apply_state(self)   -- initial skin + animation
 
 	-- world-space transform (this desk may be a child of another object)
 	local wp    = go.get_world_position()
 	local scale = go.get_world_scale()
 
-	-- fake-isometric depth from WORLD Y (same rule as the solid objects)
 	local z = office.z_for_y(wp.y)
 	office.apply_depth(z)
-
-	-- if this desk is a child of another object, re-apply depth each frame so a
-	-- parent that applies its depth after us cannot push our world Z off-screen
 	self.reapply_depth = go.get_parent() ~= nil
 
 	local size = go.get("#sprite", "size")
@@ -81,17 +124,57 @@ function update(self, dt)
 	if self.reapply_depth then
 		office.apply_depth()
 	end
+
+	apply_state(self)   -- follow the level psychosis
+
+	-- while fuelling psychosis: grunt every GRUNT_INTERVAL seconds
+	if self.grunting then
+		self.grunt_timer = self.grunt_timer - dt
+		if self.grunt_timer <= 0 then
+			play(math.random() < 0.5 and "#snd_grunt1" or "#snd_grunt2")
+			self.grunt_timer = GRUNT_INTERVAL
+		end
+	end
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("register_icon") then
 		self.icon = message.icon           -- the child request-icon linked itself
+
 	elseif message_id == hash("show_icon") then
-		tell_icon(self, "show_request", { type = message.type })   -- icon picks the image
-		play("#snd_request")                 -- a new request appeared
+		-- a new request appeared (not yet impatient)
+		self.grunting = false
+		tell_icon(self, "hide_alarm")
+		tell_icon(self, "show_request", { type = message.type })
+		play("#snd_request")
+
+	elseif message_id == hash("expired") then
+		-- the worker's patience ran out: it now fuels psychosis
+		self.grunting = true
+		self.grunt_timer = 0            -- grunt promptly, then every interval
+		tell_icon(self, "show_alarm")
+
 	elseif message_id == hash("fulfilled") then
-		local snd = DELIVER_SOUND[message.type]
-		if snd then play(snd) end            -- worker got what they wanted
+		local snd  = DELIVER_SOUND[message.type]
+		local anim = FULFIL_ANIM[message.type]   -- coffee / cat get a reaction animation
+
+		if anim and snd then
+			-- play the reaction animation over the base state for as long as its
+			-- sound is playing, then return to the base animation
+			self.overlay = true
+			spine.play_anim("#spinemodel", anim, go.PLAYBACK_LOOP_FORWARD)
+			msg.post(snd, "stop_sound")
+			sound.play(snd, nil, function()
+				self.overlay = false
+				spine.play_anim("#spinemodel", BASE_ANIM[self.state], go.PLAYBACK_LOOP_FORWARD)
+			end)
+		elseif snd then
+			play(snd)   -- e.g. paper: just the delivery sound, no special animation
+		end
+
+		-- request cleared: stop grunting and hide the icon + alarm
+		self.grunting = false
 		tell_icon(self, "hide_request")
+		tell_icon(self, "hide_alarm")
 	end
 end

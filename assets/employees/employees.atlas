@@ -1,0 +1,91 @@
+images {
+  image: "/assets/employees/Cartoon orange cat.png"
+}
+images {
+  image: "/assets/employees/chair.png"
+}
+images {
+  image: "/assets/employees/chair_p.png"
+}
+images {
+  image: "/assets/employees/coffee.png"
+}
+images {
+  image: "/assets/employees/employee_1.png"
+}
+images {
+  image: "/assets/employees/employee_2.png"
+}
+images {
+  image: "/assets/employees/employee_3.png"
+}
+images {
+  image: "/assets/employees/employee_4.png"
+}
+images {
+  image: "/assets/employees/employee_5.png"
+}
+images {
+  image: "/assets/employees/employee_6.png"
+}
+images {
+  image: "/assets/employees/employee_7.png"
+}
+images {
+  image: "/assets/employees/employee_8.png"
+}
+images {
+  image: "/assets/employees/employee_p_1.png"
+}
+images {
+  image: "/assets/employees/employee_p_2.png"
+}
+images {
+  image: "/assets/employees/employee_p_3.png"
+}
+images {
+  image: "/assets/employees/employee_p_4.png"
+}
+images {
+  image: "/assets/employees/employee_p_5.png"
+}
+images {
+  image: "/assets/employees/employee_p_6.png"
+}
+images {
+  image: "/assets/employees/employee_p_7.png"
+}
+images {
+  image: "/assets/employees/employee_p_8.png"
+}
+images {
+  image: "/assets/employees/employee_s_1.png"
+}
+images {
+  image: "/assets/employees/employee_s_2.png"
+}
+images {
+  image: "/assets/employees/employee_s_3.png"
+}
+images {
+  image: "/assets/employees/employee_s_4.png"
+}
+images {
+  image: "/assets/employees/employee_s_5.png"
+}
+images {
+  image: "/assets/employees/employee_s_6.png"
+}
+images {
+  image: "/assets/employees/employee_s_7.png"
+}
+images {
+  image: "/assets/employees/employee_s_8.png"
+}
+images {
+  image: "/assets/employees/light.png"
+}
+images {
+  image: "/assets/employees/shadow.png"
+}
+extrude_borders: 2

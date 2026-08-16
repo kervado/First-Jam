@@ -28,6 +28,7 @@ function init(self)
 	self.phase  = 0
 	self.active = false
 	msg.post("#sprite", "disable")    -- hidden until a request comes in
+	msg.post("#alarm", "disable")     -- red "!" shown only while the desk fuels psychosis
 
 	-- auto-link: tell the parent desk that we are its request icon, so no manual
 	-- wiring is needed -- just make this object a child of the desk.
@@ -56,6 +57,11 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("hide_request") then
 		self.active = false
 		msg.post("#sprite", "disable")
+		msg.post("#alarm", "disable")
 		go.set_position(self.base)   -- back to rest
+	elseif message_id == hash("show_alarm") then
+		msg.post("#alarm", "enable")
+	elseif message_id == hash("hide_alarm") then
+		msg.post("#alarm", "disable")
 	end
 end

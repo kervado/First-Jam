@@ -13,3 +13,18 @@ embedded_components {
   "}\n"
   ""
 }
+embedded_components {
+  id: "alarm"
+  type: "sprite"
+  data: "default_animation: \"exclamation\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "textures {\n"
+  "  sampler: \"texture_sampler\"\n"
+  "  texture: \"/assets/icons/Icons.atlas\"\n"
+  "}\n"
+  ""
+  position {
+    x: 55.0
+    y: 15.0
+  }
+}

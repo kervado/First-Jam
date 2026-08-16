@@ -355,7 +355,11 @@ function update(self, dt)
 		if d.active then
 			if not d.expired then
 				d.wait = d.wait - dt
-				if d.wait <= 0 then d.expired = true end
+				if d.wait <= 0 then
+					d.expired = true
+					-- the worker lost patience: tell the desk to alarm + grunt
+					msg.post(msg.url(nil, d.id, "script"), "expired")
+				end
 			end
 			if d.expired then expired = expired + 1 end
 		elseif not d.ready then
