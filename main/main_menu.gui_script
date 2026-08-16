@@ -136,6 +136,7 @@ end
 local function do_next_level(self)
 	cancel_finish_timer(self)
 	unload_current(self)
+	self.first_level = false -- advancing, not a fresh start -> no start banner
 	self.level_index = self.level_index + 1
 	if self.level_index <= #LEVELS then
 		load_level(self, LEVELS[self.level_index])
@@ -163,6 +164,7 @@ end
 
 local function start_game(self)
 	self.returning = false     -- fresh run
+	self.first_level = true    -- first level -> show the start banner
 	self.level_index = 1
 	set_active(self, false)    -- hide the menu
 	load_level(self, LEVELS[1])
@@ -187,6 +189,7 @@ function init(self)
 	self.finish_timer = nil
 	self.banner_timer = nil
 	self.level_index = 1
+	self.first_level = false
 	self.cur_proxy = nil
 	self.buttons = {}
 	for i, def in ipairs(ITEMS) do
@@ -232,6 +235,14 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("show_menu") then
 		set_active(self, true)
+	elseif message_id == hash("hud_ready") then
+		-- the level's HUD asks for its floor number (menu is the source of truth)
+		self.hud_url = sender -- remember this level's HUD for later messages
+		msg.post(sender, "set_floor", { floor = self.level_index })
+		if self.first_level then
+			self.first_level = false
+			msg.post(sender, "show_banner")
+		end
 	elseif message_id == hash("proxy_loaded") then
 		-- game.collection finished loading: init + enable it
 		msg.post(sender, "init")
@@ -267,10 +278,11 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("begin_banner") then
 		-- floor 1 start banner: auto-dismiss after 15s (timer runs here, in the
 		-- main collection, because the level is paused/frozen)
-		if not self.banner_timer then
+		if not self.banner_timer and self.hud_url then
+			local hud = self.hud_url
 			self.banner_timer = timer.delay(12, false, function()
 				self.banner_timer = nil
-				msg.post("game:/game_ui#game_gui", "banner_timeout")
+				msg.post(hud, "banner_timeout")
 			end)
 		end
 	elseif message_id == hash("cancel_banner") then

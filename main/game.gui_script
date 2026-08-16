@@ -156,6 +156,10 @@ function init(self)
 	set_img(self, "gear_img", self.btn, "button_settings")
 	set_img(self, "pause_img", self.btn_pauze, "button_pause")
 	set_stress(self, 0)
+
+	-- ask the menu for our floor number (and a start banner on the first level).
+	-- The menu is the authoritative source of the level index.
+	msg.post("main:/menu#menu", "hud_ready")
 end
 
 function on_message(self, message_id, message, sender)
@@ -171,13 +175,12 @@ function on_message(self, message_id, message, sender)
 		gui.set_texture(self.smile_stress, "emoji" .. n)
 		gui.play_flipbook(self.smile_stress, hash("1"))
 		self.smile_face = "1"
-		if message.floor == 1 then
-			-- first floor: show the start banner and pause until dismissed
-			self.banner_active = true
-			gui.set_enabled(self.start_banner, true)
-			set_paused(self, true)
-			msg.post("main:/menu#menu", "begin_banner")
-		end
+	elseif message_id == hash("show_banner") then
+		-- shown only on the first level of a run (the menu decides)
+		self.banner_active = true
+		gui.set_enabled(self.start_banner, true)
+		set_paused(self, true)
+		msg.post("main:/menu#menu", "begin_banner")
 	elseif message_id == hash("set_clock") then
 		gui.set_text(self.text_clock, fmt_clock(message.time))
 	elseif message_id == hash("level_win") then
