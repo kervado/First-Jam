@@ -388,6 +388,43 @@ nodes {
   size_mode: SIZE_MODE_AUTO
   enabled: false
 }
+nodes {
+  position {
+    x: 960.0
+    y: 540.0
+  }
+  size {
+    x: 5000.0
+    y: 2500.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_BOX
+  id: "shadow"
+  inherit_alpha: true
+  alpha: 0.54
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "\320\222\320\253 \320\243\320\222\320\236\320\233\320\225\320\235\320\253"
+  font: "font_title"
+  id: "text_finish"
+  parent: "shadow"
+  inherit_alpha: true
+}
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
 max_nodes: 64

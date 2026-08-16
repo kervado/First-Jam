@@ -9,26 +9,58 @@
 local COLOR_IDLE  = vmath.vector4(0.16, 0.16, 0.20, 0.90)
 local COLOR_HOVER = vmath.vector4(0.30, 0.30, 0.38, 0.95)
 
-local GAME_PROXY = "main:/menu#gameproxy"   -- the collectionproxy that hosts this level
-local AMBIENCE   = "/controller#ambience"   -- looping office ambience sound
+local AMBIENCE = "/controller#ambience"   -- looping office ambience sound
 
 local function set_button(self, on)
 	self.active = on
 	gui.set_enabled(self.btn, on) -- disabling the button hides its icon too
 end
 
+local function fmt_clock(sec)
+	sec = math.max(0, math.floor(sec))
+	return string.format("%d:%02d", math.floor(sec / 60), sec % 60)
+end
+
 -- Freeze/unfreeze the level and its background music, and flip the button icon
--- (pause bars ln3/ln4 while running, play triangle while paused).
+-- (pause bars ln3/ln4 while running, play triangle while paused). The menu owns
+-- the current level's proxy, so it applies the time step.
 local function set_paused(self, paused)
 	if self.paused == paused then
 		return
 	end
 	self.paused = paused
-	msg.post(GAME_PROXY, "set_time_step", { factor = paused and 0 or 1, mode = 0 })
+	msg.post("main:/menu#menu", "set_game_paused", { paused = paused })
 	sound.pause(AMBIENCE, paused)
 	gui.set_enabled(self.ln3, not paused)
 	gui.set_enabled(self.ln4, not paused)
 	gui.set_enabled(self.play, paused)
+end
+
+-- Stress reached 100%: freeze the level, dim the screen with the "ВЫ УВОЛЕНЫ"
+-- overlay, and ask the menu to auto-return after 5s (a click returns instantly).
+local function game_over(self)
+	if self.finished then
+		return
+	end
+	self.finished = true
+	self.result = "lose"
+	set_paused(self, true)               -- freeze the level + pause the music
+	gui.set_text(self.text_finish, "ВЫ УВОЛЕНЫ")
+	gui.set_enabled(self.shadow, true)   -- shadow contains the text_finish label
+	msg.post("main:/menu#menu", "begin_finish")
+end
+
+-- Round timer ran out: the level is passed.
+local function win_level(self)
+	if self.finished then
+		return
+	end
+	self.finished = true
+	self.result = "win"
+	set_paused(self, true)
+	gui.set_text(self.text_finish, "УРОВЕНЬ ПРОЙДЕН")
+	gui.set_enabled(self.shadow, true)
+	msg.post("main:/menu#menu", "level_complete") -- menu loads the next level after 5s
 end
 
 -- Chaos level -> smile_stress face, by office stress (0..100):
@@ -66,6 +98,10 @@ local function set_stress(self, value)
 		self.smile_face = face
 		pcall(gui.play_flipbook, self.smile_stress, hash(face))
 	end
+
+	if value >= 100 then
+		game_over(self)
+	end
 end
 
 function init(self)
@@ -78,13 +114,20 @@ function init(self)
 	self.text_stress = gui.get_node("text_stress")
 	self.level_stress = gui.get_node("level_stress")
 	self.smile_stress = gui.get_node("smile_stress")
+	self.shadow = gui.get_node("shadow")
+	self.text_finish = gui.get_node("text_finish")
+	self.text_floor = gui.get_node("text_floor")
+	self.text_clock = gui.get_node("text_clock")
 	-- read the bar width from the mask node, so resizing base_level in the gui
 	-- needs no script change
 	self.stress_w = gui.get_size(gui.get_node("base_level")).x
 
 	self.active = true
 	self.paused = false
+	self.finished = false
+	gui.set_enabled(self.shadow, false) -- hidden until game over
 	gui.set_color(self.btn, COLOR_IDLE)
+	gui.set_color(self.btn_pauze, COLOR_IDLE)
 	-- initial icon: running -> pause bars visible, play hidden
 	gui.set_enabled(self.ln3, true)
 	gui.set_enabled(self.ln4, true)
@@ -99,12 +142,27 @@ function on_message(self, message_id, message, sender)
 		set_paused(self, false) -- resume when returning from settings
 	elseif message_id == hash("stress") then
 		set_stress(self, message.value)
+	elseif message_id == hash("set_floor") then
+		gui.set_text(self.text_floor, string.format("%d ЭТАЖ", message.floor))
+	elseif message_id == hash("set_clock") then
+		gui.set_text(self.text_clock, fmt_clock(message.time))
+	elseif message_id == hash("level_win") then
+		win_level(self)
 	end
 end
 
 function on_input(self, action_id, action)
 	if not self.active then
 		return
+	end
+
+	-- finished: on a LOSS a left click returns to the menu immediately;
+	-- on a WIN the menu advances to the next level on its own timer.
+	if self.finished then
+		if self.result == "lose" and action_id == hash("touch") and action.pressed then
+			msg.post("main:/menu#menu", "return_to_menu")
+		end
+		return true
 	end
 
 	-- Space toggles pause (key action -> no cursor position)
@@ -122,6 +180,7 @@ function on_input(self, action_id, action)
 	local hover_gear  = gui.pick_node(self.btn, action.x, action.y)
 	local hover_pause = gui.pick_node(self.btn_pauze, action.x, action.y)
 	gui.set_color(self.btn, hover_gear and COLOR_HOVER or COLOR_IDLE)
+	gui.set_color(self.btn_pauze, hover_pause and COLOR_HOVER or COLOR_IDLE)
 
 	if action_id == hash("touch") then
 		if action.released then

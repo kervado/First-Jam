@@ -27,6 +27,10 @@ local office = require("main.office")
 go.property("MaxActiveRequests", 3)
 -- how often (seconds) the controller tries to hand out a new request.
 go.property("ChekFrequency", 1.0)
+-- round duration in seconds. Win the level when it reaches zero. Set per level.
+go.property("RoundTime", 180)
+-- floor / round number, shown in the HUD as "N ЭТАЖ". Set per level.
+go.property("Floor", 1)
 
 local SPEED         = 320      -- max horizontal pixels / second
 local ISO_RATIO     = 0.58     -- classic isometric height/width; movement only
@@ -187,6 +191,12 @@ function init(self)
 	-- request pacing
 	self.check_timer = self.ChekFrequency
 
+	-- round timer: counts down from RoundTime; win the level at zero
+	self.time_left    = self.RoundTime
+	self.round_over   = false
+	self.clock_shown  = -1
+	self.floor_shown  = false -- HUD floor label sent on the first update frame
+
 	-- looping office ambience (master group -> the volume slider controls it)
 	msg.post("#ambience", "play_sound")
 end
@@ -230,6 +240,27 @@ function on_message(self, message_id, message, sender)
 end
 
 function update(self, dt)
+	-- send the floor label once, from update (game_ui is reliably ready here,
+	-- unlike during init when the level is loaded through a proxy)
+	if not self.floor_shown then
+		self.floor_shown = true
+		msg.post("/game_ui#game_gui", "set_floor", { floor = self.Floor })
+	end
+
+	-- ---- round timer: win when it reaches zero (dt is 0 while paused) ----
+	if not self.round_over then
+		self.time_left = self.time_left - dt
+		local shown = math.max(0, math.ceil(self.time_left))
+		if shown ~= self.clock_shown then
+			self.clock_shown = shown
+			msg.post("/game_ui#game_gui", "set_clock", { time = shown })
+		end
+		if self.time_left <= 0 then
+			self.round_over = true
+			msg.post("/game_ui#game_gui", "level_win")
+		end
+	end
+
 	local p = self.player
 	if not p then return end
 

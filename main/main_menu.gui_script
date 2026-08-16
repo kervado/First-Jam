@@ -92,6 +92,54 @@ local function set_active(self, on)
 	end
 end
 
+-- Level order: one collectionproxy per floor, then the final victory screen.
+local LEVELS       = { "#floor1proxy", "#floor2proxy", "#floor3proxy" }
+local FINISH_PROXY = "#finishproxy"
+
+local function cancel_finish_timer(self)
+	if self.finish_timer then
+		timer.cancel(self.finish_timer)
+		self.finish_timer = nil
+	end
+end
+
+local function load_level(self, proxy)
+	self.cur_proxy = proxy
+	msg.post(proxy, "async_load") -- proxy_loaded -> init + enable
+end
+
+local function unload_current(self)
+	if self.cur_proxy then
+		msg.post(self.cur_proxy, "disable")
+		msg.post(self.cur_proxy, "unload")
+		self.cur_proxy = nil
+	end
+end
+
+-- Unload the running level and show the menu. Guarded so the click and the 5s
+-- game-over timer can't both trigger it.
+local function do_return(self)
+	if self.returning then
+		return
+	end
+	self.returning = true
+	cancel_finish_timer(self)
+	unload_current(self)
+	set_active(self, true)
+end
+
+-- Level passed: unload it and load the next one (or the final screen).
+local function do_next_level(self)
+	cancel_finish_timer(self)
+	unload_current(self)
+	self.level_index = self.level_index + 1
+	if self.level_index <= #LEVELS then
+		load_level(self, LEVELS[self.level_index])
+	else
+		load_level(self, FINISH_PROXY) -- all floors done -> victory screen (WIP)
+	end
+end
+
 local function quit_game()
 	msg.post("@system:", "exit", { code = 0 })
 end
@@ -102,8 +150,10 @@ local function open_settings(self)
 end
 
 local function start_game(self)
-	set_active(self, false)          -- hide the menu
-	msg.post("#gameproxy", "load")   -- load game.collection; enabled on proxy_loaded
+	self.returning = false     -- fresh run
+	self.level_index = 1
+	set_active(self, false)    -- hide the menu
+	load_level(self, LEVELS[1])
 end
 
 -- on_click(self) fires on release over the same item. Items without a handler
@@ -121,6 +171,10 @@ function init(self)
 	self.root = gui.get_node("root")
 	self.logo2 = gui.get_node("logo2")
 	self.active = true
+	self.returning = false
+	self.finish_timer = nil
+	self.level_index = 1
+	self.cur_proxy = nil
 	self.buttons = {}
 	for i, def in ipairs(ITEMS) do
 		local btn = {
@@ -169,11 +223,34 @@ function on_message(self, message_id, message, sender)
 		-- game.collection finished loading: init + enable it
 		msg.post(sender, "init")
 		msg.post(sender, "enable")
+		-- the proxy keeps its time step across unload/reload; reset to normal so a
+		-- new game never starts frozen (e.g. after a game-over that paused it)
+		msg.post(sender, "set_time_step", { factor = 1, mode = 0 })
 	elseif message_id == hash("return_to_menu") then
-		-- settings (opened from the game) asked to quit the game and show the menu
-		msg.post("#gameproxy", "disable")
-		msg.post("#gameproxy", "unload")
-		set_active(self, true)
+		-- settings "menu" button, or a click on the game-over screen
+		do_return(self)
+	elseif message_id == hash("set_game_paused") then
+		-- pause/resume the currently loaded level (the proxy the menu owns)
+		if self.cur_proxy then
+			msg.post(self.cur_proxy, "set_time_step", { factor = message.paused and 0 or 1, mode = 0 })
+		end
+	elseif message_id == hash("begin_finish") then
+		-- stress hit 100%: auto-return to the menu after 5s (runs here, in the
+		-- main collection, because the game collection is frozen/paused)
+		if not self.finish_timer then
+			self.finish_timer = timer.delay(5, false, function()
+				self.finish_timer = nil
+				do_return(self)
+			end)
+		end
+	elseif message_id == hash("level_complete") then
+		-- level passed: advance to the next level after 5s
+		if not self.finish_timer then
+			self.finish_timer = timer.delay(5, false, function()
+				self.finish_timer = nil
+				do_next_level(self)
+			end)
+		end
 	end
 end
 
