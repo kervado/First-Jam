@@ -24,6 +24,51 @@ instances {
       value: "2.0"
       type: PROPERTY_TYPE_NUMBER
     }
+    properties {
+      id: "cooldown_coffee"
+      value: "4.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "cooldown_paper"
+      value: "2.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "cooldown_cat"
+      value: "5.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_coffee_min"
+      value: "8.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_coffee_max"
+      value: "12.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_paper_min"
+      value: "5.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_paper_max"
+      value: "12.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_cat_min"
+      value: "9.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_cat_max"
+      value: "16.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
   }
 }
 instances {

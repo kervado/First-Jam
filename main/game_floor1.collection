@@ -5,8 +5,58 @@ instances {
   component_properties {
     id: "controller"
     properties {
+      id: "ChekFrequency"
+      value: "2.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
       id: "RoundTime"
       value: "60.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "miss_coffee"
+      value: "4.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "miss_paper"
+      value: "2.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "miss_cat"
+      value: "5.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_coffee_min"
+      value: "6.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_coffee_max"
+      value: "8.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_paper_min"
+      value: "5.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_paper_max"
+      value: "10.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_cat_min"
+      value: "9.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_cat_max"
+      value: "15.0"
       type: PROPERTY_TYPE_NUMBER
     }
   }
