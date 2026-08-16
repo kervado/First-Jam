@@ -17,93 +17,89 @@ textures {
 }
 nodes {
   position {
-    x: 1905.0
-    y: 1062.0
+    x: 110.0
+    y: 1014.0
   }
   size {
-    x: 68.0
-    y: 68.0
+    x: 200.0
+    y: 100.0
   }
   color {
-    x: 0.16
-    y: 0.16
-    z: 0.2
+    x: 0.4
+    y: 0.4
+    z: 0.4
   }
   type: TYPE_BOX
-  id: "btn"
-  xanchor: XANCHOR_RIGHT
+  blend_mode: BLEND_MODE_MULT
+  id: "box_floor"
+  xanchor: XANCHOR_LEFT
   yanchor: YANCHOR_TOP
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -89.0
+    y: 20.0
+  }
+  scale {
+    x: 0.6
+    y: 0.6
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "1 \320\255\320\242\320\220\320\226"
+  font: "font_small"
+  id: "text_floor"
+  pivot: PIVOT_W
+  parent: "box_floor"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -87.0
+    y: -31.0
+  }
+  scale {
+    x: 0.5
+    y: 0.5
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "08:00"
+  font: "font_small"
+  id: "text_clock"
+  pivot: PIVOT_W
+  parent: "box_floor"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 1920.0
+    y: 1080.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  id: "box"
+  xanchor: XANCHOR_RIGHT
   pivot: PIVOT_NE
   inherit_alpha: true
-  alpha: 0.9
+  size_mode: SIZE_MODE_AUTO
+  visible: false
 }
 nodes {
   position {
-    x: -34.0
-    y: -18.0
-  }
-  size {
-    x: 32.0
-    y: 5.0
-  }
-  color {
-    x: 0.8
-    y: 0.8
-    z: 0.85
-  }
-  type: TYPE_BOX
-  id: "ln0"
-  xanchor: XANCHOR_RIGHT
-  yanchor: YANCHOR_TOP
-  parent: "btn"
-  inherit_alpha: true
-}
-nodes {
-  position {
-    x: -34.0
-    y: -34.0
-  }
-  size {
-    x: 32.0
-    y: 5.0
-  }
-  color {
-    x: 0.8
-    y: 0.8
-    z: 0.85
-  }
-  type: TYPE_BOX
-  id: "ln1"
-  xanchor: XANCHOR_RIGHT
-  yanchor: YANCHOR_TOP
-  parent: "btn"
-  inherit_alpha: true
-}
-nodes {
-  position {
-    x: -34.0
-    y: -50.0
-  }
-  size {
-    x: 32.0
-    y: 5.0
-  }
-  color {
-    x: 0.8
-    y: 0.8
-    z: 0.85
-  }
-  type: TYPE_BOX
-  id: "ln2"
-  xanchor: XANCHOR_RIGHT
-  yanchor: YANCHOR_TOP
-  parent: "btn"
-  inherit_alpha: true
-}
-nodes {
-  position {
-    x: 1623.0
-    y: 1028.0
+    x: -298.0
+    y: -52.0
   }
   scale {
     x: 0.5
@@ -120,6 +116,7 @@ nodes {
   }
   type: TYPE_BOX
   id: "box_haos"
+  parent: "box"
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
 }
@@ -220,64 +217,88 @@ nodes {
 }
 nodes {
   position {
-    x: 110.0
-    y: 1014.0
+    x: -15.0
+    y: -18.0
   }
   size {
-    x: 200.0
-    y: 100.0
+    x: 68.0
+    y: 68.0
   }
   color {
-    x: 0.4
-    y: 0.4
-    z: 0.4
+    x: 0.16
+    y: 0.16
+    z: 0.2
   }
   type: TYPE_BOX
-  blend_mode: BLEND_MODE_MULT
-  id: "box_floor"
+  id: "btn"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_NE
+  parent: "box"
   inherit_alpha: true
-  size_mode: SIZE_MODE_AUTO
+  alpha: 0.9
 }
 nodes {
   position {
-    x: -89.0
-    y: 20.0
-  }
-  scale {
-    x: 0.6
-    y: 0.6
+    x: -34.0
+    y: -18.0
   }
   size {
-    x: 200.0
-    y: 100.0
+    x: 32.0
+    y: 5.0
   }
-  type: TYPE_TEXT
-  text: "1 \320\255\320\242\320\220\320\226"
-  font: "font_small"
-  id: "text_floor"
-  pivot: PIVOT_W
-  parent: "box_floor"
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln0"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn"
   inherit_alpha: true
 }
 nodes {
   position {
-    x: -87.0
-    y: -31.0
-  }
-  scale {
-    x: 0.5
-    y: 0.5
+    x: -34.0
+    y: -34.0
   }
   size {
-    x: 200.0
-    y: 100.0
+    x: 32.0
+    y: 5.0
   }
-  type: TYPE_TEXT
-  text: "08:00"
-  font: "font_small"
-  id: "text_clock"
-  pivot: PIVOT_W
-  parent: "box_floor"
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln1"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -34.0
+    y: -50.0
+  }
+  size {
+    x: 32.0
+    y: 5.0
+  }
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln2"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn"
   inherit_alpha: true
 }
 material: "/builtins/materials/gui.material"
