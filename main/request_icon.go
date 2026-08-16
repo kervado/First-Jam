@@ -12,6 +12,9 @@ embedded_components {
   "  texture: \"/assets/icons/Icons.atlas\"\n"
   "}\n"
   ""
+  position {
+    z: 1.0
+  }
 }
 embedded_components {
   id: "alarm"
@@ -26,5 +29,6 @@ embedded_components {
   position {
     x: 55.0
     y: 15.0
+    z: 1.0
   }
 }
