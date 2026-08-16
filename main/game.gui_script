@@ -9,7 +9,13 @@
 local COLOR_IDLE  = vmath.vector4(0.16, 0.16, 0.20, 0.90)
 local COLOR_HOVER = vmath.vector4(0.30, 0.30, 0.38, 0.95)
 
-local AMBIENCE = "/controller#ambience"   -- looping office ambience sound
+-- all looping audio in the level; paused/resumed together with the game
+local GAME_SOUNDS = {
+	"/controller#ambience",
+	"/controller#music_calm",
+	"/controller#music_stress",
+	"/controller#music_psycho",
+}
 
 local function set_button(self, on)
 	self.active = on
@@ -30,7 +36,9 @@ local function set_paused(self, paused)
 	end
 	self.paused = paused
 	msg.post("main:/menu#menu", "set_game_paused", { paused = paused })
-	sound.pause(AMBIENCE, paused)
+	for _, url in ipairs(GAME_SOUNDS) do
+		sound.pause(url, paused) -- stop/resume ambience + music on pause
+	end
 	gui.set_enabled(self.ln3, not paused)
 	gui.set_enabled(self.ln4, not paused)
 	gui.set_enabled(self.play, paused)
