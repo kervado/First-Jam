@@ -1,0 +1,48 @@
+script: "/main/finish.gui_script"
+textures {
+  name: "finish_ui"
+  texture: "/assets/ui/finish_scen/finish_ui.atlas"
+}
+nodes {
+  position {
+    x: 960.0
+    y: 540.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 1920.0
+    y: 1080.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "finish_ui/finish background_1"
+  id: "slide"
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_ZOOM
+  inherit_alpha: true
+  size_mode: SIZE_MODE_MANUAL
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT
+max_nodes: 16
