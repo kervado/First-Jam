@@ -93,7 +93,11 @@ function init(self)
 
 	go.set("#sprite", "tint", TRANSPARENT)   -- footprint square is never drawn
 
-	apply_state(self)   -- initial skin + animation
+	-- IMPORTANT: do NOT call spine functions (apply_state) here. Depending on
+	-- component init order, spine.set_skin/play_anim in init() can error, which
+	-- would abort init() *before* the desk registers below -- so the controller
+	-- never learns about the desk and never sends it requests (no icons, no
+	-- deliveries). apply_state() runs safely in update() from the first frame.
 
 	-- world-space transform (this desk may be a child of another object)
 	local wp    = go.get_world_position()
