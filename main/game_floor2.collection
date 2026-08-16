@@ -1,4 +1,4 @@
-name: "game"
+name: "game2"
 instances {
   id: "controller"
   prototype: "/main/controller.go"

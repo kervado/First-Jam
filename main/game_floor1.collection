@@ -1,27 +1,12 @@
-name: "game"
+name: "game1"
 instances {
   id: "controller"
   prototype: "/main/controller.go"
   component_properties {
     id: "controller"
     properties {
-      id: "MaxActiveRequests"
-      value: "3.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "ChekFrequency"
-      value: "3.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
       id: "RoundTime"
       value: "60.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "Floor"
-      value: "1.0"
       type: PROPERTY_TYPE_NUMBER
     }
   }

@@ -198,7 +198,6 @@ function init(self)
 	self.time_left    = self.RoundTime
 	self.round_over   = false
 	self.clock_shown  = -1
-	self.floor_shown  = false -- HUD floor label sent on the first update frame
 
 	-- looping office ambience (master group -> the volume slider controls it)
 	msg.post("#ambience", "play_sound")
@@ -256,13 +255,6 @@ function on_message(self, message_id, message, sender)
 end
 
 function update(self, dt)
-	-- send the floor label once, from update (game_ui is reliably ready here,
-	-- unlike during init when the level is loaded through a proxy)
-	if not self.floor_shown then
-		self.floor_shown = true
-		msg.post("/game_ui#game_gui", "set_floor", { floor = self.Floor })
-	end
-
 	-- ---- round timer: win when it reaches zero (dt is 0 while paused) ----
 	if not self.round_over then
 		self.time_left = self.time_left - dt
