@@ -1,0 +1,31 @@
+images {
+  image: "/assets/ui/settings/button_close.png"
+}
+images {
+  image: "/assets/ui/settings/button_close_down.png"
+}
+images {
+  image: "/assets/ui/settings/button_close_focus.png"
+}
+images {
+  image: "/assets/ui/settings/icon_brain.png"
+}
+images {
+  image: "/assets/ui/settings/switch.png"
+}
+images {
+  image: "/assets/ui/settings/window_settings.png"
+}
+images {
+  image: "/assets/ui/settings/check.png"
+}
+images {
+  image: "/assets/ui/settings/checkbox.png"
+}
+images {
+  image: "/assets/ui/settings/checkbox_down.png"
+}
+images {
+  image: "/assets/ui/settings/checkbox_focus.png"
+}
+extrude_borders: 2
