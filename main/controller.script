@@ -22,6 +22,21 @@
 local items = require("main.items")
 local office = require("main.office")
 
+-- [BALANCE] item type -> short name, for tuning logs
+local TYPE_NAME = { [items.COFFEE] = "coffee", [items.PAPER] = "paper", [items.CAT] = "cat" }
+
+-- [BALANCE] print a one-line end-of-round summary (once). Shows the inputs
+-- (tuning) next to the outcome so a playtest log is self-contained.
+local function log_end(self, reason)
+	if self.logged_end then return end
+	self.logged_end = true
+	local s = self.stat
+	print(string.format(
+		"[BAL] Floor %d %s  psychosis=%.1f%%  made=%d delivered=%d missed=%d  miss[coffee=%d paper=%d cat=%d]  RoundTime=%.0f Max=%d Chek=%.2f",
+		self.Floor, reason, office.psychosis, s.made, s.delivered, s.missed,
+		s.m_coffee, s.m_paper, s.m_cat, self.RoundTime, self.MaxActiveRequests, self.ChekFrequency))
+end
+
 -- how many requests may be active at once. No new request is created while the
 -- active count is at this cap.
 go.property("MaxActiveRequests", 3)
@@ -137,6 +152,7 @@ local function give_request(self, d)
 	d.ready   = false
 	d.want    = weighted_pick(d.w)
 	d.wait    = rand_range(self.wait_range[d.want])
+	self.stat.made = self.stat.made + 1   -- [BALANCE]
 	msg.post(msg.url(nil, d.id, "script"), "show_icon", { type = d.want })
 end
 
@@ -205,6 +221,11 @@ function init(self)
 	-- so it starts clean even if the level collection is reloaded.
 	office.psychosis = 0
 	self.psychosis_shown = 0
+
+	-- [BALANCE] round stats + logging state
+	self.stat = { made = 0, delivered = 0, missed = 0, m_coffee = 0, m_paper = 0, m_cat = 0 }
+	self.logged_end = false
+	self.log_next = 10   -- next periodic psychosis log, in seconds elapsed
 
 	-- request pacing
 	self.check_timer = self.ChekFrequency
@@ -277,9 +298,21 @@ function update(self, dt)
 			self.clock_shown = shown
 			msg.post("/game_ui#game_gui", "set_clock", { time = shown })
 		end
+
+		-- [BALANCE] psychosis snapshot every 10s (the curve)
+		local elapsed = self.RoundTime - self.time_left
+		if elapsed >= self.log_next then
+			self.log_next = self.log_next + 10
+			print(string.format("[BAL] Floor %d  t=%.0fs  psychosis=%.1f%%  made=%d delivered=%d missed=%d",
+				self.Floor, elapsed, office.psychosis, self.stat.made, self.stat.delivered, self.stat.missed))
+		end
+
 		if self.time_left <= 0 then
 			self.round_over = true
+			log_end(self, "WIN")   -- [BALANCE]
 			msg.post("/game_ui#game_gui", "level_win")
+		elseif office.psychosis >= 100 then
+			log_end(self, "LOSE@100%")   -- [BALANCE] safety-net (do not alter game flow)
 		end
 	end
 
@@ -364,6 +397,9 @@ function update(self, dt)
 				-- and start the same cooldown as a fulfilled one (no reward, no
 				-- delivery anim/sound, no alarm -- just a grunt on the desk side).
 				office.psychosis = math.min(100, office.psychosis + (self.miss[d.want] or 0))
+				self.stat.missed = self.stat.missed + 1               -- [BALANCE]
+				local nm = TYPE_NAME[d.want]
+				if nm then self.stat["m_" .. nm] = self.stat["m_" .. nm] + 1 end
 				d.active   = false
 				d.ready    = false
 				d.cooldown = self.cooldown[d.want] or 0
@@ -408,6 +444,7 @@ function update(self, dt)
 				self.carry_type = nil
 			end
 			-- request satisfied: start the type cooldown
+			self.stat.delivered = self.stat.delivered + 1   -- [BALANCE]
 			d.active   = false
 			d.ready    = false
 			d.cooldown = self.cooldown[d.want] or 0

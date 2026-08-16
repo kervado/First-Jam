@@ -5,8 +5,13 @@ instances {
   component_properties {
     id: "controller"
     properties {
+      id: "MaxActiveRequests"
+      value: "3.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
       id: "ChekFrequency"
-      value: "2.0"
+      value: "1.2"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
@@ -21,32 +26,47 @@ instances {
     }
     properties {
       id: "miss_paper"
-      value: "2.0"
+      value: "3.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
       id: "miss_cat"
-      value: "5.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "wait_coffee_min"
-      value: "6.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "wait_coffee_max"
       value: "8.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
-      id: "wait_paper_min"
+      id: "cooldown_coffee"
+      value: "3.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "cooldown_paper"
       value: "5.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
+      id: "cooldown_cat"
+      value: "8.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_coffee_min"
+      value: "7.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_coffee_max"
+      value: "12.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "wait_paper_min"
+      value: "15.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
       id: "wait_paper_max"
-      value: "10.0"
+      value: "20.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
@@ -56,7 +76,7 @@ instances {
     }
     properties {
       id: "wait_cat_max"
-      value: "15.0"
+      value: "14.0"
       type: PROPERTY_TYPE_NUMBER
     }
   }
