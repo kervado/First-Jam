@@ -301,6 +301,93 @@ nodes {
   parent: "btn"
   inherit_alpha: true
 }
+nodes {
+  position {
+    x: -515.0
+    y: -18.0
+  }
+  size {
+    x: 68.0
+    y: 68.0
+  }
+  color {
+    x: 0.16
+    y: 0.16
+    z: 0.2
+  }
+  type: TYPE_BOX
+  id: "btn_pauze"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_NE
+  parent: "box"
+  inherit_alpha: true
+  alpha: 0.9
+}
+nodes {
+  position {
+    x: -42.0
+    y: -34.0
+  }
+  size {
+    x: 5.0
+    y: 45.0
+  }
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln3"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn_pauze"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -25.0
+    y: -34.0
+  }
+  size {
+    x: 5.0
+    y: 45.0
+  }
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.85
+  }
+  type: TYPE_BOX
+  id: "ln4"
+  xanchor: XANCHOR_RIGHT
+  yanchor: YANCHOR_TOP
+  parent: "btn_pauze"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -46.0
+    y: -59.0
+  }
+  rotation {
+    z: 45.0
+  }
+  size {
+    x: 70.0
+    y: 70.0
+  }
+  type: TYPE_PIE
+  id: "pie"
+  parent: "btn_pauze"
+  inherit_alpha: true
+  outerBounds: PIEBOUNDS_RECTANGLE
+  perimeterVertices: 4
+  pieFillAngle: 45.0
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
 max_nodes: 64
