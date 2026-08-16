@@ -1,0 +1,15 @@
+local BOB_AMP   = 6.0    -- how many pixels it rises/falls
+local BOB_SPEED = 4.0    -- radians per second (bob rate)
+
+function init(self)
+	self.base   = go.get_position()   -- rest position; we bob around its Y
+	self.phase  = 0
+end
+
+function update(self, dt)
+	self.phase = self.phase + dt * BOB_SPEED
+	go.set_position(vmath.vector3(
+	self.base.x,
+	self.base.y + BOB_AMP * math.sin(self.phase),
+	self.base.z))
+end

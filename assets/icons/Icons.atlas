@@ -1,0 +1,19 @@
+images {
+  image: "/assets/icons/icon_cat 1.png"
+}
+images {
+  image: "/assets/icons/icon_coffee 3.png"
+}
+images {
+  image: "/assets/icons/icon_paper 1.png"
+}
+images {
+  image: "/assets/icons/icon_space_cat 1.png"
+}
+images {
+  image: "/assets/icons/icon_space_coffee 1.png"
+}
+images {
+  image: "/assets/icons/icon_space_paper 1.png"
+}
+extrude_borders: 2
