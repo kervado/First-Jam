@@ -186,6 +186,9 @@ function init(self)
 
 	-- request pacing
 	self.check_timer = self.ChekFrequency
+
+	-- looping office ambience (master group -> the volume slider controls it)
+	msg.post("#ambience", "play_sound")
 end
 
 function on_message(self, message_id, message, sender)

@@ -1,0 +1,3 @@
+sound: "/assets/audio_game/office_ambience.ogg"
+looping: 1
+gain: 1.5
