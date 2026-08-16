@@ -26,7 +26,6 @@ local office = require("main.office")
 
 local CONTROLLER = "controller#controller"
 local TRANSPARENT = vmath.vector4(1.0, 1.0, 1.0, 0.0)
-local GRUNT_INTERVAL = 5.0   -- seconds between grunts while fuelling psychosis
 
 go.property("coffee", 3)
 go.property("paper", 2)
@@ -91,8 +90,6 @@ function init(self)
 	self.icon        = nil     -- set when the child request-icon registers itself
 	self.state       = nil     -- current psychosis state (calm/stress/psycho)
 	self.overlay     = false   -- a one-shot fulfil animation is playing
-	self.grunting    = false   -- this desk is fuelling the level psychosis
-	self.grunt_timer = 0
 
 	go.set("#sprite", "tint", TRANSPARENT)   -- footprint square is never drawn
 
@@ -126,15 +123,6 @@ function update(self, dt)
 	end
 
 	apply_state(self)   -- follow the level psychosis
-
-	-- while fuelling psychosis: grunt every GRUNT_INTERVAL seconds
-	if self.grunting then
-		self.grunt_timer = self.grunt_timer - dt
-		if self.grunt_timer <= 0 then
-			play(math.random() < 0.5 and "#snd_grunt1" or "#snd_grunt2")
-			self.grunt_timer = GRUNT_INTERVAL
-		end
-	end
 end
 
 function on_message(self, message_id, message, sender)
@@ -142,17 +130,14 @@ function on_message(self, message_id, message, sender)
 		self.icon = message.icon           -- the child request-icon linked itself
 
 	elseif message_id == hash("show_icon") then
-		-- a new request appeared (not yet impatient)
-		self.grunting = false
-		tell_icon(self, "hide_alarm")
 		tell_icon(self, "show_request", { type = message.type })
-		play("#snd_request")
+		play("#snd_request")               -- a new request appeared
 
-	elseif message_id == hash("expired") then
-		-- the worker's patience ran out: it now fuels psychosis
-		self.grunting = true
-		self.grunt_timer = 0            -- grunt promptly, then every interval
-		tell_icon(self, "show_alarm")
+	elseif message_id == hash("timed_out") then
+		-- the worker's patience ran out: no reward animation/sound and no alarm --
+		-- just one grunt, and the request icon disappears
+		play(math.random() < 0.5 and "#snd_grunt1" or "#snd_grunt2")
+		tell_icon(self, "hide_request")
 
 	elseif message_id == hash("fulfilled") then
 		local snd  = DELIVER_SOUND[message.type]
@@ -172,9 +157,6 @@ function on_message(self, message_id, message, sender)
 			play(snd)   -- e.g. paper: just the delivery sound, no special animation
 		end
 
-		-- request cleared: stop grunting and hide the icon + alarm
-		self.grunting = false
 		tell_icon(self, "hide_request")
-		tell_icon(self, "hide_alarm")
 	end
 end

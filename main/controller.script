@@ -32,6 +32,26 @@ go.property("RoundTime", 180)
 -- floor / round number, shown in the HUD as "N ЭТАЖ". Set per level.
 go.property("Floor", 1)
 
+-- Psychosis added ONCE when a request of each type times out unfulfilled (%).
+go.property("miss_coffee", 5)
+go.property("miss_paper", 3)
+go.property("miss_cat", 10)
+
+-- Cooldown (seconds, per type) a desk waits after a request ends -- whether it
+-- was fulfilled or timed out -- before it can join the request pool again.
+go.property("cooldown_coffee", 3)
+go.property("cooldown_paper", 5)
+go.property("cooldown_cat", 8)
+
+-- Patience window (seconds, per type): a fresh request waits a random time in
+-- [min, max]; if not delivered by then it times out.
+go.property("wait_coffee_min", 5)
+go.property("wait_coffee_max", 10)
+go.property("wait_paper_min", 15)
+go.property("wait_paper_max", 20)
+go.property("wait_cat_min", 8)
+go.property("wait_cat_max", 13)
+
 local SPEED         = 320      -- max horizontal pixels / second
 local ISO_RATIO     = 0.58     -- classic isometric height/width; movement only
 local ACCEL_TIME    = 0.5      -- seconds to reach max speed, and to brake to 0
@@ -39,27 +59,6 @@ local CONTACT_PAD   = 8        -- how close counts as "touching" for interaction
 
 local ROOM_W        = 1920
 local ROOM_H        = 1080
-
--- When a request appears, the worker will wait patiently for this many seconds
--- (random in the range for the requested type). After that the request stays
--- active but the desk starts raising the level psychosis.
-local WAIT_RANGE = {
-	[items.COFFEE] = { 5, 10 },
-	[items.PAPER]  = { 15, 20 },
-	[items.CAT]    = { 8, 13 },
-}
-
--- After a request is fulfilled the desk waits this cooldown (seconds, by the
--- delivered type) before it re-joins the pool of desks able to request again.
-local COOLDOWN = {
-	[items.COFFEE] = 3,
-	[items.PAPER]  = 5,
-	[items.CAT]    = 8,
-}
-
--- Each desk whose wait time has expired (but is still undelivered) adds this
--- many psychosis percent per minute. Psychosis is clamped to 0..100.
-local PSYCHOSIS_PER_MIN = 60.0
 
 -- adaptive music cross-fade speed (gain units per second; ~1.5s for a full swap)
 local MUSIC_FADE = 0.66
@@ -137,8 +136,7 @@ local function give_request(self, d)
 	d.active  = true
 	d.ready   = false
 	d.want    = weighted_pick(d.w)
-	d.wait    = rand_range(WAIT_RANGE[d.want])
-	d.expired = false
+	d.wait    = rand_range(self.wait_range[d.want])
 	msg.post(msg.url(nil, d.id, "script"), "show_icon", { type = d.want })
 end
 
@@ -184,6 +182,23 @@ function init(self)
 	self.sources  = {}   -- item sources (subset of solids): coffee/paper/cat
 	self.player   = nil  -- filled in when the player registers
 	self.floor    = nil  -- walkable rectangle {x, y, hw, hh}, from the floor object
+
+	-- per-item tuning, built from the properties above
+	self.wait_range = {
+		[items.COFFEE] = { self.wait_coffee_min, self.wait_coffee_max },
+		[items.PAPER]  = { self.wait_paper_min, self.wait_paper_max },
+		[items.CAT]    = { self.wait_cat_min, self.wait_cat_max },
+	}
+	self.cooldown = {
+		[items.COFFEE] = self.cooldown_coffee,
+		[items.PAPER]  = self.cooldown_paper,
+		[items.CAT]    = self.cooldown_cat,
+	}
+	self.miss = {   -- one-time psychosis % added when a request times out
+		[items.COFFEE] = self.miss_coffee,
+		[items.PAPER]  = self.miss_paper,
+		[items.CAT]    = self.miss_cat,
+	}
 
 	-- level-wide psychosis meter (0..100), raised by impatient workers.
 	-- lives in the shared office module so every object can read it; reset here
@@ -237,7 +252,6 @@ function on_message(self, message_id, message, sender)
 		box.active   = false
 		box.want     = nil
 		box.wait     = 0
-		box.expired  = false
 		box.cooldown = 0
 		box.ready    = true
 		box.w = { coffee = message.w_coffee, paper = message.w_paper, cats = message.w_cats }
@@ -349,34 +363,27 @@ function update(self, dt)
 	-- fake-isometric depth: the assistant's Z follows its Y, like every object
 	go.set_position(vmath.vector3(p.x, p.y, office.z_for_y(p.y)), p.id)
 
-	-- ---- desk timers: wait -> expiry (psychosis), and post-delivery cooldown ----
-	local expired = 0
+	-- ---- desk timers: request patience -> timeout, and post-request cooldown ----
 	for _, d in ipairs(self.desks) do
 		if d.active then
-			if not d.expired then
-				d.wait = d.wait - dt
-				if d.wait <= 0 then
-					d.expired = true
-					-- the worker lost patience: tell the desk to alarm + grunt
-					msg.post(msg.url(nil, d.id, "script"), "expired")
+			d.wait = d.wait - dt
+			if d.wait <= 0 then
+				-- patience ran out: add a one-time psychosis hit, drop the request
+				-- and start the same cooldown as a fulfilled one (no reward, no
+				-- delivery anim/sound, no alarm -- just a grunt on the desk side).
+				office.psychosis = math.min(100, office.psychosis + (self.miss[d.want] or 0))
+				d.active   = false
+				d.ready    = false
+				d.cooldown = self.cooldown[d.want] or 0
+				msg.post(msg.url(nil, d.id, "script"), "timed_out")
+				if office.psychosis ~= self.psychosis_shown then
+					self.psychosis_shown = office.psychosis
+					msg.post("/game_ui#game_gui", "stress", { value = office.psychosis })
 				end
 			end
-			if d.expired then expired = expired + 1 end
 		elseif not d.ready then
 			d.cooldown = d.cooldown - dt
 			if d.cooldown <= 0 then d.ready = true end
-		end
-	end
-
-	-- ---- psychosis: every impatient (expired) desk raises the level meter ----
-	if expired > 0 then
-		office.psychosis = math.min(100, office.psychosis + expired * (PSYCHOSIS_PER_MIN / 60) * dt)
-		-- push the real value to the in-game HUD whenever it changes: the fill
-		-- bar slides continuously, so sub-percent growth is visible immediately
-		-- (the % text is rounded on the HUD side).
-		if office.psychosis ~= self.psychosis_shown then
-			self.psychosis_shown = office.psychosis
-			msg.post("/game_ui#game_gui", "stress", { value = office.psychosis })
 		end
 	end
 
@@ -408,11 +415,10 @@ function update(self, dt)
 			if self.carry_count <= 0 then
 				self.carry_type = nil
 			end
-			-- request satisfied: stop raising psychosis, start the type cooldown
+			-- request satisfied: start the type cooldown
 			d.active   = false
-			d.expired  = false
 			d.ready    = false
-			d.cooldown = COOLDOWN[d.want] or 0
+			d.cooldown = self.cooldown[d.want] or 0
 			msg.post(msg.url(nil, d.id, "script"), "fulfilled", { type = d.want })
 		end
 	end
