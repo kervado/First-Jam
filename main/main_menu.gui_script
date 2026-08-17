@@ -171,12 +171,32 @@ local function start_game(self)
 	load_level(self, LEVELS[1])
 end
 
+-- Show the developers/credits overlay. While it is up, the menu keeps input
+-- focus but ignores its own buttons (see on_input) -- the next click closes it.
+local function open_credits(self)
+	self.credits_shown = true
+	gui.set_enabled(self.credits_root, true)
+	-- clear any hover/press visuals so nothing lingers behind the overlay
+	for _, btn in ipairs(self.buttons) do
+		btn.hovered = false
+		btn.pressed = false
+		set_highlight(btn, false)
+		gui.set_scale(btn.text, SCALE_NORMAL)
+	end
+end
+
+local function close_credits(self)
+	self.credits_shown = false
+	gui.set_enabled(self.credits_root, false)
+	play_click()
+end
+
 -- on_click(self) fires on release over the same item. Items without a handler
 -- still highlight on hover but do nothing yet.
 local ITEMS = {
 	{ prefix = "new", on_click = start_game },
 	{ prefix = "settings", on_click = open_settings },
-	{ prefix = "diary" },
+	{ prefix = "dev", on_click = open_credits },
 	{ prefix = "exit", on_click = quit_game },
 }
 
@@ -185,6 +205,9 @@ function init(self)
 
 	self.root = gui.get_node("root")
 	self.logo2 = gui.get_node("logo2")
+	self.credits_root = gui.get_node("credits_root")
+	self.credits_shown = false
+	gui.set_enabled(self.credits_root, false) -- start hidden
 	self.active = true
 	self.returning = false
 	self.finish_timer = nil
@@ -301,6 +324,15 @@ function on_input(self, action_id, action)
 	end
 	if action.x == nil then
 		return -- ignore key actions (WASD/arrows) - no cursor position
+	end
+
+	-- While the credits overlay is up, the menu buttons are inert; any mouse
+	-- click dismisses the overlay and nothing else happens.
+	if self.credits_shown then
+		if action_id == hash("touch") and action.released then
+			close_credits(self)
+		end
+		return
 	end
 
 	-- Mouse movement arrives with action_id == nil; use every pointer action to

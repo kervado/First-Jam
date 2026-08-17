@@ -139,9 +139,9 @@ function on_message(self, message_id, message, sender)
 
 	elseif message_id == hash("timed_out") then
 		-- the worker's patience ran out: no reward animation/sound and no alarm --
-		-- just one grunt, and the request icon disappears
+		-- just one grunt, and a "failed" icon for the current state for ~1s
 		play(math.random() < 0.5 and "#snd_grunt1" or "#snd_grunt2")
-		tell_icon(self, "hide_request")
+		tell_icon(self, "show_outcome", { kind = "broke", state = state_for(self, office.psychosis) })
 
 	elseif message_id == hash("fulfilled") then
 		local snd  = DELIVER_SOUND[message.type]
@@ -161,6 +161,7 @@ function on_message(self, message_id, message, sender)
 			play(snd)   -- e.g. paper: just the delivery sound, no special animation
 		end
 
-		tell_icon(self, "hide_request")
+		-- flash the "completed" icon for the current state for ~1s
+		tell_icon(self, "show_outcome", { kind = "complete", state = state_for(self, office.psychosis) })
 	end
 end

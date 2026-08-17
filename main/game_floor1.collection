@@ -11,12 +11,17 @@ instances {
     }
     properties {
       id: "ChekFrequency"
-      value: "1.2"
+      value: "3.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
       id: "RoundTime"
       value: "60.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "Floor"
+      value: "1.0"
       type: PROPERTY_TYPE_NUMBER
     }
     properties {
@@ -1153,7 +1158,6 @@ embedded_instances {
   children: "decor12"
   children: "decor13"
   children: "paper_cabinet"
-  children: "source_icon2"
   data: ""
   position {
     x: 1305.0
@@ -5765,6 +5769,16 @@ embedded_instances {
   "  id: \"script\"\n"
   "  component: \"/main/desk.script\"\n"
   "  properties {\n"
+  "    id: \"coffee\"\n"
+  "    value: \"2.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "  properties {\n"
+  "    id: \"paper\"\n"
+  "    value: \"0.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "  properties {\n"
   "    id: \"skin_variant\"\n"
   "    value: \"4.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
@@ -7114,7 +7128,7 @@ embedded_instances {
   "  component: \"/main/desk.script\"\n"
   "  properties {\n"
   "    id: \"paper\"\n"
-  "    value: \"1.0\"\n"
+  "    value: \"0.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "  properties {\n"
@@ -8656,34 +8670,6 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "source_icon2"
-  data: "components {\n"
-  "  id: \"script\"\n"
-  "  component: \"/main/source_icon.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"icon_space_paper 1\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 100.0\\n"
-  "  y: 100.0\\n"
-  "}\\n"
-  "size_mode: SIZE_MODE_MANUAL\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/assets/icons/Icons.atlas\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "}\n"
-  ""
-  position {
-    y: 200.0
-    z: 0.01
-  }
-}
-embedded_instances {
   id: "source_icon"
   data: "components {\n"
   "  id: \"script\"\n"
@@ -8837,6 +8823,11 @@ embedded_instances {
   data: "components {\n"
   "  id: \"script\"\n"
   "  component: \"/main/desk.script\"\n"
+  "  properties {\n"
+  "    id: \"paper\"\n"
+  "    value: \"0.0\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
   "  properties {\n"
   "    id: \"skin_variant\"\n"
   "    value: \"4.0\"\n"
@@ -9038,7 +9029,7 @@ embedded_instances {
   "  component: \"/main/desk.script\"\n"
   "  properties {\n"
   "    id: \"paper\"\n"
-  "    value: \"1.0\"\n"
+  "    value: \"0.0\"\n"
   "    type: PROPERTY_TYPE_NUMBER\n"
   "  }\n"
   "  properties {\n"

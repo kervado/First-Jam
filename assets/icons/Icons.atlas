@@ -19,4 +19,22 @@ images {
 images {
   image: "/assets/icons/exclamation.png"
 }
+images {
+  image: "/assets/icons/request_broke.png"
+}
+images {
+  image: "/assets/icons/request_broke_p.png"
+}
+images {
+  image: "/assets/icons/request_broke_s.png"
+}
+images {
+  image: "/assets/icons/request_complete.png"
+}
+images {
+  image: "/assets/icons/request_complete_p.png"
+}
+images {
+  image: "/assets/icons/request_complete_s.png"
+}
 extrude_borders: 2

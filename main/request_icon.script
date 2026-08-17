@@ -4,8 +4,11 @@
 -- The floating request icon above a desk. It is its own game object (a sprite
 -- component's position cannot be moved at runtime, so the bob needs a real
 -- game object). A desk points its `icon` property here and sends:
---   "show_request" { type }  -> show the image for that item and start bobbing
---   "hide_request"           -> hide and stop
+--   "show_request" { type }         -> show the image for that item and bob
+--   "show_outcome" { kind, state }  -> flash the fulfil/fail icon (kind =
+--        "complete"|"broke") for the desk's psychosis state (calm/stress/psycho)
+--        for ~1s, then auto-hide
+--   "hide_request"                  -> hide and stop
 --
 -- Colours are baked into the images -- the icon is never tinted.
 --------------------------------------------------------------------------------
@@ -20,13 +23,23 @@ local ICON = {
 	[items.CAT]    = "icon_cat 1",
 }
 
+-- outcome icons shown for a moment when a request closes, one image per desk
+-- psychosis state (calm / stress / psycho). "complete" = delivered in time,
+-- "broke" = the request timed out.
+local OUTCOME = {
+	complete = { calm = "request_complete", stress = "request_complete_s", psycho = "request_complete_p" },
+	broke    = { calm = "request_broke",    stress = "request_broke_s",    psycho = "request_broke_p" },
+}
+local OUTCOME_HOLD = 1.0   -- seconds the outcome icon stays up before hiding
+
 local BOB_AMP   = 6.0    -- how many pixels it rises/falls
 local BOB_SPEED = 4.0    -- radians per second (bob rate)
 
 function init(self)
-	self.base   = go.get_position()   -- rest position; we bob around its Y
-	self.phase  = 0
-	self.active = false
+	self.base       = go.get_position()   -- rest position; we bob around its Y
+	self.phase      = 0
+	self.active     = false
+	self.hide_timer = nil             -- counts down while an outcome icon is up
 	msg.post("#sprite", "disable")    -- hidden until a request comes in
 	msg.post("#alarm", "disable")     -- red "!" shown only while the desk fuels psychosis
 
@@ -40,6 +53,19 @@ end
 
 function update(self, dt)
 	if not self.active then return end
+
+	-- an outcome icon (fulfil / fail) hides itself after OUTCOME_HOLD seconds
+	if self.hide_timer then
+		self.hide_timer = self.hide_timer - dt
+		if self.hide_timer <= 0 then
+			self.hide_timer = nil
+			self.active = false
+			msg.post("#sprite", "disable")
+			go.set_position(self.base)   -- back to rest
+			return
+		end
+	end
+
 	self.phase = self.phase + dt * BOB_SPEED
 	go.set_position(vmath.vector3(
 		self.base.x,
@@ -52,10 +78,23 @@ function on_message(self, message_id, message, sender)
 		local img = ICON[message.type]
 		if img then sprite.play_flipbook("#sprite", img) end
 		msg.post("#sprite", "enable")
-		self.phase  = 0
-		self.active = true
+		self.phase      = 0
+		self.active     = true
+		self.hide_timer = nil        -- a fresh request cancels any outcome hold
+	elseif message_id == hash("show_outcome") then
+		-- reuse the (now free) request sprite to flash the fulfil / fail icon for
+		-- the desk's current psychosis state, then auto-hide via the timer above
+		local variants = OUTCOME[message.kind]
+		local img = variants and (variants[message.state] or variants.calm)
+		if img then sprite.play_flipbook("#sprite", img) end
+		msg.post("#sprite", "enable")
+		msg.post("#alarm", "disable")
+		self.phase      = 0
+		self.active     = true
+		self.hide_timer = OUTCOME_HOLD
 	elseif message_id == hash("hide_request") then
-		self.active = false
+		self.active     = false
+		self.hide_timer = nil
 		msg.post("#sprite", "disable")
 		msg.post("#alarm", "disable")
 		go.set_position(self.base)   -- back to rest

@@ -180,7 +180,7 @@ nodes {
   }
   type: TYPE_BOX
   texture: "main_menu/frame"
-  id: "diary_frame"
+  id: "dev_frame"
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
@@ -189,12 +189,12 @@ nodes {
 }
 nodes {
   position {
-    x: 1000.0
+    x: 1240.0
     y: 590.0
   }
   type: TYPE_BOX
   texture: "main_menu/square"
-  id: "diary_marker"
+  id: "dev_marker"
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
@@ -216,9 +216,9 @@ nodes {
     z: 0.5882353
   }
   type: TYPE_TEXT
-  text: "\320\224\320\235\320\225\320\222\320\235\320\230\320\232"
+  text: "\320\240\320\220\320\227\320\240\320\220\320\221\320\236\320\242\320\247\320\230\320\232\320\230"
   font: "menu"
-  id: "diary_text"
+  id: "dev_text"
   pivot: PIVOT_W
   parent: "root"
   inherit_alpha: true
@@ -296,6 +296,183 @@ nodes {
   parent: "logo"
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 1920.0
+    y: 1080.0
+  }
+  color {
+    x: 0.03
+    y: 0.03
+    z: 0.04
+  }
+  type: TYPE_BOX
+  id: "credits_root"
+  parent: "box_center"
+  inherit_alpha: true
+  alpha: 0.93
+  enabled: false
+}
+nodes {
+  position {
+    y: 400.0
+  }
+  size {
+    x: 1700.0
+    y: 140.0
+  }
+  color {
+    x: 0.8509804
+    y: 0.85490197
+    z: 0.8627451
+  }
+  type: TYPE_TEXT
+  text: "\320\220\320\222\320\242\320\236\320\240\320\253"
+  font: "menu"
+  id: "cr_title"
+  parent: "credits_root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 250.0
+  }
+  size {
+    x: 1700.0
+    y: 90.0
+  }
+  color {
+    x: 0.82
+    y: 0.1
+    z: 0.12
+  }
+  type: TYPE_TEXT
+  text: "\320\237\321\200\320\276\320\263\321\200\320\260\320\274\320\274\320\270\321\201\321\202\321\213:"
+  font: "small"
+  id: "cr_role1"
+  parent: "credits_root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 170.0
+  }
+  size {
+    x: 1700.0
+    y: 90.0
+  }
+  color {
+    x: 0.8509804
+    y: 0.85490197
+    z: 0.8627451
+  }
+  type: TYPE_TEXT
+  text: "\320\220\321\200\321\202\321\221\320\274 \320\232\320\276\321\200\320\276\321\202\320\272\320\270\320\271, \320\224\320\274\320\270\321\202\321\200\320\270\320\271 \320\232\320\276\321\200\320\276\321\202\320\272\320\270\320\271"
+  font: "small"
+  id: "cr_name1"
+  parent: "credits_root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 40.0
+  }
+  size {
+    x: 1700.0
+    y: 90.0
+  }
+  color {
+    x: 0.82
+    y: 0.1
+    z: 0.12
+  }
+  type: TYPE_TEXT
+  text: "\320\245\321\203\320\264\320\276\320\266\320\275\320\270\320\272\320\270:"
+  font: "small"
+  id: "cr_role2"
+  parent: "credits_root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -40.0
+  }
+  size {
+    x: 1700.0
+    y: 90.0
+  }
+  color {
+    x: 0.8509804
+    y: 0.85490197
+    z: 0.8627451
+  }
+  type: TYPE_TEXT
+  text: "\320\236\320\273\321\214\320\263\320\260 \320\236\321\200\320\265\321\205\320\276\320\262\320\260, \320\234\320\260\320\272\321\201\320\270\320\274 \320\257\320\272\320\276\320\262\320\265\320\275\320\272\320\276"
+  font: "small"
+  id: "cr_name2"
+  parent: "credits_root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -170.0
+  }
+  size {
+    x: 1700.0
+    y: 90.0
+  }
+  color {
+    x: 0.82
+    y: 0.1
+    z: 0.12
+  }
+  type: TYPE_TEXT
+  text: "\320\230\320\263\321\200\320\276\320\262\320\276\320\271 \320\224\320\270\320\267\320\260\320\271\320\275 / \320\237\321\200\320\276\320\264\320\260\320\272\321\210\320\275:"
+  font: "small"
+  id: "cr_role3"
+  parent: "credits_root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -250.0
+  }
+  size {
+    x: 1700.0
+    y: 90.0
+  }
+  color {
+    x: 0.8509804
+    y: 0.85490197
+    z: 0.8627451
+  }
+  type: TYPE_TEXT
+  text: "\320\230\320\263\320\276\321\200\321\214 \320\223\320\260\320\273\320\270\321\206\320\272\320\270\320\271"
+  font: "small"
+  id: "cr_name3"
+  parent: "credits_root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -430.0
+  }
+  size {
+    x: 1700.0
+    y: 80.0
+  }
+  color {
+    x: 0.45
+    y: 0.45
+    z: 0.47
+  }
+  type: TYPE_TEXT
+  text: "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \320\262 \320\273\321\216\320\261\320\276\320\274 \320\274\320\265\321\201\321\202\320\265, \321\207\321\202\320\276\320\261\321\213 \320\267\320\260\320\272\321\200\321\213\321\202\321\214"
+  font: "small"
+  id: "cr_hint"
+  parent: "credits_root"
+  inherit_alpha: true
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
